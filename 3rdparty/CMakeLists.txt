@@ -1,0 +1,2 @@
+add_subdirectory(qtmqtt)
+add_subdirectory(DelegateUI)

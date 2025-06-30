@@ -1,0 +1,11 @@
+{
+  "name": "collect-platform",
+  "version": "1.0.0",
+  "builtin-baseline": "275a29dcdb864aa9ce57042eadf95f4a28482280",
+  "dependencies": [
+    {
+      "name": "msgpack",
+      "version>=": "7.0.0"
+    }
+  ]
+}

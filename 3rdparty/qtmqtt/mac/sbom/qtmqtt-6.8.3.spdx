@@ -1,0 +1,151 @@
+SPDXVersion: SPDX-2.3
+DataLicense: CC0-1.0
+SPDXID: SPDXRef-DOCUMENT
+DocumentName: qtmqtt-6.8.3
+DocumentNamespace: https://qt.io/spdxdocs/qtmqtt-6.8.3
+Creator: Organization: TheQtCompany
+Creator: Tool: Qt Build System
+CreatorComment: <text>This SPDX document was created from CMake 3.29.3, using the qt
+build system from https://code.qt.io/cgit/qt/qtbase.git/tree/cmake/QtPublicSbomHelpers.cmake</text>
+Created: 2025-04-29T15:23:52Z
+ExternalDocumentRef: DocumentRef-qtbase https://qt.io/spdxdocs/qtbase-c07c2d5a+HEAD SHA1: e70c6ddaabeba77e35861a70e0c234f8ac212c0d
+
+PackageName: AppleClang
+SPDXID: SPDXRef-compiler
+PackageVersion: 16.0.0.16000026
+PackageDownloadLocation: NOASSERTION
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: NOASSERTION
+PackageSupplier: Organization: Anonymous
+FilesAnalyzed: false
+PackageSummary: <text>The compiler as identified by CMake, running on Darwin (arm64)</text>
+PrimaryPackagePurpose: APPLICATION
+Relationship: SPDXRef-compiler BUILD_DEPENDENCY_OF SPDXRef-Package-qtmqtt
+RelationshipComment: <text>SPDXRef-Package-qtmqtt is built by compiler AppleClang version 16.0.0.16000026</text>
+
+PackageName: qtmqtt
+SPDXID: SPDXRef-Package-qtmqtt
+ExternalRef: SECURITY cpe23Type cpe:2.3:a:qt:qt:6.8.3:*:*:*:*:*:*:*
+ExternalRef: PACKAGE-MANAGER purl pkg:generic/TheQtCompany/qtmqtt@6.8.3
+PackageVersion: 6.8.3
+PackageSupplier: Organization: TheQtCompany
+PackageDownloadLocation: git://code.qt.io/qt/qtmqtt.git
+PackageLicenseConcluded: NOASSERTION
+PackageLicenseDeclared: NOASSERTION
+PackageCopyrightText: Copyright (C) The Qt Company Ltd. and other contributors.
+PackageHomePage: https://qt.io
+PackageComment: <text>Built by CMake 3.29.3 with RelWithDebInfo configuration for Darwin (arm64)</text>
+PackageVerificationCode: 78d1b60d554bd002cd21d4fed1813b9168182680
+BuiltDate: 2025-04-29T15:23:52Z
+Relationship: SPDXRef-DOCUMENT DESCRIBES SPDXRef-Package-qtmqtt
+
+PackageName: Mqtt
+SPDXID: SPDXRef-Package-qtmqtt-qt-module-Mqtt
+PackageDownloadLocation: git://code.qt.io/qt/qtmqtt.git
+PackageVersion: 6.8.3
+PackageSupplier: Organization: TheQtCompany
+PackageLicenseConcluded: LicenseRef-Qt-Commercial OR GPL-3.0-only
+PackageLicenseDeclared: LicenseRef-Qt-Commercial OR GPL-3.0-only
+ExternalRef: PACKAGE-MANAGER purl pkg:github/qt/qtmqtt?library_name=Mqtt#src/mqtt
+ExternalRef: PACKAGE-MANAGER purl pkg:generic/TheQtCompany/qtmqtt-Mqtt?vcs_url=https://code.qt.io/qt/qtmqtt.git&library_name=Mqtt#src/mqtt
+FilesAnalyzed: true
+PackageCopyrightText: <text>Copyright (C) The Qt Company Ltd. and other contributors.</text>
+PrimaryPackagePurpose: LIBRARY
+PackageComment: <text>
+CMake target name: Mqtt
+CMake exported target name: Qt6::Mqtt
+Contained in CMake package: Qt6Mqtt
+</text>
+ExternalRef: SECURITY cpe23Type cpe:2.3:a:qt:qtmqtt:6.8.3:*:*:*:*:*:*:*
+ExternalRef: SECURITY cpe23Type cpe:2.3:a:qt:qt:6.8.3:*:*:*:*:*:*:*
+Relationship: SPDXRef-Package-qtmqtt-qt-module-Mqtt DEPENDS_ON DocumentRef-qtbase:SPDXRef-Package-qtbase-qt-module-Core
+Relationship: SPDXRef-Package-qtmqtt-qt-module-Mqtt DEPENDS_ON DocumentRef-qtbase:SPDXRef-Package-qtbase-qt-module-PlatformModuleInternal
+Relationship: SPDXRef-Package-qtmqtt-qt-module-Mqtt DEPENDS_ON DocumentRef-qtbase:SPDXRef-Package-qtbase-qt-module-Network
+Relationship: SPDXRef-Package-qtmqtt CONTAINS SPDXRef-Package-qtmqtt-qt-module-Mqtt
+
+FileName: ./lib/QtMqtt.framework/Versions/A/QtMqtt
+SPDXID: SPDXRef-PackagedFile-qt-module-Mqtt
+FileType: BINARY
+FileChecksum: SHA1: 9c693d0fabd4684e9eb4f18b9982d1249165c8aa
+LicenseConcluded: LicenseRef-Qt-Commercial OR GPL-3.0-only
+FileCopyrightText: <text>Copyright (C) The Qt Company Ltd. and other contributors.</text>
+LicenseInfoInFile: NOASSERTION
+Relationship: SPDXRef-Package-qtmqtt-qt-module-Mqtt CONTAINS SPDXRef-PackagedFile-qt-module-Mqtt
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/build/Qt_6_8_3_for_macOS-RelWithDebInfo/include/QtMqtt/qtmqttexports.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttauthenticationproperties.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttauthenticationproperties.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttclient.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttclient.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttclient_p.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttconnection.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttconnection_p.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttconnectionproperties.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttconnectionproperties.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttconnectionproperties_p.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttcontrolpacket.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttcontrolpacket_p.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttglobal.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttmessage.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttmessage.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttmessage_p.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttpublishproperties.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttpublishproperties.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttpublishproperties_p.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttsubscription.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttsubscription.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttsubscription_p.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttsubscriptionproperties.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqttsubscriptionproperties.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqtttopicfilter.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqtttopicfilter.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqtttopicname.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqtttopicname.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqtttype.cpp
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/src/mqtt/qmqtttype.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /src_dir/qtmqtt/build/Qt_6_8_3_for_macOS-RelWithDebInfo/src/mqtt/Mqtt_fake_header.h
+Relationship: SPDXRef-PackagedFile-qt-module-Mqtt GENERATED_FROM NOASSERTION
+RelationshipComment: /Applications/Qt/6.8.3/macos/lib/cmake/Qt6/macos/PrivacyInfo.xcprivacy
+
+LicenseID: LicenseRef-Qt-Commercial
+ExtractedText: <text>Licensees holding valid commercial Qt licenses may use this software in
+accordance with the the terms contained in a written agreement between
+you and The Qt Company. Alternatively, the terms and conditions that were
+accepted by the licensee when buying and/or downloading the
+software do apply.
+
+For the latest licensing terms and conditions, see https://www.qt.io/terms-conditions.
+For further information use the contact form at https://www.qt.io/contact-us.
+</text>
