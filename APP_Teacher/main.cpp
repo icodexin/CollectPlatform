@@ -18,7 +18,7 @@ int main(int argc, char* argv[]) {
     app.setWindowIcon(QIcon(":/res/icons/app_logo.ico"));
     app.setApplicationDisplayName(QObject::tr("多模态数据采集与学习者状态实时感知平台"));
     app.setApplicationVersion("1.0.0");
-    app.setOrganizationName(QObject::tr("教育大数据应用技术国家工程研究中心 杨鑫"));
+    app.setOrganizationName("perlab");
     app.setOrganizationDomain("nerc-ebd.ccnu.edu.cn");
 
     QQmlApplicationEngine engine;
@@ -33,7 +33,7 @@ int main(int argc, char* argv[]) {
     );
     // engine.loadFromModule("qml", "App");
 
-    const QString qmlPath = "D:/Workspace/CollectPlatform/APP_Teacher/qml/";
+    const QString qmlPath = "D:/Workspace/CollectPlatform/Client/APP_Teacher/qml/";
     const QUrl mainQmlUrl = QUrl::fromLocalFile(qmlPath + "App.qml");
 
     engine.load(mainQmlUrl);
