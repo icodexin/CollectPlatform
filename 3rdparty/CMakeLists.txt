@@ -1,2 +1,2 @@
 add_subdirectory(qtmqtt)
-add_subdirectory(DelegateUI)
+add_subdirectory(HuskarUI)

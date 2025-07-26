@@ -1,3 +1,3 @@
-[submodule "3rdparty/DelegateUI"]
-	path = 3rdparty/DelegateUI
-	url = https://github.com/icodexin/DelegateUI
+[submodule "3rdparty/HuskarUI"]
+	path = 3rdparty/HuskarUI
+	url = https://github.com/icodexin/HuskarUI
