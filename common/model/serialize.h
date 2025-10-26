@@ -273,165 +273,128 @@ struct object_with_zone<EEGEventData> {
 };
 
 template<>
-struct convert<PulseWaveData> {
-    msgpack::object const& operator()(msgpack::object const& o, PulseWaveData& v) const {
-        if (o.type != type::MAP) throw type_error();
-        if (o.via.map.size != 2) throw type_error();
+struct convert<PulseWaveValue> {
+    msgpack::object const& operator()(msgpack::object const& o, PulseWaveValue& v) const {
+        if (o.type != type::ARRAY) throw type_error();
+        if (o.via.array.size != 2) throw type_error();
 
-        for (uint32_t i = 0; i < o.via.map.size; ++i) {
-            const auto& kv = o.via.map.ptr[i];
-            if (kv.key.as<QString>() == "raw") {
-                v.raw = kv.val.as<qint64>();
-            } else if (kv.key.as<QString>() == "filtered") {
-                v.filtered = kv.val.as<qreal>();
-            }
-        }
+        v = PulseWaveValue(
+            o.via.array.ptr[0].as<qint64>(),
+            o.via.array.ptr[1].as<qreal>()
+        );
         return o;
     }
 };
 
 template<>
-struct pack<PulseWaveData> {
+struct pack<PulseWaveValue> {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, PulseWaveData const& v) const {
-        o.pack_map(2);
-        o.pack("raw");
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, PulseWaveValue const& v) const {
+        o.pack_array(2);
         o.pack(v.raw);
-        o.pack("filtered");
         o.pack(v.filtered);
         return o;
     }
 };
 
 template<>
-struct object_with_zone<PulseWaveData> {
-    void operator()(msgpack::object::with_zone& o, PulseWaveData const& v) const {
-        o.type = msgpack::type::MAP;
-        o.via.map.size = 2;
-        o.via.map.ptr = static_cast<msgpack::object_kv*>(
-            o.zone.allocate_align(sizeof(msgpack::object_kv) * 2, MSGPACK_ZONE_ALIGNOF(msgpack::object_kv)));
+struct object_with_zone<PulseWaveValue> {
+    void operator()(msgpack::object::with_zone& o, PulseWaveValue const& v) const {
+        o.type = msgpack::type::ARRAY;
+        o.via.array.size = 2;
+        o.via.array.ptr = static_cast<msgpack::object*>(
+            o.zone.allocate_align(sizeof(msgpack::object) * 2, MSGPACK_ZONE_ALIGNOF(msgpack::object)));
 
-        o.via.map.ptr[0].key = msgpack::object("raw", o.zone);
-        o.via.map.ptr[0].val = msgpack::object(v.raw, o.zone);
-        o.via.map.ptr[1].key = msgpack::object("filtered", o.zone);
-        o.via.map.ptr[1].val = msgpack::object(v.filtered, o.zone);
+        o.via.array.ptr[0] = msgpack::object(v.raw, o.zone);
+        o.via.array.ptr[1] = msgpack::object(v.filtered, o.zone);
     }
 };
 
 template<>
-struct convert<AccData> {
-    msgpack::object const& operator()(msgpack::object const& o, AccData& v) const {
-        if (o.type != type::MAP) throw type_error();
-        if (o.via.map.size != 3) throw type_error();
+struct convert<AccValue> {
+    msgpack::object const& operator()(msgpack::object const& o, AccValue& v) const {
+        if (o.type != type::ARRAY) throw type_error();
+        if (o.via.array.size != 3) throw type_error();
 
-        for (uint32_t i = 0; i < o.via.map.size; ++i) {
-            const auto& kv = o.via.map.ptr[i];
-            if (kv.key.as<QString>() == "x") {
-                v.x = kv.val.as<qreal>();
-            } else if (kv.key.as<QString>() == "y") {
-                v.y = kv.val.as<qreal>();
-            } else if (kv.key.as<QString>() == "z") {
-                v.z = kv.val.as<qreal>();
-            }
-        }
+        v = AccValue(
+            o.via.array.ptr[0].as<qreal>(),
+            o.via.array.ptr[1].as<qreal>(),
+            o.via.array.ptr[2].as<qreal>()
+        );
         return o;
     }
 };
 
 template<>
-struct pack<AccData> {
+struct pack<AccValue> {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, AccData const& v) const {
-        o.pack_map(3);
-        o.pack("x");
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, AccValue const& v) const {
+        o.pack_array(3);
         o.pack(v.x);
-        o.pack("y");
         o.pack(v.y);
-        o.pack("z");
         o.pack(v.z);
         return o;
     }
 };
 
 template<>
-struct object_with_zone<AccData> {
-    void operator()(msgpack::object::with_zone& o, AccData const& v) const {
-        o.type = msgpack::type::MAP;
-        o.via.map.size = 3;
-        o.via.map.ptr = static_cast<msgpack::object_kv*>(
-            o.zone.allocate_align(sizeof(msgpack::object_kv) * 3, MSGPACK_ZONE_ALIGNOF(msgpack::object_kv)));
+struct object_with_zone<AccValue> {
+    void operator()(msgpack::object::with_zone& o, AccValue const& v) const {
+        o.type = msgpack::type::ARRAY;
+        o.via.array.size = 3;
+        o.via.array.ptr = static_cast<msgpack::object*>(
+            o.zone.allocate_align(sizeof(msgpack::object) * 3, MSGPACK_ZONE_ALIGNOF(msgpack::object)));
 
-        o.via.map.ptr[0].key = msgpack::object("x", o.zone);
-        o.via.map.ptr[0].val = msgpack::object(v.x, o.zone);
-        o.via.map.ptr[1].key = msgpack::object("y", o.zone);
-        o.via.map.ptr[1].val = msgpack::object(v.y, o.zone);
-        o.via.map.ptr[2].key = msgpack::object("z", o.zone);
-        o.via.map.ptr[2].val = msgpack::object(v.z, o.zone);
+        o.via.array.ptr[0] = msgpack::object(v.x, o.zone);
+        o.via.array.ptr[1] = msgpack::object(v.y, o.zone);
+        o.via.array.ptr[2] = msgpack::object(v.z, o.zone);
     }
 };
 
 template<>
-struct convert<WristbandData> {
-    msgpack::object const& operator()(msgpack::object const& o, WristbandData& v) const {
-        if (o.type != type::MAP) throw type_error();
-        if (o.via.map.size != 5) throw type_error();
+struct convert<WristbandPacket> {
+    msgpack::object const& operator()(msgpack::object const& o, WristbandPacket& v) const {
+        if (o.type != type::ARRAY) throw type_error();
+        if (o.via.array.size != 5) throw type_error();
 
-        for (uint32_t i = 0; i < o.via.map.size; ++i) {
-            auto& [key, val] = o.via.map.ptr[i];
-            QString key_str = key.as<QString>();
-            if (key_str == "timestamp") {
-                v.setTimestamp(val.as<qint64>());
-            } else if (key_str == "hr") {
-                v.setHr(val.as<qreal>());
-            } else if (key_str == "pulseWaves") {
-                v.setPulseWaves(val.as<QList<PulseWaveData>>());
-            } else if (key_str == "gsrs") {
-                v.setGsrs(val.as<QList<qreal>>());
-            } else if (key_str == "accs") {
-                v.setAccs(val.as<QList<AccData>>());
-            }
-        }
+        v = WristbandPacket(
+            o.via.array.ptr[0].as<qint64>(),
+            o.via.array.ptr[1].as<HrValue>(),
+            o.via.array.ptr[2].as<QList<PulseWaveValue> >(),
+            o.via.array.ptr[3].as<QList<GsrValue> >(),
+            o.via.array.ptr[4].as<QList<AccValue> >()
+        );
         return o;
     }
 };
 
 template<>
-struct pack<WristbandData> {
+struct pack<WristbandPacket> {
     template <typename Stream>
-    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, WristbandData const& v) const {
-        o.pack_map(5);
-        o.pack("timestamp");
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, WristbandPacket const& v) const {
+        o.pack_array(5);
         o.pack(v.timestamp());
-        o.pack("hr");
         o.pack(v.hr());
-        o.pack("pulseWaves");
-        o.pack(v.pulseWaves());
-        o.pack("gsrs");
-        o.pack(v.gsrs());
-        o.pack("accs");
-        o.pack(v.accs());
+        o.pack(v.pulseWaveList());
+        o.pack(v.gsrList());
+        o.pack(v.accList());
         return o;
     }
 };
 
 template<>
-struct object_with_zone<WristbandData> {
-    void operator()(msgpack::object::with_zone& o, WristbandData const& v) const {
-        o.type = msgpack::type::MAP;
-        o.via.map.size = 5;
-        o.via.map.ptr = static_cast<msgpack::object_kv*>(
-            o.zone.allocate_align(sizeof(msgpack::object_kv) * 5, MSGPACK_ZONE_ALIGNOF(msgpack::object_kv)));
+struct object_with_zone<WristbandPacket> {
+    void operator()(msgpack::object::with_zone& o, WristbandPacket const& v) const {
+        o.type = msgpack::type::ARRAY;
+        o.via.array.size = 5;
+        o.via.array.ptr = static_cast<msgpack::object*>(
+            o.zone.allocate_align(sizeof(msgpack::object) * 5, MSGPACK_ZONE_ALIGNOF(msgpack::object)));
 
-        o.via.map.ptr[0].key = msgpack::object("timestamp", o.zone);
-        o.via.map.ptr[0].val = msgpack::object(v.timestamp(), o.zone);
-        o.via.map.ptr[1].key = msgpack::object("hr", o.zone);
-        o.via.map.ptr[1].val = msgpack::object(v.hr(), o.zone);
-        o.via.map.ptr[2].key = msgpack::object("pulseWaves", o.zone);
-        o.via.map.ptr[2].val = msgpack::object(v.pulseWaves(), o.zone);
-        o.via.map.ptr[3].key = msgpack::object("gsrs", o.zone);
-        o.via.map.ptr[3].val = msgpack::object(v.gsrs(), o.zone);
-        o.via.map.ptr[4].key = msgpack::object("accs", o.zone);
-        o.via.map.ptr[4].val = msgpack::object(v.accs(), o.zone);
+        o.via.array.ptr[0] = msgpack::object(v.timestamp(), o.zone);
+        o.via.array.ptr[1] = msgpack::object(v.hr(), o.zone);
+        o.via.array.ptr[2] = msgpack::object(v.pulseWaveList(), o.zone);
+        o.via.array.ptr[3] = msgpack::object(v.gsrList(), o.zone);
+        o.via.array.ptr[4] = msgpack::object(v.accList(), o.zone);
     }
 };
 

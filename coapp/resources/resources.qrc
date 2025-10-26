@@ -1,0 +1,15 @@
+<RCC>
+    <qresource prefix="/res">
+        <file>style_light.qss</file>
+        <file>icons/head-snowflake-outline.svg</file>
+        <file>icons/bluetooth.svg</file>
+        <file>icons/wristband.svg</file>
+        <file>icons/camera.svg</file>
+        <file>icons/camera-off.svg</file>
+        <file>icons/up.svg</file>
+        <file>icons/up-focus.svg</file>
+        <file>icons/down.svg</file>
+        <file>icons/down-focus.svg</file>
+        <file>icons/history.svg</file>
+    </qresource>
+</RCC>

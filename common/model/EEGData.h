@@ -19,13 +19,15 @@ struct EEGData {
 };
 
 struct EEGSensorData final : EEGData {
+    static constexpr int channelCount = 24;
+    using ChArray = std::array<float, channelCount>;
+
     QByteArray adcStatus;
-    std::array<float, 24> channelData{};
+    ChArray channelData{};
     float trigger{};
 
     EEGSensorData() = default;
-
-    EEGSensorData(qint64 timestamp, const QByteArray& adcStatus, const std::array<float, 24>& channelData, float trigger);
+    EEGSensorData(qint64 timestamp, const QByteArray& adcStatus, const ChArray& channelData, float trigger);
 };
 
 struct EEGEventData final : EEGData {
@@ -33,17 +35,11 @@ struct EEGEventData final : EEGData {
     QVariantMap message;
 
     EEGEventData() = default;
-
     EEGEventData(qint64 timestamp, quint64 code, const QVariantMap& message);
 };
 
-QDataStream& operator<<(QDataStream& out, const EEGSensorData& data);
-
-QDebug operator<<(QDebug debug, const EEGSensorData& data);
-
-QDataStream& operator<<(QDataStream& out, const EEGEventData& data);
-
-QDebug operator<<(QDebug debug, const EEGEventData& data);
+QDebug operator<<(QDebug, const EEGSensorData&);
+QDebug operator<<(QDebug, const EEGEventData&);
 
 
 #endif //EEGDATA_H

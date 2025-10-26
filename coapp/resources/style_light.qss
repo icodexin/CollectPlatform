@@ -1,0 +1,450 @@
+/******************** QPushButton ********************/
+
+QPushButton {
+    background: white;
+    border: 1px solid #e0e6ea;
+    border-radius: 5px;
+    padding: 2px 8px;
+}
+
+QPushButton:hover {
+    background: #f1f3f4;
+}
+
+QPushButton:pressed {
+    background: white;
+    border: 1px solid #3376cd;
+}
+
+QPushButton#primary {
+    background: #eef5fe;
+    color: #5b9cf8;
+    border: 1px solid #bad7fb;
+    font-weight: bold;
+}
+
+QPushButton#primary:hover {
+    background: #5a9cf8;
+    color: white;
+}
+
+QPushButton#primary:pressed {
+    background: #eef5fe;
+    color: #5b9cf8;
+    border: 1px solid #3376cd;
+}
+
+QPushButton#tool {
+    padding: 2px 2px;
+}
+
+QPushButton#primary:disabled {
+    color: #98c3fa;
+    border: 1px solid #ebeefa;
+}
+
+/******************** QLineEdit ********************/
+
+QLineEdit {
+    background: white;
+    border: 1px solid #e0e6ea;
+    border-radius: 5px;
+    padding: 4px 8px;
+    selection-background-color: #3376cd;
+}
+
+QLineEdit:hover {
+    background: #f1f3f4;
+}
+
+QLineEdit:focus {
+    background: white;
+    border: 2px solid #3376cd;
+}
+
+QLineEdit:read-only, QLineEdit:disabled {
+    background: #f5f7fa;
+}
+
+QLineEdit:read-only:focus {
+    border: 1px solid #e0e6ea;
+}
+
+/******************** QSpinBox ********************/
+
+QSpinBox {
+    background: white;
+    border: 1px solid #e0e6ea;
+    border-radius: 5px;
+    padding: 2px 8px;
+    selection-background-color: #3376cd;
+}
+
+QSpinBox:hover {
+    background: #f1f3f4;
+}
+
+QSpinBox:focus {
+    background: white;
+    border: 2px solid #3376cd;
+}
+
+QSpinBox::up-button {
+    subcontrol-origin: padding;
+    subcontrol-position: top right; /* position at the top right corner */
+
+    width: 15px;
+    margin-bottom: -1px;
+    background-color: white;
+    border-top-right-radius: 5px;
+    border-left: 1px solid #e0e6ea;
+}
+
+QSpinBox::up-button:hover {
+    background-color: #f5f7fa;
+}
+
+QSpinBox::up-arrow {
+    image: url(:/res/icons/up.svg);
+    width: 100%;
+}
+
+QSpinBox::up-arrow:pressed {
+    image: url(:/res/icons/up-focus.svg);
+}
+
+QSpinBox::down-button {
+    subcontrol-origin: padding;
+    subcontrol-position: bottom right; /* position at bottom right corner */
+
+    width: 15px;
+    margin-top: -1px;
+    background-color: white;
+    border-bottom-right-radius: 5px;
+    border-left: 1px solid #e0e6ea;
+}
+
+QSpinBox::down-button:hover {
+    background-color: #f5f7fa;
+}
+
+QSpinBox::down-arrow {
+    image: url(:/res/icons/down.svg);
+    width: 100%;
+}
+
+QSpinBox::down-arrow:pressed {
+    image: url(:/res/icons/down-focus.svg);
+}
+
+QSpinBox:disabled {
+    background: #f5f7fa;
+}
+
+/******************** QComboBox ********************/
+
+QComboBox {
+    background: white;
+    border: 1px solid #e0e6ea;
+    border-radius: 5px;
+    padding: 4px 8px;
+    selection-background-color: #3376cd;
+}
+
+/* 鼠标悬停时改变背景 */
+QComboBox:hover {
+    background: #f1f3f4;
+}
+
+/* 获得焦点时高亮边框 */
+QComboBox:focus, QComboBox:on {
+    border: 2px solid #3376cd;
+    background: white;
+}
+
+/* 禁用状态 */
+QComboBox:disabled {
+    background: #f5f7fa;
+    color: #a0a0a0;
+}
+
+/* 下拉按钮（右侧的小箭头按钮） */
+QComboBox::drop-down {
+    subcontrol-origin: padding;
+    subcontrol-position: top right;
+    width: 20px;
+    border-left: 1px solid #e0e6ea;
+    background: white;
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+/* 下拉按钮悬停 */
+QComboBox::drop-down:hover {
+    background-color: #f5f7fa;
+}
+
+/* 箭头图标 */
+QComboBox::down-arrow {
+    image: url(:/res/icons/down.svg);
+    width: 100%;
+}
+
+/* 点击箭头时切换图标 */
+QComboBox::down-arrow:pressed {
+    image: url(:/res/icons/down-focus.svg);
+}
+
+/* 下拉弹出菜单 */
+QComboBox QAbstractItemView {
+    background: white;
+    border: 1px solid #e0e6ea;
+    selection-background-color: #eef5fe;
+    selection-color: #5b9cf8;
+}
+
+QComboBox QAbstractItemView::item {
+    height: 25px;
+}
+
+/******************** QScrollBar ********************/
+
+/* 通用滚动条属性（纵向） */
+QScrollBar:vertical {
+    background: transparent;
+    width: 8px;
+    margin: 2px 0 2px 0;
+}
+
+QScrollBar::handle:vertical {
+    background: #cfd8dc;
+    border-radius: 4px;
+    min-height: 20px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #b0bec5;
+}
+
+QScrollBar::add-line:vertical,
+QScrollBar::sub-line:vertical {
+    height: 0;
+    width: 0;
+    border: none;
+    background: none;
+}
+
+QScrollBar::add-page:vertical,
+QScrollBar::sub-page:vertical {
+    background: none;
+}
+
+/* 横向滚动条 */
+QScrollBar:horizontal {
+    background: transparent;
+    height: 8px;
+    margin: 0 2px 0 2px;
+}
+
+QScrollBar::handle:horizontal {
+    background: #cfd8dc;
+    border-radius: 4px;
+    min-width: 20px;
+}
+
+QScrollBar::handle:horizontal:hover {
+    background: #b0bec5;
+}
+
+QScrollBar::add-line:horizontal,
+QScrollBar::sub-line:horizontal {
+    height: 0;
+    width: 0;
+    border: none;
+    background: none;
+}
+
+QScrollBar::add-page:horizontal,
+QScrollBar::sub-page:horizontal {
+    background: none;
+}
+
+/******************** QSpliter ********************/
+
+QSplitter::handle {
+    background: #cfd8dc;
+    border-radius: 50%;
+}
+
+QSplitter::handle:horizontal {
+    width: 2px;
+}
+
+QSplitter::handle:vertical {
+    height: 2px;
+}
+
+QSplitter::handle:pressed {
+    background: #5b9cf8;
+}
+
+/******************** QMenu ********************/
+
+QMenu {
+    background-color: white;
+    border: 1px solid #e0e6ea;
+    border-radius: 6px;
+    padding: 4px;
+}
+
+/* 每一项的样式 */
+QMenu::item {
+    padding: 6px 10px;
+    background-color: transparent;
+    color: #333;
+    border-radius: 5%;
+}
+
+QMenu::icon {
+    padding-left: 4px;
+    padding-right: 6px; /* 缩短图标与文本之间的间距 */
+}
+
+/* 悬停或选中项高亮显示 */
+QMenu::item:selected {
+    background-color: #eef5fe;
+    color: #3376cd;
+}
+
+/* 禁用项样式 */
+QMenu::item:disabled {
+    color: #a0a0a0;
+    background-color: transparent;
+}
+
+/* 分隔线 */
+QMenu::separator {
+    height: 1px;
+    background: #e0e6ea;
+    margin: 6px 8px;
+}
+
+/* 菜单箭头图标（子菜单） */
+QMenu::right-arrow {
+    image: url(:/res/icons/arrow-right.svg);
+    width: 10px;
+    height: 10px;
+}
+
+/* 子菜单样式（可选，如果需要） */
+QMenu QMenu {
+    background-color: white;
+    border: 1px solid #e0e6ea;
+    border-radius: 6px;
+}
+
+/******************** BarCard ********************/
+
+BarCard #content {
+    background: #f1f3f6;
+    border: 1px solid #e6e8ea;
+}
+
+BarCard[bar-position="bottom"] #content {
+    border-top-left-radius: 8%;
+    border-top-right-radius: 8%;
+}
+
+BarCard[bar-position="top"] #content {
+    border-bottom-left-radius: 8%;
+    border-bottom-right-radius: 8%;
+}
+
+BarCard #bar {
+    background: #fafbfc;
+    border: 1px solid #e6e8ea;
+}
+
+BarCard[bar-position="bottom"] #bar {
+    border-bottom-left-radius: 8%;
+    border-bottom-right-radius: 8%;
+    border-top: none;
+}
+
+BarCard[bar-position="top"] #bar {
+    border-top-left-radius: 8%;
+    border-top-right-radius: 8%;
+    border-bottom: none;
+}
+
+/******************** IPv4Edit ********************/
+
+IPv4Edit, IPv4Edit[child-focus="false"] {
+    background: white;
+    border: 1px solid #e0e6ea;
+    border-radius: 5px;
+}
+
+IPv4Edit:hover {
+    background: #f1f3f4;
+}
+
+IPv4Edit[child-focus="true"] {
+    background: white;
+    border: 2px solid #3376cd;
+}
+
+IPv4Edit:disabled {
+    background: #f5f7fa;
+}
+
+IPv4Edit #sub-ip {
+    background: transparent;
+    border: none;
+    padding: 4px 0;
+    selection-background-color: #3376cd;
+    text-align: center;
+}
+
+/******************** LogEdit ********************/
+
+LogEdit {
+    background: white;
+    border: 1px solid #e0e6ea;
+    border-radius: 5px;
+    padding: 2px 8px;
+    selection-background-color: #3376cd;
+}
+
+LogEdit:hover {
+    background: #f1f3f4;
+}
+
+LogEdit:focus {
+    background: white;
+    border: 2px solid #3376cd;
+}
+
+LogEdit:disabled {
+    background: #f5f7fa;
+}
+
+LogEdit:read-only:focus {
+    border: 1px solid #3376cd;
+}
+
+/******************** GroupBox ********************/
+
+QGroupBox {
+    background-color: #ededed;
+    border: 1px solid #e6e6e6;
+    border-radius: 5%;
+    margin-top: 1.5em; /* leave space at the top for the title */
+}
+
+QGroupBox::title {
+    subcontrol-origin: margin;
+    subcontrol-position: top left; /* position at the top center */
+    padding: 0 3px;
+    background-color: transparent;
+}

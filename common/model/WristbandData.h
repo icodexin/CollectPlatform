@@ -1,71 +1,62 @@
-//
-// Created by Lenovo on 25-6-26.
-//
-
 #ifndef WRISTBANDDATA_H
 #define WRISTBANDDATA_H
 
 #include <QObject>
 
-struct PulseWaveData {
-    qint64 raw{0};       // 原始脉搏波数据
-    qreal filtered{0.0}; // 过滤后的脉搏波数据
+using HrValue = qreal;
+using GsrValue = qreal;
 
-    static PulseWaveData fromJsonObject(const QJsonObject& json);
+struct PulseWaveValue {
+    qint64  raw = 0.0;
+    qreal   filtered = 0.0;
+    PulseWaveValue() = default;
+    PulseWaveValue(qint64 r, qreal f);
+    explicit PulseWaveValue(const QJsonObject& json);
 };
 
-Q_DECLARE_METATYPE(PulseWaveData);
-
-struct AccData {
-    qreal x{0.0};
-    qreal y{0.0};
-    qreal z{0.0};
-
-    static AccData fromJsonObject(const QJsonObject& json);
+struct AccValue {
+    qreal x = 0.0;
+    qreal y = 0.0;
+    qreal z = 0.0;
+    AccValue() = default;
+    AccValue(qreal x, qreal y, qreal z);
+    explicit AccValue(const QJsonObject& json);
 };
 
-Q_DECLARE_METATYPE(AccData);
-
-class WristbandData {
+class WristbandPacket {
 public:
-    WristbandData() = default;
+    WristbandPacket() = default;
+    ~WristbandPacket() = default;
+    WristbandPacket(const WristbandPacket&) = default;
+    WristbandPacket& operator=(const WristbandPacket&) = default;
 
-    static WristbandData fromJsonObject(const QJsonObject& json);
+    WristbandPacket(qint64 timestamp, HrValue hr, const QList<PulseWaveValue>& pulseWaves,
+                    const QList<GsrValue>& gsrs, const QList<AccValue>& accs);
+    static WristbandPacket fromJsonObject(const QJsonObject& json);
 
-    qint64 timestamp() const;
-    qreal hr() const;
-    QList<PulseWaveData> pulseWaves() const;
-    QList<qreal> gsrs() const;
-    QList<AccData> accs() const;
+    qint64 timestamp(qsizetype index = 0) const;
+    HrValue hr(qsizetype index = 0) const;
+    PulseWaveValue pulseWave(qsizetype index = 0) const;
+    GsrValue gsr(qsizetype index = 0) const;
+    AccValue acc(qsizetype index = 0) const;
+    QList<PulseWaveValue> pulseWaveList() const;
+    QList<GsrValue> gsrList() const;
+    QList<AccValue> accList() const;
 
-    void setTimestamp(qint64 m_timestamp);
-    void setHr(qreal m_hr);
-    void setPulseWaves(const QList<PulseWaveData>& m_pulse_waves);
-    void setGsrs(const QList<qreal>& m_gsrs);
-    void setAccs(const QList<AccData>& m_accs);
+    qsizetype length() const;
 
 private:
-    qint64 m_timestamp{};              // 毫秒级时间戳
-    qreal m_hr{};                      // 心率
-    QList<PulseWaveData> m_pulseWaves; // 脉搏波数据
-    QList<qreal> m_gsrs;               // 皮肤电反应数据
-    QList<AccData> m_accs;             // 加速度数据
+    qint64                  m_timestamp{};  // 毫秒时间戳
+    HrValue                 m_hr{};         // 心率
+    QList<PulseWaveValue>   m_pulseWaves;   // 脉搏波列表
+    QList<GsrValue>         m_gsrs;         // 皮肤电反应列表
+    QList<AccValue>         m_accs;         // 加速度列表
 };
 
-Q_DECLARE_METATYPE(WristbandData)
+Q_DECLARE_METATYPE(WristbandPacket)
 
-
-QDataStream& operator<<(QDataStream& out, const PulseWaveData& data);
-
-QDataStream& operator<<(QDataStream& out, const AccData& data);
-
-QDataStream& operator<<(QDataStream& out, const WristbandData& data);
-
-QDebug operator<<(QDebug debug, const PulseWaveData& data);
-
-QDebug operator<<(QDebug debug, const AccData& data);
-
-QDebug operator<<(QDebug debug, const WristbandData& data);
-
+QDebug operator<<(QDebug, const PulseWaveValue&);
+QDebug operator<<(QDebug, const AccValue&);
+QDebug operator<<(QDebug, const WristbandPacket&);
 
 #endif //WRISTBANDDATA_H
