@@ -1,3 +1,4 @@
 [submodule "3rdparty/HuskarUI"]
 	path = 3rdparty/HuskarUI
-	url = https://github.com/icodexin/HuskarUI
+	url = https://github.com/mengps/HuskarUI
+	branch = master
