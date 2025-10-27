@@ -1,0 +1,101 @@
+{
+  "version": 4,
+  "cmakeMinimumRequired": {
+    "major": 3,
+    "minor": 20,
+    "patch": 0
+  },
+  "configurePresets": [
+    {
+      "name": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_PREFIX_PATH": "$env{QT6_DIR}",
+        "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
+        "QT_QML_GENERATE_QMLLS_INI": "ON"
+      }
+    },
+    {
+      "name": "windows",
+      "hidden": true,
+      "inherits": "base",
+      "generator": "Ninja",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Windows"
+      }
+    },
+    {
+      "name": "debug-windows-x64",
+      "inherits": "windows",
+      "displayName": "Windows x64 (Debug)",
+      "description": "Debug build for Windows x64 using MSVC & Ninja",
+      "binaryDir": "${sourceDir}/../build/debug-windows-x64",
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_C_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "release-windows-x64",
+      "inherits": "windows",
+      "displayName": "Windows x64 (Release)",
+      "description": "Release build for Windows x64 using MSVC & Ninja",
+      "binaryDir": "${sourceDir}/../build/release-windows-x64",
+      "architecture": {
+        "value": "x64",
+        "strategy": "set"
+      },
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_CXX_COMPILER": "cl",
+        "CMAKE_C_COMPILER": "cl"
+      }
+    },
+    {
+      "name": "macOS",
+      "hidden": true,
+      "inherits": "base",
+      "generator": "Ninja",
+      "condition": {
+        "type": "equals",
+        "lhs": "${hostSystemName}",
+        "rhs": "Darwin"
+      }
+    },
+    {
+      "name": "debug-macos-arm64",
+      "inherits": "macOS",
+      "generator": "Ninja",
+      "displayName": "macOS arm64 (Debug)",
+      "description": "Debug build for macOS arm64 using Clang & Ninja",
+      "binaryDir": "${sourceDir}/../build/debug-macos-arm64",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Debug",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
+        "CMAKE_C_COMPILER": "/usr/bin/clang"
+      }
+    },
+    {
+      "name": "release-macos-arm64",
+      "inherits": "macOS",
+      "generator": "Ninja",
+      "displayName": "macOS arm64 (Release)",
+      "description": "Release build for macOS arm64 using Clang & Ninja",
+      "binaryDir": "${sourceDir}/../build/release-macos-arm64",
+      "cacheVariables": {
+        "CMAKE_BUILD_TYPE": "Release",
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
+        "CMAKE_C_COMPILER": "/usr/bin/clang"
+      }
+    }
+  ]
+}
