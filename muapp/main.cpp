@@ -3,8 +3,6 @@
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 #include "HuskarUI/husapp.h"
-#include "src/WristTest.h"
-
 
 int main(int argc, char* argv[]) {
 #ifndef Q_OS_MAC
@@ -27,11 +25,6 @@ int main(int argc, char* argv[]) {
         Qt::QueuedConnection
     );
     engine.loadFromModule("MuApp", "App");
-
-    // WristTest tester;
-    // QObject::connect(&tester, &WristTest::dataFetched, [](const WristbandData& data) {
-    //     qDebug() << data;
-    // });
 
     return app.exec();
 }
