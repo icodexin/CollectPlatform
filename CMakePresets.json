@@ -19,7 +19,6 @@
       "name": "windows",
       "hidden": true,
       "inherits": "base",
-      "generator": "Ninja",
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
