@@ -2,3 +2,7 @@
 	path = 3rdparty/HuskarUI
 	url = https://github.com/mengps/HuskarUI
 	branch = master
+[submodule "3rdparty/qtmqtt"]
+	path = 3rdparty/qtmqtt
+	url = https://github.com/qt/qtmqtt.git
+	branch = 6.8.3
