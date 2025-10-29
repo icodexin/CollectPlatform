@@ -9,16 +9,22 @@
     {
       "name": "base",
       "hidden": true,
+      "generator": "Ninja",
       "cacheVariables": {
         "CMAKE_PREFIX_PATH": "$env{QT6_DIR}",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
-        "QT_QML_GENERATE_QMLLS_INI": "ON"
+        "QT_QML_GENERATE_QMLLS_INI": "ON",
+        "BINARY_OUT_DIRECTORY": "${sourceDir}/../output/"
       }
     },
     {
-      "name": "windows",
-      "hidden": true,
+      "name": "base-windows",
       "inherits": "base",
+      "hidden": true,
+      "cacheVariables": {
+        "CMAKE_C_COMPILER": "cl.exe",
+        "CMAKE_CXX_COMPILER": "cl.exe"
+      },
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
@@ -27,74 +33,80 @@
     },
     {
       "name": "debug-windows-x64",
-      "inherits": "windows",
+      "inherits": "base-windows",
       "displayName": "Windows x64 (Debug)",
       "description": "Debug build for Windows x64 using MSVC & Ninja",
       "binaryDir": "${sourceDir}/../build/debug-windows-x64",
       "architecture": {
         "value": "x64",
-        "strategy": "set"
+        "strategy": "external"
       },
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_CXX_COMPILER": "cl",
-        "CMAKE_C_COMPILER": "cl"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
       "name": "release-windows-x64",
-      "inherits": "windows",
+      "inherits": "debug-windows-x64",
       "displayName": "Windows x64 (Release)",
       "description": "Release build for Windows x64 using MSVC & Ninja",
       "binaryDir": "${sourceDir}/../build/release-windows-x64",
-      "architecture": {
-        "value": "x64",
-        "strategy": "set"
-      },
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_CXX_COMPILER": "cl",
-        "CMAKE_C_COMPILER": "cl"
+        "CMAKE_BUILD_TYPE": "Release"
       }
     },
     {
-      "name": "macOS",
-      "hidden": true,
+      "name": "base-macos",
       "inherits": "base",
-      "generator": "Ninja",
+      "hidden": true,
       "condition": {
         "type": "equals",
         "lhs": "${hostSystemName}",
         "rhs": "Darwin"
+      },
+      "cacheVariables": {
+        "CMAKE_OSX_ARCHITECTURES": "arm64",
+        "CMAKE_C_COMPILER": "/usr/bin/clang",
+        "CMAKE_CXX_COMPILER": "/usr/bin/clang++"
       }
     },
     {
       "name": "debug-macos-arm64",
-      "inherits": "macOS",
-      "generator": "Ninja",
+      "inherits": "base-macos",
       "displayName": "macOS arm64 (Debug)",
       "description": "Debug build for macOS arm64 using Clang & Ninja",
       "binaryDir": "${sourceDir}/../build/debug-macos-arm64",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Debug",
-        "CMAKE_OSX_ARCHITECTURES": "arm64",
-        "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
-        "CMAKE_C_COMPILER": "/usr/bin/clang"
+        "CMAKE_BUILD_TYPE": "Debug"
       }
     },
     {
       "name": "release-macos-arm64",
-      "inherits": "macOS",
-      "generator": "Ninja",
+      "inherits": "base-macos",
       "displayName": "macOS arm64 (Release)",
       "description": "Release build for macOS arm64 using Clang & Ninja",
       "binaryDir": "${sourceDir}/../build/release-macos-arm64",
       "cacheVariables": {
-        "CMAKE_BUILD_TYPE": "Release",
-        "CMAKE_OSX_ARCHITECTURES": "arm64",
-        "CMAKE_CXX_COMPILER": "/usr/bin/clang++",
-        "CMAKE_C_COMPILER": "/usr/bin/clang"
+        "CMAKE_BUILD_TYPE": "Release"
       }
+    },
+    {
+      "name": "debug",
+      "inherits": [
+        "debug-windows-x64",
+        "debug-macos-arm64"
+      ],
+      "displayName": "Debug",
+      "description": "Debug build for the current platform, auto-selected"
+    },
+    {
+      "name": "release",
+      "inherits": [
+        "release-windows-x64",
+        "release-macos-arm64"
+      ],
+      "displayName": "Release",
+      "description": "Release build for the current platform, auto-selected"
     }
   ]
 }
