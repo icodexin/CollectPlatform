@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 project(CoApp VERSION 0.1.1)
 
-set(TARGET_OUTPUT_NAME "学生采集终端")
+set(TARGET_OUTPUT_NAME "Collection App")
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
@@ -63,8 +63,11 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
+set(PACKAGE_OUTPUT_DIRECTORY ${APP_OUTPUT_DIRECTORY}/coapp)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${TARGET_OUTPUT_NAME}
+    RUNTIME_OUTPUT_DIRECTORY ${PACKAGE_OUTPUT_DIRECTORY}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/resources/macOS/Info.plist.in"
@@ -75,3 +78,25 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 target_link_libraries(${PROJECT_NAME}
     PRIVATE Qt6::Core Qt6::Widgets Qt6::Svg Qt6::Network Qt6::Mqtt Qt6::Multimedia Qt6::MultimediaWidgets PlatformCommon
 )
+
+if (WIN32)
+    find_program(QT_DEPLOY_QT NAMES windeployqt)
+    set(APP_EXE_PATH ${PACKAGE_OUTPUT_DIRECTORY}/${TARGET_OUTPUT_NAME}.exe)
+elseif(APPLE)
+    find_program(QT_DEPLOY_QT NAMES macdeployqt)
+    set(APP_EXE_PATH ${PACKAGE_OUTPUT_DIRECTORY}/${TARGET_OUTPUT_NAME}.app)
+endif()
+
+if (QT_DEPLOY_QT)
+    set(QT_DEPLOY_ARGS
+        ${APP_EXE_PATH}
+        --translations en,zh_CN
+        --translationdir i18n
+    )
+    add_custom_target(Deploy_${PROJECT_NAME}
+        COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
+        COMMENT "Deploying Qt6 dependencies for ${PROJECT_NAME} after build ..."
+        WORKING_DIRECTORY ${PACKAGE_OUTPUT_DIRECTORY}
+        DEPENDS ${PROJECT_NAME}
+    )
+endif()
