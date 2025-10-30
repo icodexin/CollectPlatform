@@ -6,6 +6,8 @@ endif()
 
 project(MuApp VERSION ${APP_VERSION} LANGUAGES CXX)
 
+set(TARGET_OUTPUT_NAME "Multimodal App")
+
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
@@ -74,6 +76,66 @@ target_compile_definitions(${PROJECT_NAME} PRIVATE
     APP_VERSION="${APP_VERSION}"
 )
 
+set(PACKAGE_OUTPUT_DIRECTORY ${APP_OUTPUT_DIRECTORY}/muapp)
+
+set_target_properties(${PROJECT_NAME} PROPERTIES
+    OUTPUT_NAME ${TARGET_OUTPUT_NAME}
+    RUNTIME_OUTPUT_DIRECTORY ${PACKAGE_OUTPUT_DIRECTORY}
+    MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
+    MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
+    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/resources/macOS/Info.plist.in"
+    MACOSX_BUNDLE TRUE
+    WIN32_EXECUTABLE TRUE # 如果使用CLion / VS Code等IDE进行调试时无法看到js console输出，则需要屏蔽此属性
+)
+
 target_link_libraries(${PROJECT_NAME}
     PRIVATE Qt6::Core Qt6::Quick Qt6::Qml Qt6::Graphs HuskarUIBasic PlatformCommon
 )
+
+if (WIN32)
+    find_program(QT_DEPLOY_QT NAMES windeployqt)
+    set(APP_EXE_PATH ${PACKAGE_OUTPUT_DIRECTORY}/${TARGET_OUTPUT_NAME}.exe)
+    set(DEBUG_SUFFIX)
+    if (CMAKE_BUILD_TYPE MATCHES "Debug")
+        set(DEBUG_SUFFIX "d")
+    endif()
+    set(THIRD_DLIBS
+        ${HuskarUI_DIR}/../../../bin/HuskarUIBasic${DEBUG_SUFFIX}.dll
+    )
+elseif(APPLE)
+    find_program(QT_DEPLOY_QT NAMES macdeployqt)
+    set(APP_EXE_PATH ${PACKAGE_OUTPUT_DIRECTORY}/${TARGET_OUTPUT_NAME}.app)
+endif()
+
+if (QT_DEPLOY_QT)
+    set(QT_DEPLOY_ARGS
+        ${APP_EXE_PATH}
+        --qmldir=${CMAKE_CURRENT_SOURCE_DIR}
+        --no-widgets
+        --no-quickcontrols2windowsstyleimpl
+        --no-quickcontrols2fusion
+        --no-quickcontrols2fusionstyleimpl
+        --no-quickcontrols2material
+        --no-quickcontrols2materialstyleimpl
+        --no-quickcontrols2universal
+        --no-quickcontrols2universalstyleimpl
+        --no-quickcontrols2imagine
+        --no-quickcontrols2imaginestyleimpl
+        --translations en,zh_CN
+        --translationdir i18n
+    )
+    if (CMAKE_BUILD_TYPE MATCHES "Debug")
+        list(APPEND QT_DEPLOY_ARGS --debug)
+    else()
+        list(APPEND QT_DEPLOY_ARGS --release)
+    endif()
+    add_custom_target(Deploy_${PROJECT_NAME}
+        COMMAND ${CMAKE_COMMAND} -E echo "Copy Qt6 dependencies ..."
+        COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
+        COMMAND ${CMAKE_COMMAND} -E echo "Copy 3rd party dependencies ..."
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${THIRD_DLIBS} ${PACKAGE_OUTPUT_DIRECTORY}
+        COMMENT "Deploying dependencies for ${PROJECT_NAME} after build ..."
+        WORKING_DIRECTORY ${PACKAGE_OUTPUT_DIRECTORY}
+        DEPENDS ${PROJECT_NAME}
+    )
+endif()

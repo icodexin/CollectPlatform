@@ -93,6 +93,11 @@ if (QT_DEPLOY_QT)
         --translations en,zh_CN
         --translationdir i18n
     )
+    if (CMAKE_BUILD_TYPE MATCHES "Debug")
+        list(APPEND QT_DEPLOY_ARGS --debug)
+    else()
+        list(APPEND QT_DEPLOY_ARGS --release)
+    endif()
     add_custom_target(Deploy_${PROJECT_NAME}
         COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
         COMMENT "Deploying Qt6 dependencies for ${PROJECT_NAME} after build ..."

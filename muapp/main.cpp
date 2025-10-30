@@ -1,5 +1,3 @@
-#include <QJsonDocument>
-#include <QJsonObject>
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 #include "HuskarUI/husapp.h"
