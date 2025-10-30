@@ -36,7 +36,7 @@ function ApplyDiffPatch {
         return
     }
     Write-Host "Applying patch $PatchFile to $TargetDir ..."
-    & git -C "$TargetDir" apply "$PatchFile"
+    & git -C "$TargetDir" apply --ignore-space-change --whitespace=nowarn "$PatchFile"
     if ($LASTEXITCODE -ne 0) {
         Write-Error "Failed to apply patch $PatchFile to $TargetDir"
         exit 1
@@ -155,7 +155,7 @@ function CMakeBuildAndInstall {
         [string[]]$CMAKE_CONFIG_ARGS = @()
     )
 
-    write-Host "================= Building ($BuildType) ================="
+    write-Host "================= Building $PkgName ($BuildType) ================="
 
     if (-not (Test-Path $BuildDir)) {
         New-Item -ItemType Directory -Path $BuildDir | Out-Null
