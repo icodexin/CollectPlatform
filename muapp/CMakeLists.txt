@@ -113,6 +113,7 @@ if (QT_DEPLOY_QT)
         --qmldir=${CMAKE_CURRENT_SOURCE_DIR}
         --no-widgets
         --no-quickcontrols2windowsstyleimpl
+        --no-quickcontrols2fluentwinui3styleimpl
         --no-quickcontrols2fusion
         --no-quickcontrols2fusionstyleimpl
         --no-quickcontrols2material

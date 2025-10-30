@@ -108,5 +108,19 @@
       "displayName": "Release",
       "description": "Release build for the current platform, auto-selected"
     }
+  ],
+  "buildPresets": [
+    {
+      "name": "debug-build",
+      "configurePreset": "debug",
+      "displayName": "Debug Build",
+      "description": "Build with the Debug configure preset"
+    },
+    {
+      "name": "release-build",
+      "configurePreset": "release",
+      "displayName": "Release Build",
+      "description": "Build with the Release configure preset"
+    }
   ]
 }

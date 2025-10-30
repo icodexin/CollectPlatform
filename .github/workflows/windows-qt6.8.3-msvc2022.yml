@@ -1,0 +1,93 @@
+name: CMake build & deploy on Windows MSVC2022 - Qt6.8.3
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+jobs:
+  build:
+    permissions: write-all
+    name: Build apps
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [windows-latest]
+        include:
+          - qt_ver: 6.8.3
+            qt_arch: win64_msvc2022_64
+            qt_arch_short_name: msvc2022
+            target_arch: x64
+    
+    env:
+      BUILD_TYPE: 'Release'
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+      
+      - name: Install Qt
+        uses: jurplel/install-qt-action@v4
+        with:
+          version: ${{ matrix.qt_ver }}
+          arch: ${{ matrix.qt_arch }}
+          modules: 'qtgraphs qtmultimedia qtquick3d qtshadertools qtwebsockets'
+          cache: true
+
+      - name: Setup Vars
+        id: vars
+        shell: pwsh
+        run: |
+          if ("${{ matrix.target_arch }}"-eq 'x64') {
+            $vsTargetArch = 'amd64'
+          } elseif ("${{ matrix.target_arch }}" -eq 'x86') {
+            $vsTargetArch = 'x86'
+          } else {
+            Write-Error "Unsupported architecture: ${{ matrix.target_arch }}"
+            exit 1
+          }
+          echo "targetArch=$vsTargetArch" >> $env:GITHUB_OUTPUT
+      
+      - name: Build 3rdparty
+        shell: pwsh
+        run: |
+          $env:QT6_DIR = $env:QT_ROOT_DIR
+          echo "QT6_DIR: $env:QT6_DIR"
+          set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1" -Arch ${{ steps.vars.outputs.targetArch }}
+          & "${{ github.workspace }}\3rdparty\scripts\build.ps1"
+      
+      - name: Config & Build App
+        shell: pwsh
+        run: |
+          $env:QT6_DIR = $env:QT_ROOT_DIR
+          $env:VCPKG_ROOT = $env:VCPKG_INSTALLATION_ROOT
+          & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1" -Arch ${{ steps.vars.outputs.targetArch }}
+          cd ${{ github.workspace }}
+          $buildType = "${{ env.BUILD_TYPE }}".ToLower()
+          cmake --preset $buildType
+          cmake --build --preset "${buildType}-build" --target all
+      
+      - name: Package
+        id: package
+        shell: pwsh
+        working-directory: ${{ github.workspace }}\..\output\bin\${{ env.BUILD_TYPE }}
+        run: |
+          $excludeList = @("*.qmlc", "*.ilk", "*.exp", "*.lib", "*.pdb")
+          Remove-Item -Path coapp -Include $excludeList -Recurse -Force
+          Remove-Item -Path muapp -Include $excludeList -Recurse -Force
+          Compress-Archive -Path coapp -DestinationPath "coapp-${{ matrix.target_arch}}.zip"
+          Compress-Archive -Path muapp -DestinationPath "muapp-${{ matrix.target_arch}}.zip"
+          echo "coappArchivePath=$((pwd).Path)\coapp-${{ matrix.target_arch}}.zip" >> "$env:GITHUB_OUTPUT"
+          echo "muappArchivePath=$((pwd).Path)\muapp-${{ matrix.target_arch}}.zip" >> "$env:GITHUB_OUTPUT"
+      
+      - name: Upload Artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: app-packages-${{ matrix.target_arch }}
+          path: |
+            ${{ steps.package.outputs.coappArchivePath }}
+            ${{ steps.package.outputs.muappArchivePath }}
