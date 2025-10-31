@@ -17,7 +17,7 @@ jobs:
         include:
           - qt_ver: 6.8.3
             qt_arch: win64_msvc2022_64
-            ide: msvc2022
+            compiler: msvc2022
             target_arch: x64
     
     env:
@@ -57,32 +57,36 @@ jobs:
           $env:QT6_DIR = $env:QT_ROOT_DIR
           set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1" -Arch ${{ steps.vars.outputs.targetArch }}
-          & "${{ github.workspace }}\3rdparty\scripts\build.ps1"
+          & ".\scripts\build_3rd.ps1" -BuildTypes ${{ env.BUILD_TYPE }} -G "Ninja Multi-Config" -InstallDir "./out/3rdparty"
       
-      - name: Config & Build App
+      - name: Build Apps
         shell: pwsh
         run: |
           $env:QT6_DIR = $env:QT_ROOT_DIR
           $env:VCPKG_ROOT = $env:VCPKG_INSTALLATION_ROOT
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1" -Arch ${{ steps.vars.outputs.targetArch }}
-          cd ${{ github.workspace }}
-          $buildType = "${{ env.BUILD_TYPE }}".ToLower()
-          cmake --preset $buildType
-          cmake --build --preset "${buildType}-build" --target all
+          cmake --preset windows-${{ matrix.target_arch }} -DBINARY_OUT_DIRECTORY="${{ github.workspace }}/out"
+          cmake --build --preset windows-${{ matrix.target_arch }} --config "${{ env.BUILD_TYPE }}"
       
       - name: Package
         id: package
         shell: pwsh
-        working-directory: ${{ github.workspace }}\..\output\bin\
+        working-directory: ${{ github.workspace }}/out/app/
         run: |
+          $distPath = (Resolve-Path ./${{ env.BUILD_TYPE }}).Path
+          # 删除不需要的文件
           $excludeList = @("*.qmlc", "*.ilk", "*.exp", "*.lib", "*.pdb")
-          Remove-Item -Path ${{ env.BUILD_TYPE }} -Include $excludeList -Recurse -Force
-          $archiveName = "app-packages-windows-Qt${{ matrix.qt_ver }}-${{ matrix.ide }}-${{ matrix.target_arch }}-${{ env.BUILD_TYPE }}"
-          Compress-Archive -Path "${{ env.BUILD_TYPE }}\*" -DestinationPath "${archiveName}.zip"
+          Remove-Item -Path $distPath -Include $excludeList -Recurse -Force
+          # 删除空目录
+          Get-ChildItem -Directory $distPath -Recurse | Where-Object {
+              ($_ | Get-ChildItem -Recurse | Measure-Object).Count -eq 0
+          } | Remove-Item -Force
+          # 创建压缩包
+          $archiveName = "app-packages-windows-Qt${{ matrix.qt_ver }}-${{ matrix.compiler }}-${{ matrix.target_arch }}-${{ env.BUILD_TYPE }}"
+          Compress-Archive -Path "$distPath/*" -DestinationPath "${archiveName}.zip"
+          # 输出包名和路径供后续step使用
           echo "packageName=${archiveName}" >> "$env:GITHUB_OUTPUT"
-          $packageDir = (Resolve-Path ${{ env.BUILD_TYPE }}).Path
-          echo "packageName=${archiveName}" >> "$env:GITHUB_OUTPUT"
-          echo "packageDir=${packageDir}" >> "$env:GITHUB_OUTPUT"
+          echo "packageDir=${distPath}" >> "$env:GITHUB_OUTPUT"
       
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
