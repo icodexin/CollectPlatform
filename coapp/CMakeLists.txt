@@ -63,11 +63,11 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
 )
 
-set(PACKAGE_OUTPUT_DIRECTORY ${APP_OUTPUT_DIRECTORY}/coapp)
+set(APP_PACKAGE_DIR ${APP_OUTPUT_DIRECTORY}/coapp)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${TARGET_OUTPUT_NAME}
-    RUNTIME_OUTPUT_DIRECTORY ${PACKAGE_OUTPUT_DIRECTORY}
+    RUNTIME_OUTPUT_DIRECTORY ${APP_PACKAGE_DIR}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/resources/macOS/Info.plist.in"
@@ -81,10 +81,10 @@ target_link_libraries(${PROJECT_NAME}
 
 if (WIN32)
     find_program(QT_DEPLOY_QT NAMES windeployqt)
-    set(APP_EXE_PATH ${PACKAGE_OUTPUT_DIRECTORY}/${TARGET_OUTPUT_NAME}.exe)
+    set(APP_EXE_PATH ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.exe)
 elseif(APPLE)
     find_program(QT_DEPLOY_QT NAMES macdeployqt)
-    set(APP_EXE_PATH ${PACKAGE_OUTPUT_DIRECTORY}/${TARGET_OUTPUT_NAME}.app)
+    set(APP_EXE_PATH ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app)
 endif()
 
 if (QT_DEPLOY_QT)
@@ -92,16 +92,13 @@ if (QT_DEPLOY_QT)
         ${APP_EXE_PATH}
         --translations en,zh_CN
         --translationdir i18n
+        $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:--debug>
+        $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>>:--release>
     )
-    if (CMAKE_BUILD_TYPE MATCHES "Debug")
-        list(APPEND QT_DEPLOY_ARGS --debug)
-    else()
-        list(APPEND QT_DEPLOY_ARGS --release)
-    endif()
     add_custom_target(Deploy_${PROJECT_NAME} ALL
         COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
-        COMMENT "Deploying Qt6 dependencies for ${PROJECT_NAME} after build ..."
-        WORKING_DIRECTORY ${PACKAGE_OUTPUT_DIRECTORY}
+        COMMENT "Deploying dependencies for ${PROJECT_NAME} after build ..."
+        WORKING_DIRECTORY ${APP_PACKAGE_DIR}
         DEPENDS ${PROJECT_NAME}
     )
 endif()

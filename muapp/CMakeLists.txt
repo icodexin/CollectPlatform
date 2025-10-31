@@ -74,13 +74,14 @@ target_include_directories(${PROJECT_NAME}
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     APP_VERSION="${APP_VERSION}"
+    $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:QT_QML_DEBUG>
 )
 
-set(PACKAGE_OUTPUT_DIRECTORY ${APP_OUTPUT_DIRECTORY}/muapp)
+set(APP_PACKAGE_DIR ${APP_OUTPUT_DIRECTORY}/muapp)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${TARGET_OUTPUT_NAME}
-    RUNTIME_OUTPUT_DIRECTORY ${PACKAGE_OUTPUT_DIRECTORY}
+    RUNTIME_OUTPUT_DIRECTORY ${APP_PACKAGE_DIR}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/resources/macOS/Info.plist.in"
@@ -94,22 +95,21 @@ target_link_libraries(${PROJECT_NAME}
 
 if (WIN32)
     find_program(QT_DEPLOY_QT NAMES windeployqt)
-    set(APP_EXE_PATH ${PACKAGE_OUTPUT_DIRECTORY}/${TARGET_OUTPUT_NAME}.exe)
-    set(DEBUG_SUFFIX)
-    if (CMAKE_BUILD_TYPE MATCHES "Debug")
-        set(DEBUG_SUFFIX "d")
-    endif()
+    set(APP_EXE_PATH ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.exe)
+    set(DEBUG_SUFFIX $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:d>)
     set(THIRD_DLIBS
         ${HuskarUI_DIR}/../../../bin/HuskarUIBasic${DEBUG_SUFFIX}.dll
     )
 elseif(APPLE)
     find_program(QT_DEPLOY_QT NAMES macdeployqt)
-    set(APP_EXE_PATH ${PACKAGE_OUTPUT_DIRECTORY}/${TARGET_OUTPUT_NAME}.app)
+    set(APP_EXE_PATH ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app)
 endif()
 
 if (QT_DEPLOY_QT)
     set(QT_DEPLOY_ARGS
         ${APP_EXE_PATH}
+        $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:--debug>
+        $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>>:--release>
         --qmldir=${CMAKE_CURRENT_SOURCE_DIR}
         --no-widgets
         --no-quickcontrols2windowsstyleimpl
@@ -125,18 +125,13 @@ if (QT_DEPLOY_QT)
         --translations en,zh_CN
         --translationdir i18n
     )
-    if (CMAKE_BUILD_TYPE MATCHES "Debug")
-        list(APPEND QT_DEPLOY_ARGS --debug)
-    else()
-        list(APPEND QT_DEPLOY_ARGS --release)
-    endif()
     add_custom_target(Deploy_${PROJECT_NAME} ALL
         COMMAND ${CMAKE_COMMAND} -E echo "Copy Qt6 dependencies ..."
         COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
         COMMAND ${CMAKE_COMMAND} -E echo "Copy 3rd party dependencies ..."
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${THIRD_DLIBS} ${PACKAGE_OUTPUT_DIRECTORY}
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${THIRD_DLIBS} ${APP_PACKAGE_DIR}
         COMMENT "Deploying dependencies for ${PROJECT_NAME} after build ..."
-        WORKING_DIRECTORY ${PACKAGE_OUTPUT_DIRECTORY}
+        WORKING_DIRECTORY ${APP_PACKAGE_DIR}
         DEPENDS ${PROJECT_NAME}
     )
 endif()
