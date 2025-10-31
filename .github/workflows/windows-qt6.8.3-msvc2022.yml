@@ -17,7 +17,7 @@ jobs:
         include:
           - qt_ver: 6.8.3
             qt_arch: win64_msvc2022_64
-            qt_arch_short_name: msvc2022
+            ide: msvc2022
             target_arch: x64
     
     env:
@@ -55,7 +55,6 @@ jobs:
         shell: pwsh
         run: |
           $env:QT6_DIR = $env:QT_ROOT_DIR
-          echo "QT6_DIR: $env:QT6_DIR"
           set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass
           & "C:\Program Files\Microsoft Visual Studio\2022\Enterprise\Common7\Tools\Launch-VsDevShell.ps1" -Arch ${{ steps.vars.outputs.targetArch }}
           & "${{ github.workspace }}\3rdparty\scripts\build.ps1"
@@ -74,20 +73,20 @@ jobs:
       - name: Package
         id: package
         shell: pwsh
-        working-directory: ${{ github.workspace }}\..\output\bin\${{ env.BUILD_TYPE }}
+        working-directory: ${{ github.workspace }}\..\output\bin\
         run: |
           $excludeList = @("*.qmlc", "*.ilk", "*.exp", "*.lib", "*.pdb")
-          Remove-Item -Path coapp -Include $excludeList -Recurse -Force
-          Remove-Item -Path muapp -Include $excludeList -Recurse -Force
-          Compress-Archive -Path coapp -DestinationPath "coapp-${{ matrix.target_arch}}.zip"
-          Compress-Archive -Path muapp -DestinationPath "muapp-${{ matrix.target_arch}}.zip"
-          echo "coappArchivePath=$((pwd).Path)\coapp-${{ matrix.target_arch}}.zip" >> "$env:GITHUB_OUTPUT"
-          echo "muappArchivePath=$((pwd).Path)\muapp-${{ matrix.target_arch}}.zip" >> "$env:GITHUB_OUTPUT"
+          Remove-Item -Path ${{ env.BUILD_TYPE }} -Include $excludeList -Recurse -Force
+          $archiveName = "app-packages-windows-Qt${{ matrix.qt_ver }}-${{ matrix.ide }}-${{ matrix.target_arch }}-${{ env.BUILD_TYPE }}"
+          Compress-Archive -Path "${{ env.BUILD_TYPE }}\*" -DestinationPath "${archiveName}.zip"
+          echo "packageName=${archiveName}" >> "$env:GITHUB_OUTPUT"
+          $packageDir = (Resolve-Path ${{ env.BUILD_TYPE }}).Path
+          echo "packageName=${archiveName}" >> "$env:GITHUB_OUTPUT"
+          echo "packageDir=${packageDir}" >> "$env:GITHUB_OUTPUT"
       
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: app-packages-${{ matrix.target_arch }}
+          name: ${{ steps.package.outputs.packageName }}
           path: |
-            ${{ steps.package.outputs.coappArchivePath }}
-            ${{ steps.package.outputs.muappArchivePath }}
+            ${{ steps.package.outputs.packageDir }}\*

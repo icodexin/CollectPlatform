@@ -98,7 +98,7 @@ if (QT_DEPLOY_QT)
     else()
         list(APPEND QT_DEPLOY_ARGS --release)
     endif()
-    add_custom_target(Deploy_${PROJECT_NAME}
+    add_custom_target(Deploy_${PROJECT_NAME} ALL
         COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
         COMMENT "Deploying Qt6 dependencies for ${PROJECT_NAME} after build ..."
         WORKING_DIRECTORY ${PACKAGE_OUTPUT_DIRECTORY}
