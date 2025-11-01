@@ -81,20 +81,21 @@ target_link_libraries(${PROJECT_NAME}
 
 if (WIN32)
     find_program(QT_DEPLOY_QT NAMES windeployqt)
-    set(APP_EXE_PATH ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.exe)
-elseif(APPLE)
-    find_program(QT_DEPLOY_QT NAMES macdeployqt)
-    set(APP_EXE_PATH ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app)
-endif()
-
-if (QT_DEPLOY_QT)
     set(QT_DEPLOY_ARGS
-        ${APP_EXE_PATH}
+        ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.exe
         --translations en,zh_CN
         --translationdir i18n
         $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:--debug>
         $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>>:--release>
     )
+elseif(APPLE)
+    find_program(QT_DEPLOY_QT NAMES macdeployqt)
+    set(QT_DEPLOY_ARGS
+        ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app
+    )
+endif()
+
+if (QT_DEPLOY_QT)
     add_custom_target(Deploy_${PROJECT_NAME} ALL
         COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
         COMMENT "Deploying dependencies for ${PROJECT_NAME} after build ..."
