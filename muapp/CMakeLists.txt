@@ -84,7 +84,6 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY ${APP_PACKAGE_DIR}
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
-    MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/resources/macOS/Info.plist.in"
     MACOSX_BUNDLE TRUE
     WIN32_EXECUTABLE TRUE # 如果使用CLion / VS Code等IDE进行调试时无法看到js console输出，则需要屏蔽此属性
 )
@@ -95,19 +94,8 @@ target_link_libraries(${PROJECT_NAME}
 
 if (WIN32)
     find_program(QT_DEPLOY_QT NAMES windeployqt)
-    set(APP_EXE_PATH ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.exe)
-    set(DEBUG_SUFFIX $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:d>)
-    set(THIRD_DLIBS
-        ${HuskarUI_DIR}/../../../bin/HuskarUIBasic${DEBUG_SUFFIX}.dll
-    )
-elseif(APPLE)
-    find_program(QT_DEPLOY_QT NAMES macdeployqt)
-    set(APP_EXE_PATH ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app)
-endif()
-
-if (QT_DEPLOY_QT)
     set(QT_DEPLOY_ARGS
-        ${APP_EXE_PATH}
+        ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.exe
         $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:--debug>
         $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>>:--release>
         --qmldir=${CMAKE_CURRENT_SOURCE_DIR}
@@ -125,11 +113,29 @@ if (QT_DEPLOY_QT)
         --translations en,zh_CN
         --translationdir i18n
     )
+    set(DEBUG_SUFFIX $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:d>)
+    set(THIRD_DLIBS
+        ${HuskarUI_DIR}/../../../bin/HuskarUIBasic${DEBUG_SUFFIX}.dll
+    )
     add_custom_target(Deploy_${PROJECT_NAME} ALL
         COMMAND ${CMAKE_COMMAND} -E echo "Copy Qt6 dependencies ..."
         COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
         COMMAND ${CMAKE_COMMAND} -E echo "Copy 3rd party dependencies ..."
-        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${THIRD_DLIBS} ${APP_PACKAGE_DIR}
+        COMMENT "Deploying dependencies for ${PROJECT_NAME} after build ..."
+        WORKING_DIRECTORY ${APP_PACKAGE_DIR}
+        DEPENDS ${PROJECT_NAME}
+    )
+elseif(APPLE)
+    find_program(QT_DEPLOY_QT NAMES macdeployqt)
+    set(QT_DEPLOY_ARGS
+        ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app
+        $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:-no-strip>
+        -qmldir=${CMAKE_CURRENT_SOURCE_DIR}
+        -appstore-compliant
+    )
+    add_custom_target(Deploy_${PROJECT_NAME} ALL
+        COMMAND ${CMAKE_COMMAND} -E echo "Copy Qt6 dependencies ..."
+        COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
         COMMENT "Deploying dependencies for ${PROJECT_NAME} after build ..."
         WORKING_DIRECTORY ${APP_PACKAGE_DIR}
         DEPENDS ${PROJECT_NAME}
