@@ -251,7 +251,6 @@ function BuildPackage {
 
     if ($Generator -eq "Ninja") {
         $CMAKE_CONFIG_ARGS += @("-G", "Ninja")
-        $CMAKE_CONFIG_ARGS += @("-DCMAKE_BUILD_TYPE=$PkgBuildType")
         foreach ($Type in $PkgBuildTypes) {
             if ($Qt6Pkg) {
                 $BuildName = "$($BuildTypes[0].ToLower())-windows-$env:VSCMD_ARG_TGT_ARCH" # 取第一个构建类型作为目录名
@@ -259,8 +258,9 @@ function BuildPackage {
                 $BuildName = "$($Type.ToLower())-windows-$env:VSCMD_ARG_TGT_ARCH" # e.g. debug-windows-x64
             }
             $PkgBuildDir = GetUnixStylePath (Join-Path -Path $BuildRoot -ChildPath ("$BuildName/3rdparty/$PkgDirname"))
+            $LOCAL_CMAKE_CONFIG_ARGS = $CMAKE_CONFIG_ARGS + "-DCMAKE_BUILD_TYPE=${Type}"
             CMakeConfigure -PkgName $PkgName -PkgSrcDir $PkgSrcDir -PkgBuildDir $PkgBuildDir -PkgInstallDir $PkgInstallDir `
-                -PkgBuildType $Type -CMAKE_CONFIG_ARGS $CMAKE_CONFIG_ARGS
+                -PkgBuildType $Type -CMAKE_CONFIG_ARGS $LOCAL_CMAKE_CONFIG_ARGS
             CMakeBuild -PkgName $PkgName -PkgBuildDir $PkgBuildDir -PkgBuildType $Type
             CMakeInstall -PkgName $PkgName -PkgBuildDir $PkgBuildDir -PkgBuildType $Type
         }

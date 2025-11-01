@@ -432,7 +432,6 @@ function build_package() {
 
     if [[ $generator == "Ninja" ]]; then
         cmake_config_args+=("-G" "Ninja")
-        cmake_config_args+=("-DCMAKE_BUILD_TYPE=${pkg_build_type}")
         for build_type in "${pkg_build_types[@]}"; do
             if [[ $qt6_pkg == true ]]; then
                 local build_name="$(echo "${build_types[0]}" | tr '[:upper:]' '[:lower:]')-macos-$(get_host_arch)" # 取第一个构建类型作为目录名
@@ -440,8 +439,9 @@ function build_package() {
                 local build_name="$(echo "$build_type" | tr '[:upper:]' '[:lower:]')-macos-$(get_host_arch)" # 取当前构建类型作为目录名, e.g. debug-macos-arm64
             fi
             local pkg_build_dir="${build_root}/${build_name}/${pkg_dirname}"
+            local cmake_config_args_with_type=("${cmake_config_args[@]}" "-DCMAKE_BUILD_TYPE=${build_type}")
             cmake_configure --name "$pkg_name" --src-dir "$pkg_src_dir" --build-dir "$pkg_build_dir" --install-dir "$pkg_install_dir" \
-                --build-type "$build_type" --extra-args "${cmake_config_args[@]}"
+                --build-type "$build_type" --extra-args "${cmake_config_args_with_type[@]}"
             cmake_build --name "$pkg_name" --build-dir "$pkg_build_dir" --build-type "$build_type"
             cmake_install --name "$pkg_name" --build-dir "$pkg_build_dir" --build-type "$build_type"
         done
