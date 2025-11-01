@@ -80,7 +80,7 @@ function ApplyDiffPatch {
 
     & git -C "$TargetDir" apply --check --quiet "$PatchFile"
     if ($LASTEXITCODE -ne 0) {
-        Write-Host "Patch $PatchFile already applied to $TargetDir, skipped."
+        Write-Host "Patch $PatchFile has already been applied to $TargetDir, skipped."
         return
     }
     Write-Host "Applying patch $PatchFile to $TargetDir ..."
@@ -152,14 +152,6 @@ function CMakeConfigure {
         }
     }
     else {
-        if (-not [string]::IsNullOrEmpty($PkgBuildType)) {
-            $CMAKE_CONFIG_ARGS += @("-G", "Ninja")
-            $CMAKE_CONFIG_ARGS += @("-DCMAKE_BUILD_TYPE=$PkgBuildType")
-        }
-        else {
-            $CMAKE_CONFIG_ARGS += @("-G", "Ninja Multi-Config")
-        }
-
         & cmake -S $PkgSrcDir -B $PkgBuildDir @CMAKE_CONFIG_ARGS -DCMAKE_INSTALL_PREFIX="$PkgInstallDir" 2>&1 | Tee-Object -FilePath $logFile
         if ($LASTEXITCODE -ne 0) {
             Write-Error "cmake configure $pkgFullName failed, see more details at $logFile";
@@ -258,6 +250,8 @@ function BuildPackage {
     }
 
     if ($Generator -eq "Ninja") {
+        $CMAKE_CONFIG_ARGS += @("-G", "Ninja")
+        $CMAKE_CONFIG_ARGS += @("-DCMAKE_BUILD_TYPE=$PkgBuildType")
         foreach ($Type in $PkgBuildTypes) {
             if ($Qt6Pkg) {
                 $BuildName = "$($BuildTypes[0].ToLower())-windows-$env:VSCMD_ARG_TGT_ARCH" # 取第一个构建类型作为目录名
@@ -272,6 +266,7 @@ function BuildPackage {
         }
     }
     elseif ($Generator -eq "Ninja Multi-Config") {
+        $CMAKE_CONFIG_ARGS += @("-G", "Ninja Multi-Config")
         $BuildName = "windows-$env:VSCMD_ARG_TGT_ARCH" # e.g. windows-x64
         $PkgBuildDir = GetUnixStylePath (Join-Path -Path $BuildRoot -ChildPath ("$BuildName/3rdparty/$PkgDirname"))
         CMakeConfigure -PkgName $PkgName -PkgSrcDir $PkgSrcDir -PkgBuildDir $PkgBuildDir -PkgInstallDir $PkgInstallDir `
