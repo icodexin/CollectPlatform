@@ -121,6 +121,7 @@ if (WIN32)
         COMMAND ${CMAKE_COMMAND} -E echo "Copy Qt6 dependencies ..."
         COMMAND ${QT_DEPLOY_QT} ${QT_DEPLOY_ARGS}
         COMMAND ${CMAKE_COMMAND} -E echo "Copy 3rd party dependencies ..."
+        COMMAND ${CMAKE_COMMAND} -E copy_if_different ${THIRD_DLIBS} ${APP_PACKAGE_DIR}
         COMMENT "Deploying dependencies for ${PROJECT_NAME} after build ..."
         WORKING_DIRECTORY ${APP_PACKAGE_DIR}
         DEPENDS ${PROJECT_NAME}
