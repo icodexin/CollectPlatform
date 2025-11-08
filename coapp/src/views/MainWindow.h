@@ -14,7 +14,9 @@ class BandView;
 class EEGView;
 class SettingView;
 
-class MainWindow final: public QMainWindow {
+class MainWindow final : public QMainWindow {
+    Q_OBJECT
+
 public:
     explicit MainWindow(QWidget* parent = nullptr);
 

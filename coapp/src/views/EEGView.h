@@ -9,6 +9,8 @@ struct EEGEventData;
 class LogBox;
 
 class EEGView final : public DeviceView {
+    Q_OBJECT
+
 public:
     explicit EEGView(QWidget* parent = nullptr);
 

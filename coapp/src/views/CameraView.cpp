@@ -4,68 +4,53 @@
 #include <QPainter>
 #include "SettingView.h"
 
-class ViewFinder final: public QWidget {
-public:
-    explicit ViewFinder(QWidget* parent = nullptr) : QWidget(parent) {
-        initUI();
+ViewFinder::ViewFinder(QWidget* parent) : QWidget(parent) {
+    ui_hint = new QWidget(this);
+    auto* hintLayout = new QVBoxLayout(ui_hint);
+    auto* iconLabel = new QLabel;
+    iconLabel->setPixmap(QIcon(":/res/icons/camera-off.svg").pixmap(32, 32));
+    auto* textLabel = new QLabel(tr("Preview has been closed."));
+    hintLayout->addWidget(iconLabel, 0, Qt::AlignHCenter);
+    hintLayout->addWidget(textLabel, 0, Qt::AlignHCenter);
+
+    auto* layout = new QVBoxLayout(this);
+    layout->setContentsMargins(0, 0, 0, 0);
+    layout->addStretch(1);
+    layout->addWidget(ui_hint);
+    layout->addStretch(1);
+}
+
+void ViewFinder::setPlaying(const bool playing) {
+    m_playing = playing;
+    ui_hint->setVisible(!playing);
+    update();
+}
+
+void ViewFinder::setCurrentFrame(const QVideoFrame& frame) {
+    m_currentFrame = frame;
+    update();
+}
+
+void ViewFinder::paintEvent(QPaintEvent* event) {
+    if (!m_playing || !m_currentFrame.isValid())
+        return;
+
+    // 计算16:9的宽高
+    qreal w = width();
+    qreal h = w * 9.0 / 16;
+    if (h > height()) {
+        h = height();
+        w = h * 16.0 / 9;
     }
+    // 居中显示
+    qreal x = (width() - w) / 2.0;
+    qreal y = (height() - h) / 2.0;
 
-    void setPlaying(const bool playing) {
-        m_playing = playing;
-        ui_hint->setVisible(!playing);
-        update();
+    if (w > 0 && h > 0) {
+        QPainter painter(this);
+        m_currentFrame.paint(&painter, {x, y, w, h}, m_framePaintOptions);
     }
-
-    void setCurrentFrame(const QVideoFrame& frame) {
-        m_currentFrame = frame;
-        update();
-    }
-
-protected:
-    void paintEvent(QPaintEvent* event) override {
-        if (!m_playing || !m_currentFrame.isValid())
-            return;
-
-        // 计算16:9的宽高
-        qreal w = width();
-        qreal h = w * 9.0 / 16;
-        if (h > height()) {
-            h = height();
-            w = h * 16.0 / 9;
-        }
-        // 居中显示
-        qreal x = (width() - w) / 2.0;
-        qreal y = (height() - h) / 2.0;
-
-        if (w > 0 && h > 0) {
-            QPainter painter(this);
-            m_currentFrame.paint(&painter, {x, y, w, h}, m_framePaintOptions);
-        }
-    }
-
-private:
-    void initUI() {
-        ui_hint = new QWidget(this);
-        auto* hintLayout = new QVBoxLayout(ui_hint);
-        auto* iconLabel = new QLabel;
-        iconLabel->setPixmap(QIcon(":/res/icons/camera-off.svg").pixmap(32, 32));
-        auto* textLabel = new QLabel(tr("Preview has been closed."));
-        hintLayout->addWidget(iconLabel, 0, Qt::AlignHCenter);
-        hintLayout->addWidget(textLabel, 0, Qt::AlignHCenter);
-
-        auto* layout = new QVBoxLayout(this);
-        layout->setContentsMargins(0, 0, 0, 0);
-        layout->addStretch(1);
-        layout->addWidget(ui_hint);
-        layout->addStretch(1);
-    }
-
-private:
-    QWidget* ui_hint = nullptr;
-    QVideoFrame::PaintOptions m_framePaintOptions{};
-    QVideoFrame m_currentFrame{};
-    bool m_playing = false;
-};
+}
 
 CameraView::CameraView(QWidget* parent)
     : DeviceView(tr("Camera"), ":/res/icons/camera.svg", Bottom, parent) {

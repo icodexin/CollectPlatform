@@ -1,5 +1,6 @@
 #include <QApplication>
 #include <QFile>
+#include <QTranslator>
 
 #include "views/MainWindow.h"
 
@@ -7,7 +8,6 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     app.setOrganizationName("perlab");
     app.setOrganizationDomain("perlab.edu");
-    app.setApplicationDisplayName(QObject::tr("Student Collection Terminal"));
 
     if (app.platformName() == "windows") {
         auto font = QFont("Microsoft YaHei UI", 9);
@@ -22,6 +22,16 @@ int main(int argc, char* argv[]) {
         qDebug() << "Failed to load stylesheet.";
     }
     file.close();
+
+
+    QTranslator translator;
+    if (translator.load(QLocale(), QApplication::applicationName(), "_", ":/i18n/")) {
+        app.installTranslator(&translator);
+    } else {
+        qDebug() << "Failed to load translation file.";
+    }
+
+    app.setApplicationDisplayName(QObject::tr("Student Collection Terminal"));
 
     MainWindow mainWindow;
     mainWindow.show();

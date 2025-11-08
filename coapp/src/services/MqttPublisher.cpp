@@ -279,7 +279,7 @@ void MqttPublishService::onClientErrorOccurred(const QMqttClient::ClientError er
                 break;
             case QMqttClient::ServerUnavailable:
                 msg = tr("The network connection has been established, "
-                    "but the service is unavailable on the broker side");
+                    "but the service is unavailable on the broker side.");
                 break;
             case QMqttClient::BadUsernameOrPassword:
                 msg = tr("The data in the username or password is malformed.");

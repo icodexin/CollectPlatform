@@ -7,8 +7,8 @@ set(TARGET_OUTPUT_NAME "Collection App")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Qt6 COMPONENTS Core Widgets Svg Network Mqtt Multimedia REQUIRED)
-qt_standard_project_setup(REQUIRES 6.5)
+find_package(Qt6 COMPONENTS Core Widgets Svg Network Mqtt Multimedia LinguistTools REQUIRED)
+qt_standard_project_setup(REQUIRES 6.5 I18N_TRANSLATED_LANGUAGES zh_CN)
 
 set(H_FILES
     src/views/settings/CameraSettingPanel.h
@@ -68,6 +68,16 @@ qt_add_resources(RESOURCES resources/resources.qrc)
 qt_add_executable(${PROJECT_NAME}
     ${H_FILES} ${CPP_FILES} ${RESOURCES}
 )
+
+if (Qt6_VERSION VERSION_GREATER_EQUAL "6.9.0")
+    qt_add_translations(${PROJECT_NAME}
+        TS_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources/i18n
+    )
+else ()
+    qt_add_translations(${PROJECT_NAME}
+        TS_FILE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/i18n
+    )
+endif ()
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src

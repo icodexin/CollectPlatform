@@ -7,6 +7,8 @@
 class LogBox;
 
 class BandView final : public DeviceView {
+    Q_OBJECT
+
 public:
     explicit BandView(QWidget* parent = nullptr);
 
@@ -25,6 +27,5 @@ private:
 private:
     LogBox* ui_logBox = nullptr;
 };
-
 
 #endif //BANDVIEW_H

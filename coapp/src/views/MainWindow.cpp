@@ -63,6 +63,7 @@ void MainWindow::initUI() {
     mainSplitter->setCollapsible(0, false);
 
     setCentralWidget(mainSplitter);
+    setWindowTitle(qApp->applicationDisplayName());
 }
 
 void MainWindow::initServices() {

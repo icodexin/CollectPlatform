@@ -6,7 +6,9 @@
 class QPushButton;
 class QVBoxLayout;
 
-class InfoPanel final: public QWidget {
+class InfoPanel final : public QWidget {
+    Q_OBJECT
+
 public:
     explicit InfoPanel(QWidget* parent = nullptr);
 

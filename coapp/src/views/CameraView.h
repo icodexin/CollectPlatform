@@ -1,12 +1,28 @@
 #ifndef CAMERAVIEW_H
 #define CAMERAVIEW_H
 
+#include <QVideoFrame>
 #include "DeviceView.h"
 
-class QVideoFrame;
-class ViewFinder;
+class ViewFinder final : public QWidget {
+    Q_OBJECT
 
-class CameraView final: public DeviceView {
+public:
+    explicit ViewFinder(QWidget* parent = nullptr);
+    void setPlaying(const bool playing);
+    void setCurrentFrame(const QVideoFrame& frame);
+
+protected:
+    void paintEvent(QPaintEvent* event) override;
+
+private:
+    QWidget* ui_hint = nullptr;
+    QVideoFrame::PaintOptions m_framePaintOptions{};
+    QVideoFrame m_currentFrame{};
+    bool m_playing = false;
+};
+
+class CameraView final : public DeviceView {
     Q_OBJECT
 
 public:
