@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.20)
 
-project(CoApp VERSION 0.1.1)
+if (NOT APP_VERSION)
+    set(APP_VERSION "0.1.1")
+endif()
+
+project(CoApp VERSION ${APP_VERSION} LANGUAGES CXX)
 
 set(TARGET_OUTPUT_NAME "Collection App")
 
@@ -81,6 +85,10 @@ endif ()
 
 target_include_directories(${PROJECT_NAME}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
+)
+
+target_compile_definitions(${PROJECT_NAME} PRIVATE
+    APP_VERSION="${APP_VERSION}"
 )
 
 set(APP_PACKAGE_DIR ${APP_OUTPUT_DIRECTORY}/coapp)
