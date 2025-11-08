@@ -38,7 +38,7 @@ Options:
   HuskarUI, Qt6Mqtt
 
 示例:
-  $(basename "$0") --pkg-names HuskarUI --build_types Debug --generator Ninja
+  $(basename "$0") --pkg-names HuskarUI --build-types Debug --generator Ninja
 EOF
 }
 
