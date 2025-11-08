@@ -4,6 +4,7 @@
 #include <QWidget>
 #include <QCameraDevice>
 
+class InfoPanel;
 class EEGSettingPanel;
 class BandSettingPanel;
 class CameraSettingPanel;
@@ -56,6 +57,7 @@ private:
     BandSettingPanel* ui_bandPanel = nullptr;
     CameraSettingPanel* ui_cameraPanel = nullptr;
     MqttSettingPanel* ui_mqttPanel = nullptr;
+    InfoPanel* ui_infoPanel = nullptr;
 };
 
 #endif //SETTINGVIEW_H

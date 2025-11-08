@@ -7,6 +7,7 @@ int main(int argc, char* argv[]) {
     QApplication app(argc, argv);
     app.setOrganizationName("perlab");
     app.setOrganizationDomain("perlab.edu");
+    app.setApplicationDisplayName(QObject::tr("Student Collection Terminal"));
 
     if (app.platformName() == "windows") {
         auto font = QFont("Microsoft YaHei UI", 9);

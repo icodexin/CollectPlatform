@@ -3,6 +3,7 @@
 #include <QVBoxLayout>
 
 #include "services/SettingsManager.h"
+#include "settings/InfoPanel.h"
 #include "settings/BandSettingPanel.h"
 #include "settings/CameraSettingPanel.h"
 #include "settings/EEGSettingPanel.h"
@@ -87,6 +88,7 @@ void SettingView::initUI() {
     ui_bandPanel = new BandSettingPanel(this);
     ui_cameraPanel = new CameraSettingPanel(this);
     ui_mqttPanel = new MqttSettingPanel(this);
+    ui_infoPanel = new InfoPanel(this);
 
     auto* layout = new QVBoxLayout(this);
     layout->setSpacing(8);
@@ -95,6 +97,7 @@ void SettingView::initUI() {
     layout->addWidget(ui_cameraPanel);
     layout->addWidget(ui_mqttPanel);
     layout->addStretch(1);
+    layout->addWidget(ui_infoPanel);
 }
 
 void SettingView::initConnection() {

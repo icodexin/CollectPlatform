@@ -15,6 +15,7 @@ set(H_FILES
     src/views/settings/EEGSettingPanel.h
     src/views/settings/BandSettingPanel.h
     src/views/settings/MqttSettingPanel.h
+    src/views/settings/InfoPanel.h
     src/views/MainWindow.h
     src/views/DeviceView.h
     src/views/SettingView.h
@@ -41,6 +42,7 @@ set(CPP_FILES
     src/views/settings/EEGSettingPanel.cpp
     src/views/settings/BandSettingPanel.cpp
     src/views/settings/MqttSettingPanel.cpp
+    src/views/settings/InfoPanel.cpp
     src/views/MainWindow.cpp
     src/views/DeviceView.cpp
     src/views/SettingView.cpp
