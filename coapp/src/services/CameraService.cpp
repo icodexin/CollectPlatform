@@ -28,9 +28,9 @@ namespace {
                 break;
             case Denied:
             case DeniedByUser:
+                callback(false);
                 QMessageBox::warning(nullptr, QObject::tr("Camera Permission"),
                     QObject::tr("Camera permission has been denied. Please allow camera access in system settings."));
-                callback(false);
                 break;
         }
     }
@@ -72,10 +72,13 @@ void CameraService::start() {
     if (!m_camera || !m_camera->isAvailable())
         return;
 
+    setRunning(true);
+
     checkCameraPermission([&](const bool granted) {
         if (granted) {
             m_camera->start();
-            setRunning(true);
+        } else {
+            setRunning(false);
         }
     });
 }
