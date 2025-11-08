@@ -11,6 +11,10 @@ find_package(Qt6 COMPONENTS Core Widgets Svg Network Mqtt Multimedia MultimediaW
 qt_standard_project_setup(REQUIRES 6.5)
 
 set(H_FILES
+    src/views/settings/CameraSettingPanel.h
+    src/views/settings/EEGSettingPanel.h
+    src/views/settings/BandSettingPanel.h
+    src/views/settings/MqttSettingPanel.h
     src/views/MainWindow.h
     src/views/DeviceView.h
     src/views/SettingView.h
@@ -33,6 +37,10 @@ set(H_FILES
 
 set(CPP_FILES
     main.cpp
+    src/views/settings/CameraSettingPanel.cpp
+    src/views/settings/EEGSettingPanel.cpp
+    src/views/settings/BandSettingPanel.cpp
+    src/views/settings/MqttSettingPanel.cpp
     src/views/MainWindow.cpp
     src/views/DeviceView.cpp
     src/views/SettingView.cpp
