@@ -2,8 +2,6 @@
 #include <QBoxLayout>
 #include <QLabel>
 #include <QPainter>
-#include <QVideoWidget>
-#include <QVideoSink>
 #include "SettingView.h"
 
 class ViewFinder final: public QWidget {
