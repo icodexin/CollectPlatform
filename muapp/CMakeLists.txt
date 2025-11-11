@@ -11,9 +11,21 @@ set(TARGET_OUTPUT_NAME "Multimodal App")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Qt6 COMPONENTS Core Quick Qml Graphs REQUIRED)
+find_package(Qt6 COMPONENTS Core Quick Qml Graphs Multimedia REQUIRED)
 find_package(HuskarUI CONFIG REQUIRED)
 qt_standard_project_setup(REQUIRES 6.5)
+
+# ===== FFmpeg =====
+# ===== FFmpeg（vcpkg 模块模式）=====
+find_package(FFMPEG REQUIRED)
+set(FFMPEG_LIBS ${FFMPEG_LIBRARIES})
+list(APPEND FFMPEG_LIBS swscale swresample avdevice)
+
+# ===== librtmp（通过 pkg-config）=====
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(librtmp REQUIRED IMPORTED_TARGET librtmp)
+set(LIBRTMP_LIBS PkgConfig::librtmp)
+# ===== END =====
 
 set(CPP_FILES
     main.cpp
@@ -24,6 +36,10 @@ qt_add_resources(RESOURCES resources/resources.qrc)
 qt_add_executable(${PROJECT_NAME}
     ${CPP_FILES} ${RESOURCES}
 )
+target_include_directories(${PROJECT_NAME} PRIVATE ${FFMPEG_INCLUDE_DIRS})
+if (FFMPEG_LIBRARY_DIRS)
+    target_link_directories(${PROJECT_NAME} PRIVATE ${FFMPEG_LIBRARY_DIRS})
+endif()
 
 qt_policy(SET QTP0004 NEW)
 
@@ -47,12 +63,24 @@ set(QML_FILES
     ui/Pages/OfflinePage.qml
     ui/Pages/StoragePage.qml
     ui/Pages/SettingPage.qml
+    ui/Pages/VideoRealTime.qml
 )
 
 set(QML_CPP_FILES
     src/models/MinMaxQueue.h src/models/MinMaxQueue.cpp
     src/models/BandViewFrame.h src/models/BandViewFrame.cpp
     src/BandViewController.h src/BandViewController.cpp
+    src/VideoRealTime/framequeue.h src/VideoRealTime/framequeue.cpp
+    src/VideoRealTime/H264Decoder.cpp src/VideoRealTime/H264Decoder.h
+    src/VideoRealTime/mediabase.h
+    src/VideoRealTime/packetqueue.cpp src/VideoRealTime/packetqueue.h
+    src/VideoRealTime/PullWork.cpp src/VideoRealTime/PullWork.h
+    src/VideoRealTime/RTMPBase.cpp src/VideoRealTime/RTMPBase.h
+    src/VideoRealTime/RTMPPlayer.cpp src/VideoRealTime/RTMPPlayer.h
+    src/VideoRealTime/TimesUtil.h
+    src/VideoRealTime/Video_View.cpp src/VideoRealTime/Video_View.h
+    src/VideoRealTime/VideoDecodeLoop.cpp src/VideoRealTime/VideoDecodeLoop.h
+    src/VideoRealTime/VideoPaintedItem.h
 )
 
 set_source_files_properties(AppController.qml
@@ -89,7 +117,11 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE Qt6::Core Qt6::Quick Qt6::Qml Qt6::Graphs HuskarUIBasic PlatformCommon
+    PRIVATE
+        Qt6::Core Qt6::Quick Qt6::Qml Qt6::Graphs Qt6::Multimedia
+        HuskarUIBasic PlatformCommon
+       ${FFMPEG_LIBS}
+        ${LIBRTMP_LIBS}
 )
 
 if (WIN32)

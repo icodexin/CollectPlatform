@@ -1,8 +1,13 @@
 #include <QQmlApplicationEngine>
 #include <QQuickWindow>
 #include "HuskarUI/husapp.h"
-
+#include "./src/VideoRealTime/PullWork.h"
+#include <qqmlcontext.h>
+#include "./src/VideoRealTime/VideoPaintedItem.h"
 int main(int argc, char* argv[]) {
+    //使用cpu渲染
+    qmlRegisterType<VideoPaintedItem>("VideoComponents", 1, 0, "VideoPaintedItem");
+
 #ifndef Q_OS_MAC
     QQuickWindow::setGraphicsApi(QSGRendererInterface::OpenGL);
 #endif
@@ -22,6 +27,11 @@ int main(int argc, char* argv[]) {
         &app, []() { QGuiApplication::exit(-1); },
         Qt::QueuedConnection
     );
+
+    //创建拉流的类，注入到调用界面
+    PullWork pull_work;
+    engine.rootContext()->setContextProperty("pull_work",&pull_work);
+
     engine.loadFromModule("MuApp", "App");
 
     return app.exec();
