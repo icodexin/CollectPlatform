@@ -216,6 +216,11 @@ HusWindow {
                 label: qsTr("存储库"),
                 iconSource: HusIcon.CloudOutlined,
                 source: "ui/Pages/StoragePage.qml"
+            },{
+                key: "videorealtime",
+                label: qsTr("实时视频采集"),
+                iconSource: HusIcon.FundProjectionScreenOutlined,
+                source: "ui/Pages/VideoRealTime.qml"
             }
         ]
     }

@@ -14,6 +14,18 @@ set(CMAKE_CXX_STANDARD 17)
 find_package(Qt6 COMPONENTS Core Widgets Svg Network Mqtt Multimedia LinguistTools REQUIRED)
 qt_standard_project_setup(REQUIRES 6.5 I18N_TRANSLATED_LANGUAGES zh_CN)
 
+# ===== FFmpeg =====
+# ===== FFmpeg（vcpkg 模块模式）=====
+find_package(FFMPEG REQUIRED)
+set(FFMPEG_LIBS ${FFMPEG_LIBRARIES})
+list(APPEND FFMPEG_LIBS swscale avdevice)
+
+# ===== librtmp（通过 pkg-config）=====
+find_package(PkgConfig REQUIRED)
+pkg_check_modules(librtmp REQUIRED IMPORTED_TARGET librtmp)
+set(LIBRTMP_LIBS PkgConfig::librtmp)
+# ===== END =====
+
 set(H_FILES
     src/views/settings/CameraSettingPanel.h
     src/views/settings/EEGSettingPanel.h
@@ -40,6 +52,15 @@ set(H_FILES
     src/services/EEGReceiver.h
     src/services/MqttPublisher.h
     src/services/CoSettingsMgr.h
+    src/components/VideoRealTime/avtimebase.h
+    src/components/VideoRealTime/H264Encoder.h
+    src/components/VideoRealTime/mediabase.h
+    src/components/VideoRealTime/NaluLoop.h
+    src/components/VideoRealTime/pushwork.h
+    src/components/VideoRealTime/semaphore.h
+    src/components/VideoRealTime/rtmpbase.h
+    src/components/VideoRealTime/RTMPPusher.h
+    src/components/VideoRealTime/VideoFromCamera.h
 )
 
 set(CPP_FILES
@@ -69,6 +90,13 @@ set(CPP_FILES
     src/services/EEGReceiver.cpp
     src/services/MqttPublisher.cpp
     src/services/CoSettingsMgr.cpp
+    src/components/VideoRealTime/H264Encoder.cpp
+    src/components/VideoRealTime/mediabase.cpp
+    src/components/VideoRealTime/NaluLoop.cpp
+    src/components/VideoRealTime/pushwork.cpp
+    src/components/VideoRealTime/rtmpbase.cpp
+    src/components/VideoRealTime/RTMPPusher.cpp
+    src/components/VideoRealTime/VideoFromCamera.cpp
 )
 
 qt_add_resources(RESOURCES resources/resources.qrc)
@@ -76,6 +104,11 @@ qt_add_resources(RESOURCES resources/resources.qrc)
 qt_add_executable(${PROJECT_NAME}
     ${H_FILES} ${CPP_FILES} ${RESOURCES}
 )
+
+target_include_directories(${PROJECT_NAME} PRIVATE ${FFMPEG_INCLUDE_DIRS})
+if (FFMPEG_LIBRARY_DIRS)
+    target_link_directories(${PROJECT_NAME} PRIVATE ${FFMPEG_LIBRARY_DIRS})
+endif()
 
 if (Qt6_VERSION VERSION_GREATER_EQUAL "6.9.0")
     qt_add_translations(${PROJECT_NAME}
@@ -93,6 +126,8 @@ target_include_directories(${PROJECT_NAME}
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     APP_VERSION="${APP_VERSION}"
+    WIN32_LEAN_AND_MEAN
+    NOMINMAX
 )
 
 set(APP_PACKAGE_DIR ${APP_OUTPUT_DIRECTORY}/coapp)
@@ -111,6 +146,8 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 
 target_link_libraries(${PROJECT_NAME}
     PRIVATE Qt6::Core Qt6::Widgets Qt6::Svg Qt6::Network Qt6::Mqtt Qt6::Multimedia PlatformCommon
+    ${FFMPEG_LIBS}
+    ${LIBRTMP_LIBS}
 )
 
 if (WIN32)

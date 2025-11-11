@@ -1,11 +1,23 @@
 {
-  "name": "collect-platform",
-  "version": "1.0.0",
-  "builtin-baseline": "275a29dcdb864aa9ce57042eadf95f4a28482280",
-  "dependencies": [
-    {
-      "name": "msgpack",
-      "version>=": "7.0.0"
-    }
-  ]
+  "name" : "collect-platform",
+  "version" : "1.0.0",
+  "builtin-baseline" : "275a29dcdb864aa9ce57042eadf95f4a28482280",
+  "dependencies" : [ {
+    "name" : "msgpack",
+    "version>=" : "7.0.0"
+  }, {
+    "name" : "ffmpeg",
+    "version>=" : "7.1.1#2",
+    "default-features" : false,
+    "features" : [ "avcodec", "avformat", "swscale", "swresample", "postproc", "avdevice", "gpl", "x264" ]
+  }, {
+    "name" : "librtmp",
+    "version>=" : "2024-03-01#1"
+  }, {
+    "name" : "x264",
+    "version>=" : "0.164.3108#2"
+  }, {
+    "name" : "winsock2",
+    "version>=" : "0.0#5"
+  } ]
 }

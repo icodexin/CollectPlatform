@@ -10,7 +10,7 @@ class LogBox;
 class EEGReceiver;
 class BandServer;
 class CameraService;
-class CameraView;
+class VideoWidget;
 class BandView;
 class EEGView;
 class SettingView;
@@ -33,12 +33,13 @@ private:
     SettingView* ui_settingView = nullptr;
     EEGView* ui_eegView = nullptr;
     BandView* ui_bandView = nullptr;
-    CameraView* ui_cameraView = nullptr;
+    VideoWidget* ui_cameraView = nullptr;
     LogBox* ui_logBox = nullptr;
     EEGReceiver* m_eegReceiver = nullptr;
     QThread* m_eegThread = nullptr;
     BandServer* m_bandServer = nullptr;
-    CameraService* m_cameraService = nullptr;
+    //之前QT的相机
+    // CameraService* m_cameraService = nullptr;
     MqttPublishService* m_mqttPubService = nullptr;
     DataPipe* m_dataPipe = nullptr;
 };

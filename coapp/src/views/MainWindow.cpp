@@ -15,7 +15,10 @@
 #include "services/DataPipe.h"
 #include "services/EEGReceiver.h"
 #include "services/MqttPublisher.h"
-
+// —— 放在所有 include 之后 ——
+#ifdef ERROR
+#  undef ERROR
+#endif
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent) {
     initUI();
@@ -36,7 +39,7 @@ void MainWindow::initUI() {
     ui_settingView->setMaximumWidth(400);
     ui_eegView = new EEGView;
     ui_bandView = new BandView;
-    ui_cameraView = new CameraView;
+    ui_cameraView = new VideoWidget;
 
     auto* logView = new BarCard(tr("Log"), ":/res/icons/history.svg");
     ui_logBox = new LogBox;
@@ -85,8 +88,8 @@ void MainWindow::initServices() {
     m_bandServer = new BandServer(this);
     m_bandServer->onDataReceived(dataFetchedCbk);
 
-    m_cameraService = new CameraService(this);
-    m_cameraService->updateCamera(ui_settingView->cameraDevice(), ui_settingView->cameraFormat());
+    // m_cameraService = new CameraService(this);
+    // m_cameraService->updateCamera(ui_settingView->cameraDevice(), ui_settingView->cameraFormat());
 
     m_mqttPubService = new MqttPublishService(this);
 }
@@ -107,13 +110,13 @@ void MainWindow::initConnection() {
     connect(m_eegReceiver, &EEGReceiver::logFetched, ui_eegView, &EEGView::log);
 
     /********** SettingView <-> CameraService <-> CameraView **********/
-    connect(ui_settingView, &SettingView::requestOpenCamera, m_cameraService, &CameraService::start);
-    connect(ui_settingView, &SettingView::requestCloseCamera, m_cameraService, &CameraService::stop);
-    connect(ui_settingView, &SettingView::requestUpdateCamera, m_cameraService, &CameraService::updateCamera);
-    connect(ui_settingView, &SettingView::requestUpdateCameraFormat, m_cameraService, &CameraService::updateFormat);
-    connect(m_cameraService, &CameraService::runningChanged, ui_settingView, &SettingView::onCameraRunningChanged);
-    connect(m_cameraService, &CameraService::runningChanged, ui_cameraView, &CameraView::setPlaying);
-    connect(m_cameraService, &CameraService::videoFrameChanged, ui_cameraView, &CameraView::setFrame);
+    connect(ui_settingView, &SettingView::requestOpenCamera, ui_cameraView, &VideoWidget::startVideo);
+    // connect(ui_settingView, &SettingView::requestCloseCamera, m_cameraService, &CameraService::stop);
+    // connect(ui_settingView, &SettingView::requestUpdateCamera, m_cameraService, &CameraService::updateCamera);
+    // connect(ui_settingView, &SettingView::requestUpdateCameraFormat, m_cameraService, &CameraService::updateFormat);
+    // connect(m_cameraService, &CameraService::runningChanged, ui_settingView, &SettingView::onCameraRunningChanged);
+    // connect(m_cameraService, &CameraService::runningChanged, ui_cameraView,&VideoWidget::startVideo);
+    // connect(m_cameraService, &CameraService::videoFrameChanged, ui_cameraView,[](){qDebug() << "videoFrameChanged";});
 
     /********** SettingView <-> BandServer <-> BandView **********/
     connect(ui_settingView, &SettingView::requestStartBandService, ui_bandView, &BandView::onConnecting);
