@@ -12,7 +12,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(Qt6 COMPONENTS Core Quick Qml Graphs REQUIRED)
-find_package(HuskarUI CONFIG REQUIRED)
+find_package(HuskarUI REQUIRED)
 qt_standard_project_setup(REQUIRES 6.5)
 
 set(CPP_FILES
@@ -89,10 +89,16 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE Qt6::Core Qt6::Quick Qt6::Qml Qt6::Graphs HuskarUIBasic PlatformCommon
+    PRIVATE Qt6::Core Qt6::Quick Qt6::Qml Qt6::Graphs HuskarUI::Basic PlatformCommon
 )
 
 if (WIN32)
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${HuskarUI_QML_IMPORT_PATH} ${APP_PACKAGE_DIR}/qml
+    )
+
     find_program(QT_DEPLOY_QT NAMES windeployqt)
     set(QT_DEPLOY_ARGS
         ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.exe
@@ -127,6 +133,12 @@ if (WIN32)
         DEPENDS ${PROJECT_NAME}
     )
 elseif(APPLE)
+    add_custom_command(
+        TARGET ${PROJECT_NAME} POST_BUILD
+        COMMAND ${CMAKE_COMMAND} -E copy_directory
+            ${HuskarUI_QML_IMPORT_PATH} ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app/Contents/Resources/qml
+    )
+
     find_program(QT_DEPLOY_QT NAMES macdeployqt)
     set(QT_DEPLOY_ARGS
         ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app

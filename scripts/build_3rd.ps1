@@ -91,6 +91,25 @@ function ApplyDiffPatch {
     }
 }
 
+function RevertDiffPatch {
+    param (
+        [Parameter(Mandatory = $true)]
+        [string]$PatchFile,
+        [Parameter(Mandatory = $true)]
+        [string]$TargetDir
+    )
+
+    $PatchFile = GetAbsolutePath -Path $PatchFile
+    $TargetDir = GetAbsolutePath -Path $TargetDir
+
+    Write-Host "Reverting patch $PatchFile in $TargetDir ..."
+    & git -C "$TargetDir" apply -R --ignore-space-change --whitespace=nowarn "$PatchFile"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Error "Failed to revert patch $PatchFile in $TargetDir"
+        exit 1
+    }
+}
+
 function GetQt6Dir {
     if (-not $env:QT6_DIR) {
         Write-Error "Environment variable QT6_DIR is not set. Please set it to the Qt6 installation directory."
@@ -301,8 +320,12 @@ try {
         Set-Location $repoRoot
         switch ($PkgName) {
             "HuskarUI" {
-                ApplyDiffPatch -PatchFile "./3rdparty/patches/${PkgName}.diff" -TargetDir "./3rdparty/$PkgName"
-                BuildPackage -PkgName $PkgName -CMAKE_CONFIG_ARGS @("-DCMAKE_PREFIX_PATH=$env:Qt6_DIR", "-DBUILD_HUSKARUI_GALLERY=OFF")
+                ApplyDiffPatch -PatchFile "${repoRoot}/3rdparty/patches/${PkgName}.diff" -TargetDir "${repoRoot}/3rdparty/$PkgName"
+                BuildPackage -PkgName $PkgName `
+                    -CMAKE_CONFIG_ARGS @("-DCMAKE_PREFIX_PATH=$env:Qt6_DIR", `
+                                         "-DBUILD_HUSKARUI_GALLERY=OFF", `
+                                         "-DINSTALL_HUSKARUI_IN_DEFAULT_LOCATION=OFF")
+                RevertDiffPatch -PatchFile "${repoRoot}/3rdparty/patches/${PkgName}.diff" -TargetDir "${repoRoot}/3rdparty/$PkgName"
             }
             "Qt6Mqtt" {
                 BuildPackage -PkgName $PkgName

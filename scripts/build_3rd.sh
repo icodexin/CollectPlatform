@@ -138,7 +138,7 @@ function apply_diffpatch() {
     local target_dir=$2
 
     if [[ -z "$patch_file" || -z "$target_dir" ]]; then
-        log_error "Usage: ApplyDiffPatch <PatchFile> <TargetDir>"
+        log_error "Usage: apply_diffpatch <PatchFile> <TargetDir>"
         return 1
     fi
 
@@ -164,6 +164,35 @@ function apply_diffpatch() {
     git -C "$target_dir" apply --ignore-space-change --whitespace=nowarn "$patch_file"
     if [[ $? -ne 0 ]]; then
         log_error "Failed to apply patch $patch_file to $target_dir"
+        exit 1
+    fi
+}
+
+function revert_diffpatch() {
+    local patch_file=$1
+    local target_dir=$2
+
+    if [[ -z "$patch_file" || -z "$target_dir" ]]; then
+        log_error "Usage: revert_diffpatch <PatchFile> <TargetDir>"
+        return 1
+    fi
+
+    if [[ ! -f "$patch_file" ]]; then
+        log_error "Patch file $patch_file does not exist"
+        exit 1
+    fi
+    if [[ ! -d "$target_dir" ]]; then
+        log_error "Target directory $target_dir does not exist"
+        exit 1
+    fi
+
+    patch_file="$(realpath "$patch_file")"
+    target_dir="$(realpath "$target_dir")"
+
+    log_info "Reverting patch $patch_file in $target_dir ..."
+    git -C "$target_dir" apply -R --ignore-space-change --whitespace=nowarn "$patch_file"
+    if [[ $? -ne 0 ]]; then
+        log_error "Failed to revert patch $patch_file in $target_dir"
         exit 1
     fi
 }
@@ -472,8 +501,12 @@ for pkg_name in "${pkg_names[@]}"; do
     (
         case "$pkg_name" in
             "HuskarUI")
-                apply_diffpatch "./3rdparty/patches/huskarui.diff" "./3rdparty/HuskarUI"
-                build_package --name "$pkg_name" --extra-config-args "-DCMAKE_PREFIX_PATH=${QT6_DIR}" "-DBUILD_HUSKARUI_GALLERY=OFF"
+                apply_diffpatch "${repo_root}/3rdparty/patches/HuskarUI.diff" "${repo_root}/3rdparty/HuskarUI"
+                build_package --name "$pkg_name" \
+                    --extra-config-args "-DCMAKE_PREFIX_PATH=${QT6_DIR}" \
+                                        "-DBUILD_HUSKARUI_GALLERY=OFF" \
+                                        "-DINSTALL_HUSKARUI_IN_DEFAULT_LOCATION=OFF"
+                revert_diffpatch "${repo_root}/3rdparty/patches/HuskarUI.diff" "${repo_root}/3rdparty/HuskarUI"
                 ;;
             "Qt6Mqtt")
                 build_package --name "$pkg_name"

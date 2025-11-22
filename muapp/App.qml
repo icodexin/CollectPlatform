@@ -8,7 +8,7 @@ HusWindow {
     minimumHeight: 600
     title: Qt.application.displayName
     captionBar.color: HusTheme.Primary.colorFillTertiary
-    captionBar.themeButtonVisible: true
+    captionBar.showThemeButton: true
 
     onWidthChanged: {
         checkNavMenuCompactMode()
@@ -27,8 +27,8 @@ HusWindow {
             anchors.left: parent.left
             anchors.top: parent.top
             anchors.bottom: settingButton.top
-            compactMode: true
-            tooltipVisible: navMenu.compactMode
+            compactMode: HusMenu.Mode_Relaxed
+            showToolTip: navMenu.compactMode === HusMenu.Mode_Compact
             defaultSelectedKey: ["home"]
             initModel: app.getNavMenuModel()
             onClickMenu: (deep, key, keyPath, data) => {
@@ -39,18 +39,22 @@ HusWindow {
         }
 
         HusDivider {
-            width: navMenu.width
             height: 1
+            anchors.left: navMenu.left
+            anchors.right: navMenu.right
             anchors.bottom: settingButton.top
+            anchors.margins: 5
         }
 
         HusIconButton {
             id: settingButton
-            width: navMenu.width
             height: 40
+            anchors.left: navMenu.left
+            anchors.right: navMenu.right
             anchors.bottom: parent.bottom
+            anchors.margins: 5
             type: HusButton.Type_Text
-            text: navMenu.compactMode ? '' : qsTr('设置')
+            text: navMenu.compactMode === HusMenu.Mode_Compact ? '' : qsTr('设置')
             colorText: HusTheme.Primary.colorTextBase
             effectEnabled: false
             iconSize: navMenu.defaultMenuIconSize
@@ -145,7 +149,7 @@ HusWindow {
     }
 
     function checkNavMenuCompactMode() {
-        navMenu.compactMode = width < 1100;
+        navMenu.compactMode = width < 1100 ? HusMenu.Mode_Compact : HusMenu.Mode_Relaxed
     }
 
     function loadPage(source) {
