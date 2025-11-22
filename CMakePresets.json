@@ -124,6 +124,21 @@
       }
     },
     {
+      "name": "windows-arm64",
+      "inherits": "base-windows",
+      "generator": "Ninja Multi-Config",
+      "displayName": "Windows arm64 (Multi)",
+      "description": "Multi-Config build for Windows arm64 using MSVC & Ninja",
+      "binaryDir": "${sourceDir}/../build/windows-arm64",
+      "architecture": {
+        "value": "arm64",
+        "strategy": "external"
+      },
+      "cacheVariables": {
+          "CMAKE_CONFIGURATION_TYPES": "Debug;Release"
+      }
+    },
+    {
       "name": "macos-arm64",
       "inherits": "base-macos",
       "generator": "Ninja Multi-Config",
@@ -153,6 +168,12 @@
       "configurePreset": "windows-x64",
       "displayName": "Windows x64 Build",
       "description": "Build with the Windows x64 configure preset"
+    },
+    {
+      "name": "windows-arm64",
+      "configurePreset": "windows-arm64",
+      "displayName": "Windows arm64 Build",
+      "description": "Build with the Windows arm64 configure preset"
     },
     {
       "name": "macos-arm64",
