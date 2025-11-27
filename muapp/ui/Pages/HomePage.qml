@@ -3,9 +3,9 @@ import QtQuick.Layouts
 import HuskarUI.Basic
 import MuApp
 
-MuFlickablePage {
+MuScrollablePage {
+    title: Qt.application.displayName
     titleIconSource: HusIcon.HomeOutlined
-    titleText: Qt.application.displayName
 
     ColumnLayout {
         id: column

@@ -1,54 +1,44 @@
 import QtQuick
+import QtQuick.Controls.Basic
 import HuskarUI.Basic
 
-Item {
+Page {
     id: page
 
     property alias titleIconSource: titleIcon.iconSource
-    property alias titleText: titleText.text
-    property real leftMargin: 20
-    property real topMargin: 20
-    property real rightMargin: 20
-    property real bottomMargin: 8
-    property real spacing: 20
 
-    default property alias content: pageContent.data
+    horizontalPadding: 15
+    verticalPadding: 15
+    spacing: 0
+    background: Item {}
 
-    Row {
-        id: titleBar
-        anchors.left: parent.left
-        anchors.leftMargin: parent.leftMargin
-        anchors.top: parent.top
-        anchors.topMargin: parent.topMargin
-        anchors.right: parent.right
-        anchors.rightMargin: parent.rightMargin
-        spacing: 8
+    header: Item {
+        implicitHeight: __row.implicitHeight + page.verticalPadding
 
-        HusIconText {
-            id: titleIcon
-            iconSize: HusTheme.Primary.fontPrimarySizeHeading3
-            anchors.verticalCenter: titleBar.verticalCenter
-        }
+        Row {
+            id: __row
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.leftMargin: page.leftPadding
+            anchors.topMargin: page.topPadding
+            anchors.rightMargin: page.rightPadding
+            spacing: 8
 
-        HusText {
-            id: titleText
-            anchors.verticalCenter: titleBar.verticalCenter
-            font {
-                pixelSize: HusTheme.Primary.fontPrimarySizeHeading3
-                weight: Font.DemiBold
+            HusIconText {
+                id: titleIcon
+                iconSize: HusTheme.Primary.fontPrimarySizeHeading3
+                anchors.verticalCenter: parent.verticalCenter
+            }
+
+            HusText {
+                text: page.title
+                anchors.verticalCenter: parent.verticalCenter
+                font {
+                    pixelSize: HusTheme.Primary.fontPrimarySizeHeading3
+                    weight: Font.DemiBold
+                }
             }
         }
-    }
-
-    Item {
-        id: pageContent
-        anchors.left: parent.left
-        anchors.leftMargin: page.leftMargin
-        anchors.top: titleBar.bottom
-        anchors.topMargin: page.spacing
-        anchors.right: parent.right
-        anchors.rightMargin: page.rightMargin
-        anchors.bottom: parent.bottom
-        anchors.bottomMargin: page.bottomMargin
     }
 }

@@ -2,7 +2,7 @@ import QtQuick
 import HuskarUI.Basic
 import MuApp
 
-MuPage {
+MuScrollablePage {
+    title: "离线分析"
     titleIconSource: HusIcon.DotChartOutlined
-    titleText: "离线分析"
 }

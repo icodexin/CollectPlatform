@@ -31,7 +31,7 @@ set(QML_FILES
     App.qml
     AppController.qml
     ui/Components/MuPage.qml
-    ui/Components/MuFlickablePage.qml
+    ui/Components/MuScrollablePage.qml
     ui/Components/MuPanel.qml
     ui/Components/Charts/MuDateTimeAxis.qml
     ui/Components/Charts/MuValueAxis.qml

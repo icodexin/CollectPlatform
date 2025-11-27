@@ -4,9 +4,9 @@ import QtQuick.Controls.Basic
 import HuskarUI.Basic
 import MuApp
 
-MuFlickablePage {
+MuScrollablePage {
+    title: qsTr("设置")
     titleIconSource: HusIcon.SettingOutlined
-    titleText: qsTr("设置")
 
     ColumnLayout {
         id: column

@@ -3,6 +3,7 @@ import HuskarUI.Basic
 import MuApp
 
 MuPage {
+    title: "实时采集"
     titleIconSource: HusIcon.DotChartOutlined
     titleText: "实时采集"
 
