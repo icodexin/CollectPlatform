@@ -10,10 +10,6 @@ HusWindow {
     captionBar.color: HusTheme.Primary.colorFillTertiary
     captionBar.showThemeButton: true
 
-    onWidthChanged: {
-        checkNavMenuCompactMode()
-    }
-
     Item {
         id: content
         anchors.left: parent.left
@@ -21,11 +17,24 @@ HusWindow {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
 
+        MenuButton {
+            id: navModeButton
+            anchors.left: navMenu.left
+            anchors.top: parent.top
+            anchors.right: navMenu.right
+            anchors.margins: 5
+            anchors.rightMargin: 8
+            iconSource: HusIcon.MenuOutlined
+
+            onClicked: navMenu.changeCompactMode()
+        }
+
         HusMenu {
             id: navMenu
             defaultMenuWidth: 200
             anchors.left: parent.left
-            anchors.top: parent.top
+            anchors.top: navModeButton.bottom
+            anchors.topMargin: -5
             anchors.bottom: settingButton.top
             compactMode: HusMenu.Mode_Relaxed
             showToolTip: navMenu.compactMode === HusMenu.Mode_Compact
@@ -35,6 +44,13 @@ HusWindow {
                 console.debug('onClickMenu', deep, key, keyPath, JSON.stringify(data));
                 if (data && data.source)
                     app.loadPage(data.source)
+            }
+
+            function changeCompactMode() {
+                if (compactMode === HusMenu.Mode_Compact)
+                    compactMode = HusMenu.Mode_Relaxed
+                else
+                    compactMode = HusMenu.Mode_Compact
             }
         }
 
@@ -46,19 +62,17 @@ HusWindow {
             anchors.margins: 5
         }
 
-        HusIconButton {
+        MenuButton {
             id: settingButton
-            height: 40
             anchors.left: navMenu.left
             anchors.right: navMenu.right
             anchors.bottom: parent.bottom
             anchors.margins: 5
-            type: HusButton.Type_Text
-            text: navMenu.compactMode === HusMenu.Mode_Compact ? '' : qsTr('设置')
-            colorText: HusTheme.Primary.colorTextBase
-            effectEnabled: false
-            iconSize: navMenu.defaultMenuIconSize
+            anchors.rightMargin: 8
+            text: qsTr("设置")
             iconSource: HusIcon.SettingOutlined
+            isCompact: navMenu.compactMode === HusMenu.Mode_Compact
+
             onClicked: {
                 navMenu.clearSelectedMenu()
                 app.loadPage("ui/Pages/SettingPage.qml")
@@ -107,7 +121,39 @@ HusWindow {
 
     Component.onCompleted: {
         setWindowEffect()
-        checkNavMenuCompactMode()
+    }
+
+    component MenuButton: HusButton {
+        id: __menuBtn
+
+        property int iconSize: HusTheme.HusMenu.fontSize
+        property var iconSource: ''
+        property int iconSpacing: 8
+        property bool isCompact: false
+
+        effectEnabled: false
+        colorBorder: "transparent"
+        colorBg: hovered ? HusTheme.HusMenu.colorBgHover : HusTheme.HusMenu.colorBg
+        horizontalPadding: 12
+        verticalPadding: 10
+        radiusBg: HusRadius { all: HusTheme.HusMenu.radiusMenuBg }
+
+        contentItem: RowLayout {
+            spacing: parent.iconSpacing
+
+            HusIconText {
+                color: HusTheme.Primary.colorTextBase
+                iconSize: __menuBtn.iconSize
+                iconSource: __menuBtn.iconSource
+            }
+
+            HusText {
+                Layout.alignment: Qt.AlignVCenter
+                Layout.fillWidth: true
+                text: __menuBtn.text
+                visible: !__menuBtn.isCompact
+            }
+        }
     }
 
     function setWindowEffect() {
@@ -146,10 +192,6 @@ HusWindow {
                 source: "ui/Pages/StoragePage.qml"
             }
         ]
-    }
-
-    function checkNavMenuCompactMode() {
-        navMenu.compactMode = width < 1100 ? HusMenu.Mode_Compact : HusMenu.Mode_Relaxed
     }
 
     function loadPage(source) {
