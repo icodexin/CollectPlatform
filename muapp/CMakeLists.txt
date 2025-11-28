@@ -52,6 +52,7 @@ set(QML_FILES
 set(QML_CPP_FILES
     src/models/MinMaxQueue.h src/models/MinMaxQueue.cpp
     src/models/BandViewFrame.h src/models/BandViewFrame.cpp
+    src/services/MuSettingsMgr.h src/services/MuSettingsMgr.cpp
     src/BandViewController.h src/BandViewController.cpp
 )
 
@@ -70,6 +71,7 @@ target_include_directories(${PROJECT_NAME}
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/models
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/services
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE

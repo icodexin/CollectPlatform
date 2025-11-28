@@ -2,11 +2,10 @@
 
 #include <QVBoxLayout>
 
-#include "services/SettingsManager.h"
-#include "settings/InfoPanel.h"
 #include "settings/BandSettingPanel.h"
 #include "settings/CameraSettingPanel.h"
 #include "settings/EEGSettingPanel.h"
+#include "settings/InfoPanel.h"
 #include "settings/MqttSettingPanel.h"
 
 SettingView::SettingView(QWidget* parent)

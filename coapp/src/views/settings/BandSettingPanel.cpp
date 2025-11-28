@@ -4,7 +4,7 @@
 #include <QPushButton>
 #include <QSpinBox>
 
-#include "services/SettingsManager.h"
+#include "services/CoSettingsMgr.h"
 
 BandSettingPanel::BandSettingPanel(QWidget* parent)
     : QGroupBox(tr("Wristband"), parent) {
@@ -12,7 +12,7 @@ BandSettingPanel::BandSettingPanel(QWidget* parent)
     m_portSpinBox->setAlignment(Qt::AlignCenter);
     m_portSpinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     m_portSpinBox->setRange(1024, 65535);
-    m_portSpinBox->setValue(SettingsManager::bandPort());
+    m_portSpinBox->setValue(CoSettingsMgr::bandPort());
     m_listenBtn = new QPushButton(tr("Start Service"));
 
     auto* layout = new QFormLayout(this);
@@ -23,7 +23,7 @@ BandSettingPanel::BandSettingPanel(QWidget* parent)
 
     connect(m_listenBtn, &QPushButton::clicked, this, &BandSettingPanel::onListenBtnClicked);
     connect(m_portSpinBox, qOverload<int>(&QSpinBox::valueChanged), this, [=](const int port) {
-        SettingsManager::setBandPort(port);
+        CoSettingsMgr::setBandPort(port);
     });
 }
 

@@ -7,17 +7,17 @@
 #include <QSpinBox>
 
 #include "components/IPv4Edit.h"
-#include "services/SettingsManager.h"
+#include "services/CoSettingsMgr.h"
 
 MqttSettingPanel::MqttSettingPanel(QWidget* parent) : QGroupBox(tr("MQTT"), parent) {
     m_addressEdit = new IPv4Edit();
-    m_addressEdit->setAddress(SettingsManager::mqttAddress());
+    m_addressEdit->setAddress(CoSettingsMgr::mqttAddress());
     m_addressEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     m_portSpinBox = new QSpinBox();
     m_portSpinBox->setAlignment(Qt::AlignCenter);
     m_portSpinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     m_portSpinBox->setRange(1024, 65535);
-    m_portSpinBox->setValue(SettingsManager::mqttPort());
+    m_portSpinBox->setValue(CoSettingsMgr::mqttPort());
     m_idEdit = new QLineEdit();
     m_idEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     m_usernameEdit = new QLineEdit();
@@ -39,10 +39,10 @@ MqttSettingPanel::MqttSettingPanel(QWidget* parent) : QGroupBox(tr("MQTT"), pare
 
     connect(m_connectBtn, &QPushButton::clicked, this, &MqttSettingPanel::onConnectBtnClicked);
     connect(m_addressEdit, &IPv4Edit::addressChanged, this, [=](const QString& address) {
-        SettingsManager::setMQTTAddress(address);
+        CoSettingsMgr::setMQTTAddress(address);
     });
     connect(m_portSpinBox, qOverload<int>(&QSpinBox::valueChanged), this, [=](const int port) {
-        SettingsManager::setMQTTPort(port);
+        CoSettingsMgr::setMQTTPort(port);
     });
 }
 

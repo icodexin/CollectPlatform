@@ -11,14 +11,17 @@ find_package(Qt6 COMPONENTS Core REQUIRED)
 set(CMAKE_AUTOMOC ON)
 
 set(H_FILES
-    model/serialize.h
-    model/EEGData.h
-    model/WristbandData.h
+    src/singleton.h
+    src/SettingsManager.h
+    src/model/serialize.h
+    src/model/EEGData.h
+    src/model/WristbandData.h
 )
 
 set(CPP_FILES
-    model/EEGData.cpp
-    model/WristbandData.cpp
+    src/SettingsManager.cpp
+    src/model/EEGData.cpp
+    src/model/WristbandData.cpp
 )
 
 add_library(${PROJECT_NAME} STATIC
@@ -26,7 +29,9 @@ add_library(${PROJECT_NAME} STATIC
 )
 
 target_include_directories(${PROJECT_NAME}
-    PUBLIC ${PROJECT_SOURCE_DIR}
+    PUBLIC
+        ${PROJECT_SOURCE_DIR}/src
+        ${PROJECT_SOURCE_DIR}/src/model
 )
 
 target_link_libraries(${PROJECT_NAME}

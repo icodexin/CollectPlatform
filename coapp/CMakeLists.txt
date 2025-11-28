@@ -37,7 +37,7 @@ set(H_FILES
     src/services/BandServer.h
     src/services/EEGReceiver.h
     src/services/MqttPublisher.h
-    src/services/SettingsManager.h
+    src/services/CoSettingsMgr.h
 )
 
 set(CPP_FILES
@@ -64,7 +64,7 @@ set(CPP_FILES
     src/services/BandServer.cpp
     src/services/EEGReceiver.cpp
     src/services/MqttPublisher.cpp
-    src/services/SettingsManager.cpp
+    src/services/CoSettingsMgr.cpp
 )
 
 qt_add_resources(RESOURCES resources/resources.qrc)
@@ -96,6 +96,8 @@ set(APP_PACKAGE_DIR ${APP_OUTPUT_DIRECTORY}/coapp)
 set_target_properties(${PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${TARGET_OUTPUT_NAME}
     RUNTIME_OUTPUT_DIRECTORY ${APP_PACKAGE_DIR}
+    MACOSX_BUNDLE_GUI_IDENTIFIER "edu.perlab.CoApp"
+    MACOSX_BUNDLE_COPYRIGHT "Copyright©2025 CCNU PerLab. All rights reserved."
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/resources/macOS/Info.plist.in"

@@ -6,18 +6,18 @@
 #include <QSpinBox>
 
 #include "components/IPv4Edit.h"
-#include "services/SettingsManager.h"
+#include "services/CoSettingsMgr.h"
 
 EEGSettingPanel::EEGSettingPanel(QWidget* parent)
     : QGroupBox(tr("EEG"), parent) {
     m_addressEdit = new IPv4Edit();
-    m_addressEdit->setAddress(SettingsManager::eegAddress());
+    m_addressEdit->setAddress(CoSettingsMgr::eegAddress());
     m_addressEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     m_portSpinBox = new QSpinBox();
     m_portSpinBox->setAlignment(Qt::AlignCenter);
     m_portSpinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
     m_portSpinBox->setRange(1024, 65535);
-    m_portSpinBox->setValue(SettingsManager::eegPort());
+    m_portSpinBox->setValue(CoSettingsMgr::eegPort());
     m_connectBtn = new QPushButton(tr("Connect"));
 
     auto* layout = new QFormLayout(this);
@@ -29,9 +29,9 @@ EEGSettingPanel::EEGSettingPanel(QWidget* parent)
 
     connect(m_connectBtn, &QPushButton::clicked, this, &EEGSettingPanel::onConnectBtnClicked);
     connect(m_addressEdit, &IPv4Edit::addressChanged, this,
-        [=](const QString& address) { SettingsManager::setEEGAddress(address); });
+        [=](const QString& address) { CoSettingsMgr::setEEGAddress(address); });
     connect(m_portSpinBox, qOverload<int>(&QSpinBox::valueChanged), this,
-        [=](const int port) { SettingsManager::setEEGPort(port); });
+        [=](const int port) { CoSettingsMgr::setEEGPort(port); });
 }
 
 QString EEGSettingPanel::address() const {

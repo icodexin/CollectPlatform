@@ -1,6 +1,5 @@
 #include "EEGReceiver.h"
 #include <QtEndian>
-#include "services/SettingsManager.h"
 #include "model/serialize.h"
 
 namespace {
