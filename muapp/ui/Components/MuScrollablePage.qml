@@ -42,10 +42,9 @@ MuPage {
         WheelHandler {
             id: wheelHandler
             target: null
-            onWheel: (event) => {
-                // 临时禁用回弹
-                flickable.boundsBehavior = Flickable.StopAtBounds
+            acceptedDevices: PointerDevice.Mouse
 
+            onWheel: (event) => {
                 let dx = 0
                 let dy = 0
 
@@ -59,18 +58,8 @@ MuPage {
                 }
 
                 flickable.scrollBy(-dx, -dy)
-
-                // 稍后恢复回弹
-                restoreTimer.restart()
                 event.accepted = true
             }
-        }
-
-        Timer {
-            id: restoreTimer
-            interval: 80
-            repeat: false
-            onTriggered: flickable.boundsBehavior = Flickable.DragAndOvershootBounds
         }
     }
 }

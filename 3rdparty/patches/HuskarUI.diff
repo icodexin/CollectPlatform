@@ -153,7 +153,7 @@ index e12d098..2ab2386 100644
 +        Transition {
 +            to: ""
 +            SequentialAnimation {
-+                PauseAnimation { duration: control.animationEnabled ? HusTheme.Primary.durationSlow : 0 }
++                PauseAnimation { duration: control.animationEnabled ? HusTheme.Primary.durationSlow * 2 : 0 }
 +                ParallelAnimation {
 +                    NumberAnimation {
 +                        target: bar_rect
