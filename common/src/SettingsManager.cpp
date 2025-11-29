@@ -1,7 +1,7 @@
 #include "SettingsManager.h"
 
 SettingsManager::SettingsManager() {
-    qDebug() << "App settings will be saved at: " << m_settings.fileName();
+    qDebug() << "App settings will be saved at:" << m_settings.fileName();
 }
 
 SettingsManager::~SettingsManager() {

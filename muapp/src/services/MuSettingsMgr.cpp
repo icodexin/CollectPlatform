@@ -1,17 +1,20 @@
 #include "MuSettingsMgr.h"
+#include <QtQml/QQmlEngine>
 
 namespace {
     constexpr int kDefaultNavMenuCompactMode = 0; // HusMenu.CompactMode.Mode_Relaxed
-    constexpr auto kDefaultAppDarkMode = HusTheme::DarkMode::Dark;
+    constexpr auto kDefaultAppDarkMode = HusTheme::DarkMode::Light;
 }
 
 MuSettingsMgr* MuSettingsMgr::instance() {
-    static auto* _instance = new MuSettingsMgr();
-    return _instance;
+    static MuSettingsMgr instance;
+    return &instance;
 }
 
 MuSettingsMgr* MuSettingsMgr::create(QQmlEngine*, QJSEngine*) {
-    return instance();
+    auto* instance = MuSettingsMgr::instance();
+    QJSEngine::setObjectOwnership(instance, QJSEngine::CppOwnership);
+    return instance;
 }
 
 int MuSettingsMgr::navMenuCompactMode() const {

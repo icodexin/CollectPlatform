@@ -2,8 +2,8 @@
 #define MUSETTINGSMGR_H
 
 #include <QtQml/qqml.h>
-#include "HuskarUI/theme/hustheme.h"
 #include "SettingsManager.h"
+#include "HuskarUI/theme/hustheme.h"
 
 class MuSettingsMgr final : public QObject, public SettingsManager {
     Q_OBJECT
