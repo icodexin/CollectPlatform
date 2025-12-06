@@ -7,11 +7,11 @@
 
 class MuSettingsMgr final : public QObject, public SettingsManager {
     Q_OBJECT
+    Q_DISABLE_COPY_MOVE(MuSettingsMgr)
+    Q_PROPERTY(int navMenuCompactMode READ navMenuCompactMode WRITE setNavMenuCompactMode NOTIFY navMenuCompactModeChanged)
+    Q_PROPERTY(HusTheme::DarkMode appDarkMode READ appDarkMode WRITE setAppDarkMode NOTIFY appDarkModeChanged)
     QML_SINGLETON
     QML_ELEMENT
-    Q_DISABLE_COPY_MOVE(MuSettingsMgr)
-    Q_PROPERTY(int navMenuCompactMode READ navMenuCompactMode WRITE setNavMenuCompactMode)
-    Q_PROPERTY(HusTheme::DarkMode appDarkMode READ appDarkMode WRITE setAppDarkMode)
 
 public:
     static MuSettingsMgr* instance();
@@ -22,6 +22,10 @@ public:
 
     Q_INVOKABLE void setNavMenuCompactMode(int mode);
     Q_INVOKABLE void setAppDarkMode(HusTheme::DarkMode mode);
+
+signals:
+    void navMenuCompactModeChanged(int);
+    void appDarkModeChanged(HusTheme::DarkMode);
 
 private:
     explicit MuSettingsMgr(QObject* parent = nullptr);

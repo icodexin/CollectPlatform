@@ -14,7 +14,8 @@
         "CMAKE_PREFIX_PATH": "$env{QT6_DIR}",
         "CMAKE_TOOLCHAIN_FILE": "$env{VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake",
         "QT_QML_GENERATE_QMLLS_INI": "ON",
-        "BINARY_OUT_DIRECTORY": "${sourceDir}/../output"
+        "BINARY_OUT_DIRECTORY": "${sourceDir}/../output",
+        "CMAKE_EXPORT_COMPILE_COMMANDS": "ON"
       }
     },
     {

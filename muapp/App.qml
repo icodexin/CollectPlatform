@@ -36,9 +36,13 @@ HusWindow {
             anchors.top: navModeButton.bottom
             anchors.topMargin: -5
             anchors.bottom: settingButton.top
-            showToolTip: navMenu.compactMode === HusMenu.Mode_Compact
+            compactMode: MuSettingsMgr.navMenuCompactMode
+            showToolTip: compactMode === HusMenu.Mode_Compact
             defaultSelectedKey: ["home"]
             initModel: app.getNavMenuModel()
+            onCompactModeChanged: {
+                MuSettingsMgr.navMenuCompactMode = compactMode
+            }
             onClickMenu: (deep, key, keyPath, data) => {
                 console.debug('onClickMenu', deep, key, keyPath, JSON.stringify(data));
                 if (data && data.source)
@@ -120,12 +124,10 @@ HusWindow {
 
     Component.onCompleted: {
         setWindowEffect()
-        navMenu.compactMode = MuSettingsMgr.navMenuCompactMode
         HusTheme.darkMode = MuSettingsMgr.appDarkMode
     }
 
     Component.onDestruction: {
-        MuSettingsMgr.navMenuCompactMode = navMenu.compactMode
         MuSettingsMgr.appDarkMode = HusTheme.darkMode
     }
 
@@ -133,7 +135,7 @@ HusWindow {
         id: __menuBtn
 
         property int iconSize: HusTheme.HusMenu.fontSize
-        property var iconSource: ''
+        property var iconSource: 0 ?? ''
         property int iconSpacing: 8
         property bool isCompact: false
 
