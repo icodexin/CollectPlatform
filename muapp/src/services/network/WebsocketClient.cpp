@@ -15,6 +15,17 @@ namespace {
 Q_LOGGING_CATEGORY(wsClient, "Services.Network.WebsocketClient")
 
 WebsocketClient::WebsocketClient(QObject* parent) : QObject(parent) {
+}
+
+WebsocketClient::~WebsocketClient() {
+    stopReconnect();
+    stopHeartbeat();
+    if (m_socket) {
+        disconnect(m_socket.get(), nullptr, this, nullptr);
+    }
+}
+
+void WebsocketClient::init() {
     setSocket(new QWebSocket);
 
     m_heartbeatTimer = new QTimer(this);
@@ -37,14 +48,6 @@ WebsocketClient::WebsocketClient(QObject* parent) : QObject(parent) {
             stopReconnect();
         }
     });
-}
-
-WebsocketClient::~WebsocketClient() {
-    stopReconnect();
-    stopHeartbeat();
-    if (m_socket) {
-        disconnect(m_socket.get(), nullptr, this, nullptr);
-    }
 }
 
 QUrl WebsocketClient::url() const {
@@ -382,13 +385,15 @@ void WebsocketClient::openSocket() {
 }
 
 void WebsocketClient::startHeartbeat() {
-    if (m_heartbeatInterval > 0) {
+    if (m_heartbeatTimer && m_heartbeatInterval > 0) {
         m_lastPongTimestamp = QDateTime::currentMSecsSinceEpoch();
         m_heartbeatTimer->start(m_heartbeatInterval);
     }
 }
 
 void WebsocketClient::stopHeartbeat() {
+    if (!m_heartbeatTimer)
+        return;
     if (m_heartbeatTimer->isActive()) {
         m_heartbeatTimer->stop();
     }
@@ -397,6 +402,11 @@ void WebsocketClient::stopHeartbeat() {
 }
 
 void WebsocketClient::scheduleReconnect() {
+    if (!m_reconnectTimer) {
+        setStatus(Closed);
+        return;
+    }
+
     // 超过最大重连次数
     if (m_reconnectAttempts >= m_reconnectMaxAttempts) {
         emit errorOccurred(QAbstractSocket::SocketError::RemoteHostClosedError,
@@ -420,7 +430,7 @@ void WebsocketClient::scheduleReconnect() {
 }
 
 void WebsocketClient::stopReconnect() const {
-    if (m_reconnectTimer->isActive()) {
+    if (m_reconnectTimer && m_reconnectTimer->isActive()) {
         m_reconnectTimer->stop();
     }
 }

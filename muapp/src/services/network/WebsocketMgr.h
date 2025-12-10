@@ -46,9 +46,16 @@ private:
     explicit WebsocketMgr(QObject* parent = nullptr);
     ~WebsocketMgr() override;
 
+    // move client to worker thread
+    void setClient(WebsocketClient* client);
     void attachSignals(const QString& key, const WebsocketClient* client);
 
+    static void openClient(WebsocketClient* client);
+    static void closeClient(WebsocketClient* client);
+    static void removeClient(WebsocketClient* client);
+
 private:
+    QThread* m_workerThread = nullptr;
     QHash<QString, WebsocketClient*> m_clients;
     QVariantMap m_heartbeatParams;
     QVariantMap m_reconnectParams;

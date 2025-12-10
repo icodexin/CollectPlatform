@@ -1,5 +1,6 @@
 #include "WebsocketMgr.h"
 
+#include <QtCore/QThread>
 #include <QtGui/QGuiApplication>
 
 void WebsocketMgr::setHeartbeatParams(const int interval, const int timeout, const int retries) {
@@ -23,7 +24,7 @@ bool WebsocketMgr::createConnection(const QString& key, const QUrl& url) {
     if (m_clients.contains(key))
         return false;
 
-    auto* client = new WebsocketClient(this);
+    auto* client = new WebsocketClient(nullptr);
     client->setUrl(url);
     client->setHeartbeat(
         m_heartbeatParams.value("interval", WebsocketClient::defaultHeartbeatInterval).toInt(),
@@ -43,6 +44,7 @@ bool WebsocketMgr::createConnection(const QString& key, const QUrl& url) {
         client->setUpgradeHeaders(headers);
     }
 
+    setClient(client);
     attachSignals(key, client);
     m_clients.insert(key, client);
     return true;
@@ -53,18 +55,14 @@ bool WebsocketMgr::removeConnection(const QString& key) {
         return false;
 
     if (auto* c = m_clients.take(key)) {
-        c->close();
-        c->deleteLater();
+        removeClient(c);
     }
     return true;
 }
 
 void WebsocketMgr::removeAllConnections() {
     for (const auto& [_, client] : std::as_const(m_clients).asKeyValueRange()) {
-        if (client) {
-            client->close();
-            client->deleteLater();
-        }
+        removeClient(client);
     }
     m_clients.clear();
 }
@@ -75,43 +73,50 @@ bool WebsocketMgr::hasConnection(const QString& key) const {
 
 void WebsocketMgr::open(const QString& key) const {
     if (const auto c = client(key))
-        c->open();
+        openClient(c);
 }
 
 void WebsocketMgr::close(const QString& key) const {
     if (const auto c = client(key))
-        c->close();
+        closeClient(c);
 }
 
 void WebsocketMgr::openAll() const {
-    for (const auto& [_, client] : std::as_const(m_clients).asKeyValueRange()) {
-        if (client)
-            client->open();
+    for (const auto& [_, c] : std::as_const(m_clients).asKeyValueRange()) {
+        openClient(c);
     }
 }
 
 void WebsocketMgr::closeAll() {
-    for (const auto& [_, client] : std::as_const(m_clients).asKeyValueRange()) {
-        if (client)
-            client->close();
+    for (const auto& [_, c] : std::as_const(m_clients).asKeyValueRange()) {
+        closeClient(c);
     }
 }
 
 qint64 WebsocketMgr::sendText(const QString& key, const QString& text) const {
-    if (const auto c = client(key))
-        return c->sendText(text);
+    if (const auto c = client(key)) {
+        qint64 id = 0;
+        QMetaObject::invokeMethod(c, &WebsocketClient::sendText, qReturnArg(id), text);
+        return id;
+    }
     return 0;
 }
 
 qint64 WebsocketMgr::sendJson(const QString& key, const QJsonObject& json) const {
-    if (const auto c = client(key))
-        return c->sendJson(json);
+    if (const auto c = client(key)) {
+        qint64 id = 0;
+        QMetaObject::invokeMethod(c, &WebsocketClient::sendJson, qReturnArg(id), json);
+        return id;
+    }
     return 0;
 }
 
 qint64 WebsocketMgr::sendBinary(const QString& key, const QByteArray& data) const {
-    if (const auto c = client(key))
-        return c->sendBinary(data);
+    if (const auto c = client(key)) {
+        qint64 id = 0;
+        QMetaObject::invokeMethod(c, &WebsocketClient::sendBinary, qReturnArg(id), data);
+        return id;
+    }
     return 0;
 }
 
@@ -134,9 +139,23 @@ WebsocketMgr::WebsocketMgr(QObject* parent) : QObject(parent) {
 }
 
 WebsocketMgr::~WebsocketMgr() {
-    closeAll();
-    qDeleteAll(m_clients);
-    m_clients.clear();
+    removeAllConnections();
+    if (m_workerThread) {
+        m_workerThread->quit();
+        m_workerThread->wait();
+    }
+}
+
+void WebsocketMgr::setClient(WebsocketClient* client) {
+    if (!m_workerThread) {
+        m_workerThread = new QThread(this);
+    }
+    client->moveToThread(m_workerThread);
+    connect(m_workerThread, &QThread::finished, client, &QObject::deleteLater);
+    if (!m_workerThread->isRunning()) {
+        m_workerThread->start();
+    }
+    QMetaObject::invokeMethod(client, &WebsocketClient::init, Qt::QueuedConnection);
 }
 
 void WebsocketMgr::attachSignals(const QString& key, const WebsocketClient* client) {
@@ -154,4 +173,25 @@ void WebsocketMgr::attachSignals(const QString& key, const WebsocketClient* clie
             emit errorOccurred(key, error, errorString);
         }
     );
+}
+
+void WebsocketMgr::openClient(WebsocketClient* client) {
+    if (client) {
+        QMetaObject::invokeMethod(client, &WebsocketClient::open, Qt::QueuedConnection);
+    }
+}
+
+void WebsocketMgr::closeClient(WebsocketClient* client) {
+    if (client) {
+        QMetaObject::invokeMethod(client, &WebsocketClient::close, Qt::QueuedConnection);
+    }
+}
+
+void WebsocketMgr::removeClient(WebsocketClient* client) {
+    if (client) {
+        QMetaObject::invokeMethod(client, [client]() {
+            client->close();
+            client->deleteLater();
+        }, Qt::QueuedConnection);
+    }
 }

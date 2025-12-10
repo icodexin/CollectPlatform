@@ -46,6 +46,8 @@ public:
     explicit WebsocketClient(QObject* parent = nullptr);
     ~WebsocketClient() override;
 
+    Q_INVOKABLE void init();
+
     QUrl url() const;
     void setUrl(const QUrl& url);
 
