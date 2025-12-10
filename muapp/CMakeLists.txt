@@ -11,7 +11,7 @@ set(TARGET_OUTPUT_NAME "Multimodal App")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(Qt6 COMPONENTS Core Quick Qml Graphs REQUIRED)
+find_package(Qt6 COMPONENTS Core WebSockets Quick Qml Graphs REQUIRED)
 find_package(HuskarUI REQUIRED)
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -53,6 +53,8 @@ set(QML_CPP_FILES
     src/models/MinMaxQueue.h src/models/MinMaxQueue.cpp
     src/models/BandViewFrame.h src/models/BandViewFrame.cpp
     src/services/MuSettingsMgr.h src/services/MuSettingsMgr.cpp
+    src/services/network/WebsocketClient.h src/services/network/WebsocketClient.cpp
+    src/services/network/WebsocketMgr.h src/services/network/WebsocketMgr.cpp
     src/BandViewController.h src/BandViewController.cpp
 )
 
@@ -93,7 +95,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE Qt6::Core Qt6::Quick Qt6::Qml Qt6::Graphs HuskarUI::Basic PlatformCommon
+    PRIVATE Qt6::Core Qt6::WebSockets Qt6::Quick Qt6::Qml Qt6::Graphs HuskarUI::Basic PlatformCommon
 )
 
 if (WIN32)
