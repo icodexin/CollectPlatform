@@ -32,7 +32,7 @@ protected:
 private:
     QSettings m_settings;
     mutable QMutex m_mutex;
-    mutable QVariantMap m_cache;
+    mutable QVariantHash m_cache;
     QSet<QString> m_dirtyKeys;
 };
 
