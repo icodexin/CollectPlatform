@@ -1,7 +1,6 @@
 #include "WebsocketMgr.h"
 
 #include <QtCore/QThread>
-#include <QtGui/QGuiApplication>
 
 void WebsocketMgr::setHeartbeatParams(const int interval, const int timeout, const int retries) {
     m_heartbeatParams["interval"] = interval;
@@ -135,7 +134,6 @@ void WebsocketMgr::setAuthToken(const QString& token) {
 }
 
 WebsocketMgr::WebsocketMgr(QObject* parent) : QObject(parent) {
-    connect(qApp, &QCoreApplication::aboutToQuit, this, &WebsocketMgr::removeAllConnections);
 }
 
 WebsocketMgr::~WebsocketMgr() {
