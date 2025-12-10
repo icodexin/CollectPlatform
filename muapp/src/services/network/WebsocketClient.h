@@ -1,6 +1,7 @@
 #ifndef WEBSOCKETCLIENT_H
 #define WEBSOCKETCLIENT_H
 
+#include <QtCore/QJsonObject>
 #include <QtNetwork/QAbstractSocket>
 #include <QtQml/qqml.h>
 

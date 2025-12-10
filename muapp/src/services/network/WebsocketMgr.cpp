@@ -9,7 +9,7 @@ void WebsocketMgr::setHeartbeatParams(const int interval, const int timeout, con
 }
 
 void WebsocketMgr::setReconnectParams(const int maxAttempts, const int baseDelay, const int maxDelay,
-                                     const bool useJitter) {
+                                      const bool useJitter) {
     m_reconnectParams["maxAttempts"] = maxAttempts;
     m_reconnectParams["baseDelay"] = baseDelay;
     m_reconnectParams["maxDelay"] = maxDelay;
@@ -104,7 +104,7 @@ qint64 WebsocketMgr::sendText(const QString& key, const QString& text) const {
 qint64 WebsocketMgr::sendJson(const QString& key, const QJsonObject& json) const {
     if (const auto c = client(key)) {
         qint64 id = 0;
-        QMetaObject::invokeMethod(c, &WebsocketClient::sendJson, qReturnArg(id), json);
+        QMetaObject::invokeMethod(c, "sendJson", Q_RETURN_ARG(qint64, id), Q_ARG(QJsonObject, json));
         return id;
     }
     return 0;
