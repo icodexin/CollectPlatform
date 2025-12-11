@@ -497,7 +497,12 @@ int WebsocketClient::nextReconnectDelay() const {
     if (m_reconnectBaseDelay <= 0)
         return 0;
 
-    const qint64 factor = static_cast<qint64>(m_reconnectBaseNumber) << m_reconnectAttempts;
+    qint64 factor = 1;
+    if (2 == m_reconnectBaseNumber) {
+        factor = 1LL << m_reconnectAttempts;
+    } else if (m_reconnectBaseNumber > 2) {
+        factor = qPow<qint64, qint64>(m_reconnectBaseNumber, m_reconnectAttempts);
+    }
     qint64 exponentialDelay = m_reconnectBaseDelay * factor;
     if (exponentialDelay > m_reconnectMaxDelay)
         exponentialDelay = m_reconnectMaxDelay;

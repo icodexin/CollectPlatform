@@ -29,6 +29,7 @@ void WebsocketMgr::setReconnectParam(const ReconnectParam& param) {
             param.useJitter,
             param.baseNumber
         );
+        QMetaObject::invokeMethod(client, &WebsocketClient::setUseReconnect, param.enable);
     }
 }
 
@@ -44,6 +45,7 @@ void WebsocketMgr::setReconnectParam(const QString& key, const ReconnectParam& p
             param.useJitter,
             param.baseNumber
         );
+        QMetaObject::invokeMethod(client, &WebsocketClient::setUseReconnect, param.enable);
     }
 }
 
@@ -70,8 +72,16 @@ bool WebsocketMgr::createConnection(const QString& key, const QUrl& url) {
     }
 
     if (m_clientReconnectParams.contains(key)) {
-        const auto& [maxAttempts, baseDelay, maxDelay, useJitter, baseNumber] = m_clientReconnectParams.value(key);
+        const auto& [
+            maxAttempts,
+            baseDelay,
+            maxDelay,
+            baseNumber,
+            enable,
+            useJitter
+        ] = m_clientReconnectParams.value(key);
         client->setReconnect(maxAttempts, baseDelay, maxDelay, useJitter, baseNumber);
+        client->setUseReconnect(enable);
     }
     else {
         client->setReconnect(
@@ -81,6 +91,7 @@ bool WebsocketMgr::createConnection(const QString& key, const QUrl& url) {
             m_globalReconnectParam.useJitter,
             m_globalReconnectParam.baseNumber
         );
+        client->setUseReconnect(m_globalReconnectParam.enable);
     }
 
     if (!m_authToken.isEmpty()) {

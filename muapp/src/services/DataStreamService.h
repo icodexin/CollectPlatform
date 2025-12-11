@@ -12,6 +12,7 @@ class DataStreamService : public QObject, public QQmlParserStatus {
     Q_OBJECT
     Q_PROPERTY(QString subStudentId READ subStudentId WRITE setSubStudentId NOTIFY subStudentIdChanged)
     Q_PROPERTY(DataType subDataType READ subDataType WRITE setSubDataType NOTIFY subDataTypeChanged)
+    Q_PROPERTY(Status status READ status NOTIFY statusChanged)
     QML_ELEMENT
     Q_INTERFACES(QQmlParserStatus)
 
@@ -24,6 +25,13 @@ public:
         Cognition = 4,
     };
     Q_ENUM(DataType)
+
+    enum Status {
+        Offline    = 0,
+        Online     = 1,
+        Connecting = 2
+    };
+    Q_ENUM(Status)
 
     explicit DataStreamService(QObject* parent = nullptr);
     ~DataStreamService() override;
@@ -39,23 +47,29 @@ public:
     DataType subDataType() const;
     void setSubDataType(DataType type);
 
+    /// 服务状态
+    Status status() const;
+
 signals:
     void subStudentIdChanged(const QString& studentId);
     void subDataTypeChanged(DataType type);
+    void statusChanged(Status status);
 
     void msgReceived(const QJsonObject& msg);
     void wristbandReceived(const WristbandPacket& data, const QString& studentId);
     void eegReceived(const EEGSensorData& data, const QString& studentId);
 
 private:
+    void setStatus(Status status);
     void subscribe(const QString& studentId, DataType type);
-    void attachClientSignals(const QString& key) const;
+    void attachClientSignals(const QString& key);
     void handleTextMessage(const QString& text);
     void handleBinaryMessage(const QByteArray& data);
 
 private:
     QString m_subStudentId;
     DataType m_subDataType = ALL;
+    Status m_status = Offline;
 };
 
 #endif //DATASTREAMSERVICE_H

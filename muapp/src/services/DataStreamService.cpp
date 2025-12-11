@@ -56,8 +56,20 @@ void DataStreamService::setSubDataType(const DataType type) {
     emit subDataTypeChanged(type);
 }
 
+DataStreamService::Status DataStreamService::status() const {
+    return m_status;
+}
+
+void DataStreamService::setStatus(const Status status) {
+    if (m_status == status)
+        return;
+    m_status = status;
+    emit statusChanged(status);
+}
+
 void DataStreamService::subscribe(const QString& studentId, const DataType type) {
     if (!MuWebsocketMgr.hasConnection(kDataStreamKey)) {
+        MuWebsocketMgr.setReconnectParam({.maxAttempts = 0, .baseNumber = 1}); // infinite reconnect
         MuWebsocketMgr.createConnection(kDataStreamKey, QUrl(kWebsocketUrl));
         MuWebsocketMgr.open(kDataStreamKey);
         attachClientSignals(kDataStreamKey);
@@ -69,12 +81,26 @@ void DataStreamService::subscribe(const QString& studentId, const DataType type)
     });
 }
 
-void DataStreamService::attachClientSignals(const QString& key) const {
+void DataStreamService::attachClientSignals(const QString& key) {
     const QPointer<WebsocketClient> client = MuWebsocketMgr.client(key);
     connect(client, &WebsocketClient::textReceived, this, &DataStreamService::handleTextMessage);
     connect(client, &WebsocketClient::binaryReceived, this, &DataStreamService::handleBinaryMessage);
-    connect(client, &WebsocketClient::statusChanged, this, [](const WebsocketClient::Status status) {
-        qCDebug(dsService) << QString("WebSocket status changed: %1").arg(status);
+    connect(client, &WebsocketClient::statusChanged, this, [this](const WebsocketClient::Status status) {
+        switch (status) {
+            case WebsocketClient::Closed:
+            case WebsocketClient::Closing: {
+                setStatus(Offline);
+                break;
+            }
+            case WebsocketClient::Open: {
+                setStatus(Online);
+                break;
+            }
+            default: {
+                setStatus(Connecting);
+                break;
+            }
+        }
     });
     connect(client, &WebsocketClient::errorOccurred, this, [](const QAbstractSocket::SocketError error, const QString& errorString) {
         qCDebug(dsService).noquote() << QString("WebSocket error occurred: %1 - %2").arg(error).arg(errorString);

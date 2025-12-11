@@ -23,8 +23,9 @@ public:
         int maxAttempts = WebsocketClient::defaultReconnectMaxAttempts;
         int baseDelay = WebsocketClient::defaultReconnectBaseDelay;
         int maxDelay = WebsocketClient::defaultReconnectMaxDelay;
-        bool useJitter = WebsocketClient::defaultUseJitter;
         int baseNumber = WebsocketClient::defaultReconnectBaseNumber;
+        bool enable = WebsocketClient::defaultUseReconnect;
+        bool useJitter = WebsocketClient::defaultUseJitter;
     };
 
     /// 设置全局心跳参数
