@@ -119,6 +119,23 @@ HusWindow {
         Connections {
             target: AppController
             function onRequestShowMessage(msg) { toast.open(msg) }
+            function onRequestCloseMessage(key) { toast.close(key) }
+            function onRequestSetMessageProperty(key, property, value) { toast.setProperty(key, property, value) }
+        }
+    }
+
+    HusNotification {
+        id: notify
+        parent: Overlay.overlay
+        anchors.fill: parent
+        anchors.topMargin: captionBar.height
+        position: HusNotification.Position_TopRight
+
+        Connections {
+            target: AppController
+            function onRequestShowNotification(msg) { notify.open(msg) }
+            function onRequestCloseNotification(key) { notify.close(key) }
+            function onRequestSetNotificationProperty(key, property, value) { notify.setProperty(key, property, value) }
         }
     }
 
