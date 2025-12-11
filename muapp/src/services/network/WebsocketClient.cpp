@@ -42,9 +42,9 @@ void WebsocketClient::init() {
                 stopHeartbeat();
         }
     });
-    connect(this, &WebsocketClient::reconnectMaxAttemptsChanged, this, [this](const int count) {
-        if (count <= 0) {
-            stopReconnect();
+    connect(this, &WebsocketClient::useReconnectChanged, this, [this](const bool use) {
+        if (!use && m_status == Reconnecting) {
+            setStatus(Closed);
         }
     });
 }
@@ -140,7 +140,7 @@ bool WebsocketClient::useReconnect() const {
     return m_useReconnect;
 }
 
-void WebsocketClient::setUseReconnect(bool use) {
+void WebsocketClient::setUseReconnect(const bool use) {
     if (m_useReconnect == use)
         return;
     m_useReconnect = use;
