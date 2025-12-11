@@ -1,10 +1,11 @@
 #ifndef WRISTBANDVIEWCONTROLLER_H
 #define WRISTBANDVIEWCONTROLLER_H
 
-#include <QMutex>
-#include <QPointer>
-#include <QQueue>
-#include <QTimer>
+#include <QtCore/QMutex>
+#include <QtCore/QPointer>
+#include <QtCore/QQueue>
+#include <QtCore/QTimer>
+#include <QtQml/QQmlParserStatus>
 #include "BandViewFrame.h"
 #include "model/WristbandData.h"
 
@@ -26,13 +27,17 @@ private:
     QMutex m_mutex;
 };
 
-class BandViewController : public QObject {
+class BandViewController : public QObject, public QQmlParserStatus {
     Q_OBJECT
     QML_ELEMENT
+    Q_INTERFACES(QQmlParserStatus)
 
 public:
     explicit BandViewController(QObject* parent = nullptr);
     ~BandViewController() override;
+
+    void classBegin() override;
+    void componentComplete() override;
 
 signals:
     void frameUpdated(const BandViewFrame&);

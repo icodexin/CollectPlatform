@@ -39,6 +39,13 @@ BandViewController::~BandViewController() {
     stopRendering();
 }
 
+void BandViewController::classBegin() {
+}
+
+void BandViewController::componentComplete() {
+    startRendering();
+}
+
 void BandViewController::pushData(const WristbandPacket& data) {
     if (m_worker)
         QMetaObject::invokeMethod(m_worker, &BandViewWorker::pushData, Qt::QueuedConnection, data);
@@ -56,6 +63,7 @@ void BandViewController::startRendering() {
     m_worker->moveToThread(m_thread);
     connect(m_worker, &BandViewWorker::frameReady, this, &BandViewController::frameUpdated);
     connect(m_thread, &QThread::finished, m_worker, &QObject::deleteLater);
+    connect(m_thread, &QThread::finished, m_thread, &QObject::deleteLater);
     if (m_timer.isActive())
         m_timer.stop();
     m_thread->start();

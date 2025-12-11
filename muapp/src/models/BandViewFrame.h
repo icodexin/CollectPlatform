@@ -1,7 +1,6 @@
 #ifndef BANDVIEWFRAME_H
 #define BANDVIEWFRAME_H
 
-#include <QObject>
 #include <QPointF>
 #include <QtQml/qqmlregistration.h>
 #include "model/WristbandData.h"

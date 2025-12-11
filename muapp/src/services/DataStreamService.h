@@ -1,0 +1,61 @@
+#ifndef DATASTREAMSERVICE_H
+#define DATASTREAMSERVICE_H
+
+#include <QtCore/QJsonObject>
+#include <QtCore/QObject>
+#include <QtQml/QQmlParserStatus>
+#include <QtQml/qqmlregistration.h>
+#include "model/EEGData.h"
+#include "model/WristbandData.h"
+
+class DataStreamService : public QObject, public QQmlParserStatus {
+    Q_OBJECT
+    Q_PROPERTY(QString subStudentId READ subStudentId WRITE setSubStudentId NOTIFY subStudentIdChanged)
+    Q_PROPERTY(DataType subDataType READ subDataType WRITE setSubDataType NOTIFY subDataTypeChanged)
+    QML_ELEMENT
+    Q_INTERFACES(QQmlParserStatus)
+
+public:
+    enum DataType {
+        ALL       = 0,
+        EEG       = 1,
+        Wristband = 2,
+        Emotion   = 3,
+        Cognition = 4,
+    };
+    Q_ENUM(DataType)
+
+    explicit DataStreamService(QObject* parent = nullptr);
+    ~DataStreamService() override;
+
+    void classBegin() override;
+    void componentComplete() override;
+
+    /// 订阅的学生ID
+    QString subStudentId() const;
+    void setSubStudentId(const QString& studentId);
+
+    /// 订阅的数据类型
+    DataType subDataType() const;
+    void setSubDataType(DataType type);
+
+signals:
+    void subStudentIdChanged(const QString& studentId);
+    void subDataTypeChanged(DataType type);
+
+    void msgReceived(const QJsonObject& msg);
+    void wristbandReceived(const WristbandPacket& data, const QString& studentId);
+    void eegReceived(const EEGSensorData& data, const QString& studentId);
+
+private:
+    void subscribe(const QString& studentId, DataType type);
+    void attachClientSignals(const QString& key) const;
+    void handleTextMessage(const QString& text);
+    void handleBinaryMessage(const QByteArray& data);
+
+private:
+    QString m_subStudentId;
+    DataType m_subDataType = ALL;
+};
+
+#endif //DATASTREAMSERVICE_H
