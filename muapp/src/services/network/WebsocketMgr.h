@@ -27,9 +27,9 @@ public:
     Q_INVOKABLE void openAll() const;
     Q_INVOKABLE void closeAll();
 
-    Q_INVOKABLE qint64 sendText(const QString& key, const QString& text) const;
-    Q_INVOKABLE qint64 sendJson(const QString& key, const QJsonObject& json) const;
-    Q_INVOKABLE qint64 sendBinary(const QString& key, const QByteArray& data) const;
+    Q_INVOKABLE void sendText(const QString& key, const QString& text) const;
+    Q_INVOKABLE void sendJson(const QString& key, const QJsonObject& json) const;
+    Q_INVOKABLE void sendBinary(const QString& key, const QByteArray& data) const;
 
     QPointer<WebsocketClient> client(const QString& key) const;
 

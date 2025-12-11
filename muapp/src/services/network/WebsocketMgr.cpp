@@ -92,31 +92,22 @@ void WebsocketMgr::closeAll() {
     }
 }
 
-qint64 WebsocketMgr::sendText(const QString& key, const QString& text) const {
+void WebsocketMgr::sendText(const QString& key, const QString& text) const {
     if (const auto c = client(key)) {
-        qint64 id = 0;
-        QMetaObject::invokeMethod(c, &WebsocketClient::sendText, qReturnArg(id), text);
-        return id;
+        QMetaObject::invokeMethod(c, &WebsocketClient::sendText, text);
     }
-    return 0;
 }
 
-qint64 WebsocketMgr::sendJson(const QString& key, const QJsonObject& json) const {
+void WebsocketMgr::sendJson(const QString& key, const QJsonObject& json) const {
     if (const auto c = client(key)) {
-        qint64 id = 0;
-        QMetaObject::invokeMethod(c, "sendJson", Q_RETURN_ARG(qint64, id), Q_ARG(QJsonObject, json));
-        return id;
+        QMetaObject::invokeMethod(c, &WebsocketClient::sendJson, json);
     }
-    return 0;
 }
 
-qint64 WebsocketMgr::sendBinary(const QString& key, const QByteArray& data) const {
+void WebsocketMgr::sendBinary(const QString& key, const QByteArray& data) const {
     if (const auto c = client(key)) {
-        qint64 id = 0;
-        QMetaObject::invokeMethod(c, &WebsocketClient::sendBinary, qReturnArg(id), data);
-        return id;
+        QMetaObject::invokeMethod(c, &WebsocketClient::sendBinary, data);
     }
-    return 0;
 }
 
 QPointer<WebsocketClient> WebsocketMgr::client(const QString& key) const {
