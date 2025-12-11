@@ -18,7 +18,9 @@ class WebsocketClient final : public QObject {
     Q_PROPERTY(int heartbeatInterval READ heartbeatInterval WRITE setHeartbeatInterval NOTIFY heartbeatIntervalChanged)
     Q_PROPERTY(int heartbeatTimeout READ heartbeatTimeout WRITE setHeartbeatTimeout NOTIFY heartbeatTimeoutChanged)
     Q_PROPERTY(int heartbeatRetries READ heartbeatRetries WRITE setHeartbeatRetries NOTIFY heartbeatRetriesChanged)
+    Q_PROPERTY(bool useReconnect READ useReconnect WRITE setUseReconnect NOTIFY useReconnectChanged)
     Q_PROPERTY(int reconnectMaxAttempts READ reconnectMaxAttempts WRITE setReconnectMaxAttempts NOTIFY reconnectMaxAttemptsChanged)
+    Q_PROPERTY(int reconnectBaseNumber READ reconnectBaseNumber WRITE setReconnectBaseNumber NOTIFY reconnectBaseNumberChanged)
     Q_PROPERTY(int reconnectBaseDelay READ reconnectBaseDelay WRITE setReconnectBaseDelay NOTIFY reconnectBaseDelayChanged)
     Q_PROPERTY(int reconnectMaxDelay READ reconnectMaxDelay WRITE setReconnectMaxDelay NOTIFY reconnectMaxDelayChanged)
     Q_PROPERTY(bool useJitter READ useJitter WRITE setUseJitter NOTIFY useJitterChanged)
@@ -32,8 +34,10 @@ public:
     static constexpr int defaultHeartbeatTimeout = 500;   // ms
     static constexpr int defaultHeartbeatRetries = 2;
     static constexpr int defaultReconnectMaxAttempts = 5;
+    static constexpr int defaultReconnectBaseNumber = 2;
     static constexpr int defaultReconnectBaseDelay = 500;  // ms
     static constexpr int defaultReconnectMaxDelay = 30000; // ms
+    static constexpr bool defaultUseReconnect = true;
     static constexpr bool defaultUseJitter = true;
 
     enum Status {
@@ -77,9 +81,15 @@ public:
     /// 心跳检测参数设置
     Q_INVOKABLE void setHeartbeat(int interval, int timeout, int retries);
 
-    /// 自动重连最大尝试次数, 等于0表示不启用自动重连
+    /// 是否启用自动重连
+    bool useReconnect() const;
+    void setUseReconnect(bool use);
+    /// 自动重连最大尝试次数, 等于0表示不限制重连次数
     int reconnectMaxAttempts() const;
     void setReconnectMaxAttempts(int count);
+    /// 自动重连指数退避底数
+    int reconnectBaseNumber() const;
+    void setReconnectBaseNumber(int base);
     /// 自动重连指数退避基础时延
     int reconnectBaseDelay() const;
     void setReconnectBaseDelay(int msec);
@@ -90,7 +100,7 @@ public:
     bool useJitter() const;
     void setUseJitter(bool jitter);
     /// 自动重连参数设置
-    Q_INVOKABLE void setReconnect(int maxAttempts, int baseDelay, int maxDelay, bool useJitter);
+    Q_INVOKABLE void setReconnect(int maxAttempts, int baseDelay, int maxDelay, bool useJitter, int baseNumber = defaultReconnectBaseNumber);
     /// 已尝试重连次数
     int reconnectAttempts() const;
 
@@ -115,7 +125,9 @@ signals:
     void heartbeatTimeoutChanged(int count);
     void heartbeatRetriesChanged(int count);
 
+    void useReconnectChanged(bool use);
     void reconnectMaxAttemptsChanged(int count);
+    void reconnectBaseNumberChanged(int base);
     void reconnectBaseDelayChanged(int msec);
     void reconnectMaxDelayChanged(int msec);
     void useJitterChanged(bool jitter);
@@ -183,9 +195,11 @@ private:
     qint64 m_lastPongTimestamp = 0; // 收到最后一个pong的时间戳
 
     int m_reconnectAttempts = 0;                              // 已尝试重连次数
+    int m_reconnectBaseNumber = defaultReconnectBaseNumber;   // 指数退避底数
     int m_reconnectBaseDelay = defaultReconnectBaseDelay;     // 指数退避基础时延
     int m_reconnectMaxDelay = defaultReconnectMaxDelay;       // 重连最大时延
-    int m_reconnectMaxAttempts = defaultReconnectMaxAttempts; // 最大重连次数, 等于0时不启用自动重连
+    int m_reconnectMaxAttempts = defaultReconnectMaxAttempts; // 最大重连次数, 等于0时不限制重连次数
+    bool m_useReconnect = defaultUseReconnect;                // 启用自动重连
     bool m_useJitter = defaultUseJitter;                      // 随机扰动
     bool m_manualCloseFlag = false;                           // 主动关闭标志
 

@@ -9,7 +9,8 @@ void WebsocketMgr::setHeartbeatParams(const int interval, const int timeout, con
 }
 
 void WebsocketMgr::setReconnectParams(const int maxAttempts, const int baseDelay, const int maxDelay,
-                                      const bool useJitter) {
+                                      const bool useJitter, const int baseNumber) {
+    m_reconnectParams["baseNumber"] = baseNumber;
     m_reconnectParams["maxAttempts"] = maxAttempts;
     m_reconnectParams["baseDelay"] = baseDelay;
     m_reconnectParams["maxDelay"] = maxDelay;
@@ -34,7 +35,8 @@ bool WebsocketMgr::createConnection(const QString& key, const QUrl& url) {
         m_reconnectParams.value("maxAttempts", WebsocketClient::defaultReconnectMaxAttempts).toInt(),
         m_reconnectParams.value("baseDelay", WebsocketClient::defaultReconnectBaseDelay).toInt(),
         m_reconnectParams.value("maxDelay", WebsocketClient::defaultReconnectMaxDelay).toInt(),
-        m_reconnectParams.value("useJitter", WebsocketClient::defaultUseJitter).toBool()
+        m_reconnectParams.value("useJitter", WebsocketClient::defaultUseJitter).toBool(),
+        m_reconnectParams.value("baseNumber", WebsocketClient::defaultReconnectBaseNumber).toInt()
     );
 
     if (!m_authToken.isEmpty()) {

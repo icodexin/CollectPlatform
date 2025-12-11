@@ -14,7 +14,8 @@ class WebsocketMgr final : public QObject, public Singleton<WebsocketMgr> {
 
 public:
     Q_INVOKABLE void setHeartbeatParams(int interval, int timeout, int retries);
-    Q_INVOKABLE void setReconnectParams(int maxAttempts, int baseDelay, int maxDelay, bool useJitter);
+    Q_INVOKABLE void setReconnectParams(int maxAttempts, int baseDelay, int maxDelay, bool useJitter,
+                                        int baseNumber = WebsocketClient::defaultReconnectBaseNumber);
 
     Q_INVOKABLE bool createConnection(const QString& key, const QUrl& url);
     Q_INVOKABLE bool removeConnection(const QString& key);

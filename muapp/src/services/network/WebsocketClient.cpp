@@ -136,6 +136,17 @@ void WebsocketClient::setHeartbeat(const int interval, const int timeout, const 
     setHeartbeatInterval(interval);
 }
 
+bool WebsocketClient::useReconnect() const {
+    return m_useReconnect;
+}
+
+void WebsocketClient::setUseReconnect(bool use) {
+    if (m_useReconnect == use)
+        return;
+    m_useReconnect = use;
+    emit useReconnectChanged(use);
+}
+
 int WebsocketClient::reconnectMaxAttempts() const {
     return m_reconnectMaxAttempts;
 }
@@ -145,6 +156,17 @@ void WebsocketClient::setReconnectMaxAttempts(const int count) {
         return;
     m_reconnectMaxAttempts = count > 0 ? count : 0;
     emit reconnectMaxAttemptsChanged(m_reconnectMaxAttempts);
+}
+
+int WebsocketClient::reconnectBaseNumber() const {
+    return m_reconnectBaseNumber;
+}
+
+void WebsocketClient::setReconnectBaseNumber(const int base) {
+    if (m_reconnectBaseNumber == base)
+        return;
+    m_reconnectBaseNumber = base > 0 ? base : 1;
+    emit reconnectBaseNumberChanged(m_reconnectBaseNumber);
 }
 
 int WebsocketClient::reconnectBaseDelay() const {
@@ -181,7 +203,8 @@ void WebsocketClient::setUseJitter(const bool jitter) {
 }
 
 void WebsocketClient::setReconnect(const int maxAttempts, const int baseDelay, const int maxDelay,
-                                   const bool useJitter) {
+                                   const bool useJitter, const int baseNumber) {
+    setReconnectBaseNumber(baseNumber);
     setReconnectBaseDelay(baseDelay);
     setReconnectMaxDelay(maxDelay);
     setUseJitter(useJitter);
@@ -217,7 +240,6 @@ void WebsocketClient::close() {
         stopReconnect();
         m_manualCloseFlag = true;
         if (m_socket) {
-            qCDebug(wsClient) << QString("FUCK FUCK [%1] Closing websocket connection.").arg(m_url.toString());
             m_socket->close();
         }
         return;
@@ -270,7 +292,7 @@ void WebsocketClient::onStateChanged(const QAbstractSocket::SocketState state) {
             // 外部通过 open()/onReconnect() 区分为 Connecting/Reconnecting
             break;
         case QAbstractSocket::UnconnectedState: {
-            if (!m_manualCloseFlag && m_reconnectMaxAttempts > 0)
+            if (!m_manualCloseFlag && m_useReconnect)
                 scheduleReconnect();
             else
                 setStatus(Closed);
@@ -444,7 +466,7 @@ void WebsocketClient::scheduleReconnect() {
     }
 
     // 超过最大重连次数
-    if (m_reconnectAttempts >= m_reconnectMaxAttempts) {
+    if (m_reconnectMaxAttempts > 0 && m_reconnectAttempts >= m_reconnectMaxAttempts) {
         emit errorOccurred(QAbstractSocket::SocketError::RemoteHostClosedError,
             tr("Maximum reconnect attempts reached."));
         setStatus(Closed);
@@ -454,9 +476,9 @@ void WebsocketClient::scheduleReconnect() {
     if (m_reconnectTimer->isActive())
         return;
 
+    const int delay = nextReconnectDelay();
     addReconnectAttempts();
     setStatus(Reconnecting);
-    const int delay = nextReconnectDelay();
     qCDebug(wsClient) << QString("[%1] Reconnect scheduled in %2 ms (attempt %3)")
                          .arg(url().toString())
                          .arg(delay)
@@ -475,10 +497,10 @@ int WebsocketClient::nextReconnectDelay() const {
     if (m_reconnectBaseDelay <= 0)
         return 0;
 
-    const int factor = m_reconnectAttempts >= 30
-                           ? std::numeric_limits<int>::max() / m_reconnectBaseDelay
-                           : (1 << m_reconnectAttempts);
-    const qint64 exponentialDelay = static_cast<qint64>(m_reconnectBaseDelay) * factor;
+    const qint64 factor = static_cast<qint64>(m_reconnectBaseNumber) << m_reconnectAttempts;
+    qint64 exponentialDelay = m_reconnectBaseDelay * factor;
+    if (exponentialDelay > m_reconnectMaxDelay)
+        exponentialDelay = m_reconnectMaxDelay;
 
     int delay = static_cast<int>(exponentialDelay);
     delay = qMin(m_reconnectMaxDelay, delay);
