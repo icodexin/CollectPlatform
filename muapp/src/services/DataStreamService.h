@@ -13,6 +13,7 @@ class DataStreamService : public QObject, public QQmlParserStatus {
     Q_PROPERTY(QString subStudentId READ subStudentId WRITE setSubStudentId NOTIFY subStudentIdChanged)
     Q_PROPERTY(DataType subDataType READ subDataType WRITE setSubDataType NOTIFY subDataTypeChanged)
     Q_PROPERTY(Status status READ status NOTIFY statusChanged)
+    Q_PROPERTY(int connectTimes READ connectTimes NOTIFY connectTimesChanged)
     QML_ELEMENT
     Q_INTERFACES(QQmlParserStatus)
 
@@ -50,10 +51,14 @@ public:
     /// 服务状态
     Status status() const;
 
+    /// 尝试连接次数
+    int connectTimes() const;
+
 signals:
     void subStudentIdChanged(const QString& studentId);
     void subDataTypeChanged(DataType type);
     void statusChanged(Status status);
+    void connectTimesChanged(int times);
 
     void msgReceived(const QJsonObject& msg);
     void wristbandReceived(const WristbandPacket& data, const QString& studentId);
@@ -61,6 +66,7 @@ signals:
 
 private:
     void setStatus(Status status);
+    void setConnectTimes(int times);
     void subscribe(const QString& studentId, DataType type);
     void attachClientSignals(const QString& key);
     void handleTextMessage(const QString& text);
@@ -70,6 +76,7 @@ private:
     QString m_subStudentId;
     DataType m_subDataType = ALL;
     Status m_status = Offline;
+    int m_connectTimes = 0;
 };
 
 #endif //DATASTREAMSERVICE_H

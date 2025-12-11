@@ -5,20 +5,164 @@ import MuApp
 MuPage {
     title: "实时采集"
     titleIconSource: HusIcon.DotChartOutlined
-    titleText: "实时采集"
 
-    BandView {
-        id: bandView
+    // todo: replace with real model
+    property var stuModel: [
+        {
+            "name": "Student 1",
+            "status": "在线"
+        },
+        {
+            "name": "Student 2",
+            "status": "离线"
+        },
+        {
+            "name": "Student 3",
+            "status": "在线"
+        }
+    ]
+
+    ListView {
+        id: listView
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.bottom: parent.bottom
-        width: parent.width / 2
+        anchors.bottom: statusBar.top
+        model: stuModel
+        delegate: stuDelegate
+        highlight: Rectangle { radius: 10; color: "lightsteelblue" }
+        highlightMoveDuration: HusTheme.animationEnabled ? HusTheme.Primary.durationFast : 0
+        width: 150
+        focus: true
+        clip: true
     }
 
-    EEGView {
-        anchors.left: bandView.right
+    Component {
+        id: stuDelegate
+        Item {
+            id: stuItem
+            required property var modelData
+            required property int index
+            property int contentHeight: 30
+            property int padding: 8
+            width: listView.width
+            height: contentHeight + 2 * padding
+
+            Row {
+                width: parent.width
+                height: parent.height
+                padding: parent.padding
+                spacing: 8
+
+                HusAvatar {
+                    id: stuAvatar
+                    size: stuItem.contentHeight
+                    iconSource: HusIcon.UserOutlined
+                }
+
+                Column {
+                    anchors.verticalCenter: parent.verticalCenter
+                    HusText {
+                        text: modelData.name
+                        font.bold: true
+                    }
+                    Row {
+                        spacing: 4
+                        Rectangle {
+                            width: stuStatusText.height / 2
+                            height: stuStatusText.height / 2
+                            radius: width / 2
+                            color: modelData.status === "在线" ? "green" : "gray"
+                            anchors.verticalCenter: parent.verticalCenter
+                        }
+                        HusText {
+                            id: stuStatusText
+                            text: modelData.status
+                        }
+                    }
+                }
+            }
+
+            MouseArea {
+                anchors.fill: parent
+                onClicked: { listView.currentIndex = index; }
+            }
+        }
+    }
+
+    Row {
+        id: statusBar
+        anchors.left: listView.left
+        anchors.right: listView.right
+        anchors.bottom: parent.bottom
+
+        HusText {
+            id: statusText
+            text: {
+                switch (service.status) {
+                case DataStreamService.Offline:
+                    return "服务已断开";
+                case DataStreamService.Online:
+                    return "服务已连接";
+                case DataStreamService.Connecting:
+                    return "服务已断开，连接中...";
+                }
+            }
+        }
+    }
+
+    Row {
+        anchors.left: listView.right
         anchors.top: parent.top
         anchors.right: parent.right
         anchors.bottom: parent.bottom
+        anchors.leftMargin: 10
+
+        BandView {
+            id: bandView
+            width: parent.width / 2
+            height: parent.height
+        }
+
+        EEGView {
+            id: eegView
+            width: parent.width / 2
+            height: parent.height
+        }
+    }
+
+    BandViewController {
+        id: bandViewController
+
+        onFrameUpdated: (frame) => {
+            bandView.updateFrame(frame)
+        }
+    }
+
+    DataStreamService {
+        id: service
+        subStudentId: "10001" // todo: replace with real student id
+
+        onWristbandReceived: (data) => {
+            bandViewController.pushData(data);
+        }
+
+        onConnectTimesChanged: (times) =>{
+            if (times === 5) {
+                AppController.notify.error(
+                    "无法连接数据服务",
+                    `连接异常，请检查网络或联系管理员。已尝试连接5次...`,
+                    60000,
+                    "datastream-service-connection-error"
+                );
+            } else if (times > 5) {
+                AppController.notify.setProperty(
+                    "datastream-service-connection-error",
+                    "description",
+                    `连接异常，请检查网络或联系管理员。已尝试连接${times}次...`
+                );
+            } else if (times === 0) {
+                AppController.notify.close("datastream-service-connection-error");
+            }
+        }
     }
 }

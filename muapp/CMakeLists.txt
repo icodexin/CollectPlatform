@@ -55,6 +55,7 @@ set(QML_CPP_FILES
     src/services/MuSettingsMgr.h src/services/MuSettingsMgr.cpp
     src/services/network/WebsocketClient.h src/services/network/WebsocketClient.cpp
     src/services/network/WebsocketMgr.h src/services/network/WebsocketMgr.cpp
+    src/services/DataStreamService.h src/services/DataStreamService.cpp
     src/BandViewController.h src/BandViewController.cpp
 )
 

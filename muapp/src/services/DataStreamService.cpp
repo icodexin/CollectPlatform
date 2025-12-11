@@ -60,11 +60,22 @@ DataStreamService::Status DataStreamService::status() const {
     return m_status;
 }
 
+int DataStreamService::connectTimes() const {
+    return m_connectTimes;
+}
+
 void DataStreamService::setStatus(const Status status) {
     if (m_status == status)
         return;
     m_status = status;
     emit statusChanged(status);
+}
+
+void DataStreamService::setConnectTimes(const int times) {
+    if (m_connectTimes == times)
+        return;
+    m_connectTimes = times;
+    emit connectTimesChanged(times);
 }
 
 void DataStreamService::subscribe(const QString& studentId, const DataType type) {
@@ -102,6 +113,7 @@ void DataStreamService::attachClientSignals(const QString& key) {
             }
         }
     });
+    connect(client, &WebsocketClient::reconnectAttemptsChanged, this, &DataStreamService::setConnectTimes);
     connect(client, &WebsocketClient::errorOccurred, this, [](const QAbstractSocket::SocketError error, const QString& errorString) {
         qCDebug(dsService).noquote() << QString("WebSocket error occurred: %1 - %2").arg(error).arg(errorString);
     });
