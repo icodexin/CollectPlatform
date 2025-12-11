@@ -13,9 +13,28 @@ class WebsocketMgr final : public QObject, public Singleton<WebsocketMgr> {
     Q_DISABLE_COPY_MOVE(WebsocketMgr)
 
 public:
-    Q_INVOKABLE void setHeartbeatParams(int interval, int timeout, int retries);
-    Q_INVOKABLE void setReconnectParams(int maxAttempts, int baseDelay, int maxDelay, bool useJitter,
-                                        int baseNumber = WebsocketClient::defaultReconnectBaseNumber);
+    struct HeartbeatParam {
+        int interval = WebsocketClient::defaultHeartbeatInterval;
+        int timeout = WebsocketClient::defaultHeartbeatTimeout;
+        int retries = WebsocketClient::defaultHeartbeatRetries;
+    };
+
+    struct ReconnectParam {
+        int maxAttempts = WebsocketClient::defaultReconnectMaxAttempts;
+        int baseDelay = WebsocketClient::defaultReconnectBaseDelay;
+        int maxDelay = WebsocketClient::defaultReconnectMaxDelay;
+        bool useJitter = WebsocketClient::defaultUseJitter;
+        int baseNumber = WebsocketClient::defaultReconnectBaseNumber;
+    };
+
+    /// 设置全局心跳参数
+    Q_INVOKABLE void setHeartbeatParam(const HeartbeatParam& param);
+    /// 设置指定连接的心跳参数
+    Q_INVOKABLE void setHeartbeatParam(const QString& key, const HeartbeatParam& param);
+    /// 设置全局重连参数
+    Q_INVOKABLE void setReconnectParam(const ReconnectParam& param);
+    /// 设置指定连接的重连参数
+    Q_INVOKABLE void setReconnectParam(const QString& key, const ReconnectParam& param);
 
     Q_INVOKABLE bool createConnection(const QString& key, const QUrl& url);
     Q_INVOKABLE bool removeConnection(const QString& key);
@@ -58,8 +77,10 @@ private:
 private:
     QThread* m_workerThread = nullptr;
     QHash<QString, WebsocketClient*> m_clients;
-    QVariantMap m_heartbeatParams;
-    QVariantMap m_reconnectParams;
+    QHash<QString, HeartbeatParam> m_clientHeartbeatParams;
+    QHash<QString, ReconnectParam> m_clientReconnectParams;
+    HeartbeatParam m_globalHeartbeatParam;
+    ReconnectParam m_globalReconnectParam;
     QString m_authToken;
 };
 

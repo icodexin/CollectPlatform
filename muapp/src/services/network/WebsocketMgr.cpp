@@ -2,19 +2,49 @@
 
 #include <QtCore/QThread>
 
-void WebsocketMgr::setHeartbeatParams(const int interval, const int timeout, const int retries) {
-    m_heartbeatParams["interval"] = interval;
-    m_heartbeatParams["timeout"] = timeout;
-    m_heartbeatParams["retries"] = retries;
+void WebsocketMgr::setHeartbeatParam(const HeartbeatParam& param) {
+    m_globalHeartbeatParam = param;
+
+    for (const auto& [_, client] : std::as_const(m_clients).asKeyValueRange()) {
+        QMetaObject::invokeMethod(client, &WebsocketClient::setHeartbeat, param.interval, param.timeout, param.retries);
+    }
 }
 
-void WebsocketMgr::setReconnectParams(const int maxAttempts, const int baseDelay, const int maxDelay,
-                                      const bool useJitter, const int baseNumber) {
-    m_reconnectParams["baseNumber"] = baseNumber;
-    m_reconnectParams["maxAttempts"] = maxAttempts;
-    m_reconnectParams["baseDelay"] = baseDelay;
-    m_reconnectParams["maxDelay"] = maxDelay;
-    m_reconnectParams["useJitter"] = useJitter;
+void WebsocketMgr::setHeartbeatParam(const QString& key, const HeartbeatParam& param) {
+    m_clientHeartbeatParams.insert(key, param);
+    if (const auto client = m_clients.value(key, nullptr)) {
+        QMetaObject::invokeMethod(client, &WebsocketClient::setHeartbeat, param.interval, param.timeout, param.retries);
+    }
+}
+
+void WebsocketMgr::setReconnectParam(const ReconnectParam& param) {
+    m_globalReconnectParam = param;
+    for (const auto& [_, client] : std::as_const(m_clients).asKeyValueRange()) {
+        QMetaObject::invokeMethod(
+            client,
+            &WebsocketClient::setReconnect,
+            param.maxAttempts,
+            param.baseDelay,
+            param.maxDelay,
+            param.useJitter,
+            param.baseNumber
+        );
+    }
+}
+
+void WebsocketMgr::setReconnectParam(const QString& key, const ReconnectParam& param) {
+    m_clientReconnectParams.insert(key, param);
+    if (const auto client = m_clients.value(key, nullptr)) {
+        QMetaObject::invokeMethod(
+            client,
+            &WebsocketClient::setReconnect,
+            param.maxAttempts,
+            param.baseDelay,
+            param.maxDelay,
+            param.useJitter,
+            param.baseNumber
+        );
+    }
 }
 
 bool WebsocketMgr::createConnection(const QString& key, const QUrl& url) {
@@ -26,18 +56,32 @@ bool WebsocketMgr::createConnection(const QString& key, const QUrl& url) {
 
     auto* client = new WebsocketClient(nullptr);
     client->setUrl(url);
-    client->setHeartbeat(
-        m_heartbeatParams.value("interval", WebsocketClient::defaultHeartbeatInterval).toInt(),
-        m_heartbeatParams.value("timeout", WebsocketClient::defaultHeartbeatTimeout).toInt(),
-        m_heartbeatParams.value("retries", WebsocketClient::defaultHeartbeatRetries).toInt()
-    );
-    client->setReconnect(
-        m_reconnectParams.value("maxAttempts", WebsocketClient::defaultReconnectMaxAttempts).toInt(),
-        m_reconnectParams.value("baseDelay", WebsocketClient::defaultReconnectBaseDelay).toInt(),
-        m_reconnectParams.value("maxDelay", WebsocketClient::defaultReconnectMaxDelay).toInt(),
-        m_reconnectParams.value("useJitter", WebsocketClient::defaultUseJitter).toBool(),
-        m_reconnectParams.value("baseNumber", WebsocketClient::defaultReconnectBaseNumber).toInt()
-    );
+
+    if (m_clientHeartbeatParams.contains(key)) {
+        const auto& [interval, timeout, retries] = m_clientHeartbeatParams.value(key);
+        client->setHeartbeat(interval, timeout, retries);
+    }
+    else {
+        client->setHeartbeat(
+            m_globalHeartbeatParam.interval,
+            m_globalHeartbeatParam.timeout,
+            m_globalHeartbeatParam.retries
+        );
+    }
+
+    if (m_clientReconnectParams.contains(key)) {
+        const auto& [maxAttempts, baseDelay, maxDelay, useJitter, baseNumber] = m_clientReconnectParams.value(key);
+        client->setReconnect(maxAttempts, baseDelay, maxDelay, useJitter, baseNumber);
+    }
+    else {
+        client->setReconnect(
+            m_globalReconnectParam.maxAttempts,
+            m_globalReconnectParam.baseDelay,
+            m_globalReconnectParam.maxDelay,
+            m_globalReconnectParam.useJitter,
+            m_globalReconnectParam.baseNumber
+        );
+    }
 
     if (!m_authToken.isEmpty()) {
         WebsocketClient::HttpHeaders headers = client->upgradeHeaders();
