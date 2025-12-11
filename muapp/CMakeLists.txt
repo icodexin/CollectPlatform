@@ -9,7 +9,7 @@ project(MuApp VERSION ${APP_VERSION} LANGUAGES CXX)
 set(TARGET_OUTPUT_NAME "Multimodal App")
 
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 20)
 
 find_package(Qt6 COMPONENTS Core WebSockets Quick Qml Graphs REQUIRED)
 find_package(HuskarUI REQUIRED)

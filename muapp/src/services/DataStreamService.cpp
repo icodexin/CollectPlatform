@@ -1,5 +1,6 @@
 #include "DataStreamService.h"
 
+#include <QtCore/QJsonDocument>
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QUrl>
 #include <QtCore/QUrlQuery>

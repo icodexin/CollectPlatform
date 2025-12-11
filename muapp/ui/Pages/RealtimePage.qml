@@ -150,15 +150,9 @@ MuPage {
             if (times === 5) {
                 AppController.notify.error(
                     "无法连接数据服务",
-                    `连接异常，请检查网络或联系管理员。已尝试连接5次...`,
+                    `连接异常，请检查网络或联系管理员。`,
                     60000,
                     "datastream-service-connection-error"
-                );
-            } else if (times > 5) {
-                AppController.notify.setProperty(
-                    "datastream-service-connection-error",
-                    "description",
-                    `连接异常，请检查网络或联系管理员。已尝试连接${times}次...`
                 );
             } else if (times === 0) {
                 AppController.notify.close("datastream-service-connection-error");
