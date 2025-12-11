@@ -4,7 +4,6 @@
 #include <QtCore/QLoggingCategory>
 #include <QtCore/QRandomGenerator>
 #include <QtCore/QTimer>
-#include <QtQml/QJSEngine>
 #include <QtWebSockets/QWebSocket>
 #include <QtWebSockets/QWebSocketHandshakeOptions>
 
@@ -217,27 +216,29 @@ void WebsocketClient::close() {
     if (m_status != Closed) {
         stopReconnect();
         m_manualCloseFlag = true;
-        if (m_socket)
+        if (m_socket) {
+            qCDebug(wsClient) << QString("FUCK FUCK [%1] Closing websocket connection.").arg(m_url.toString());
             m_socket->close();
+        }
         return;
     }
     qCDebug(wsClient) << QString("[%1] Websocket is already closed.").arg(m_url.toString());
 }
 
 qint64 WebsocketClient::sendText(const QString& text) {
-    if (m_status != Open || !m_socket) {
-        m_errString = tr("Messages can only be sent when the socket is open.");
-        emit errorOccurred(QAbstractSocket::SocketError::OperationError, m_errString);
-        return 0;
+    if (!canSendMessages()) {
+        enqueueTextMessage(text);
+        qCDebug(wsClient) << QString("[%1] Socket not open, queued text message.").arg(m_url.toString());
+        return text.size();
     }
     return m_socket->sendTextMessage(text);
 }
 
 qint64 WebsocketClient::sendBinary(const QByteArray& data) {
-    if (m_status != Open || !m_socket) {
-        m_errString = tr("Messages can only be sent when the socket is open.");
-        emit errorOccurred(QAbstractSocket::SocketError::OperationError, m_errString);
-        return 0;
+    if (!canSendMessages()) {
+        enqueueBinaryMessage(data);
+        qCDebug(wsClient) << QString("[%1] Socket not open, queued binary message.").arg(m_url.toString());
+        return data.size();
     }
     return m_socket->sendBinaryMessage(data);
 }
@@ -248,7 +249,7 @@ qint64 WebsocketClient::sendJson(const QJsonObject& json) {
 
 void WebsocketClient::ping(const QByteArray& payload) {
     if (m_status != Open || !m_socket) {
-        m_errString = tr("Messages can only be sent when the socket is open.");
+        m_errString = tr("Ping Messages can only be sent when the socket is open.");
         emit errorOccurred(QAbstractSocket::SocketError::OperationError, m_errString);
         return;
     }
@@ -355,6 +356,7 @@ void WebsocketClient::setStatus(const Status status) {
         startHeartbeat();
         clearReconnectAttempts();
         m_manualCloseFlag = false;
+        flushPendingMessages();
     }
     else {
         stopHeartbeat();
@@ -368,6 +370,40 @@ void WebsocketClient::setStatus(const Status status) {
     if (m_negotiatedSubprotocol != protocol) {
         m_negotiatedSubprotocol = protocol;
         emit negotiatedSubprotocolChanged(protocol);
+    }
+}
+
+bool WebsocketClient::canSendMessages() const {
+    return m_status == Open && m_socket;
+}
+
+void WebsocketClient::enqueueTextMessage(const QString& text) {
+    m_pendingMessages.enqueue({
+        .type = PendingMessage::Text,
+        .textPayload = text
+    });
+}
+
+void WebsocketClient::enqueueBinaryMessage(const QByteArray& data) {
+    m_pendingMessages.enqueue({
+        .type = PendingMessage::Binary,
+        .binaryPayload = data
+    });
+}
+
+void WebsocketClient::flushPendingMessages() {
+    if (!canSendMessages() || m_pendingMessages.isEmpty())
+        return;
+
+    while (!m_pendingMessages.isEmpty()) {
+        switch (const auto& message = m_pendingMessages.dequeue(); message.type) {
+            case PendingMessage::Text:
+                m_socket->sendTextMessage(message.textPayload);
+                break;
+            case PendingMessage::Binary:
+                m_socket->sendBinaryMessage(message.binaryPayload);
+                break;
+        }
     }
 }
 

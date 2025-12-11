@@ -2,6 +2,7 @@
 #define WEBSOCKETCLIENT_H
 
 #include <QtCore/QJsonObject>
+#include <QtCore/QQueue>
 #include <QtNetwork/QAbstractSocket>
 #include <QtQml/qqml.h>
 
@@ -135,12 +136,23 @@ private slots:
     void onReconnect();
 
 private:
+    struct PendingMessage {
+        enum Type { Text, Binary } type = Type::Text;
+        QString textPayload;
+        QByteArray binaryPayload;
+    };
+
     // 设置底层WebSocket对象
     void setSocket(QWebSocket* socket);
     // 设置连接状态
     void setStatus(Status status);
     // 打开连接
     void openSocket();
+    // 立即发送或缓存待发送消息
+    bool canSendMessages() const;
+    void enqueueTextMessage(const QString& text);
+    void enqueueBinaryMessage(const QByteArray& data);
+    void flushPendingMessages();
     // 心跳检测
     void startHeartbeat();
     void stopHeartbeat();
@@ -178,6 +190,7 @@ private:
     bool m_manualCloseFlag = false;                           // 主动关闭标志
 
     Status m_status = Closed;
+    QQueue<PendingMessage> m_pendingMessages;                 // 待发送消息队列
 };
 
 #endif //WEBSOCKETCLIENT_H
