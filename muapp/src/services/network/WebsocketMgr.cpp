@@ -113,6 +113,7 @@ bool WebsocketMgr::removeConnection(const QString& key) {
     if (auto* c = m_clients.take(key)) {
         removeClient(c);
     }
+    m_clients.remove(key);
     return true;
 }
 
