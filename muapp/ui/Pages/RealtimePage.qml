@@ -1,4 +1,5 @@
 import QtQuick
+import QtQuick.Layouts
 import HuskarUI.Basic
 import MuApp
 
@@ -89,13 +90,20 @@ MuPage {
         }
     }
 
-    Row {
+    RowLayout {
         id: statusBar
         anchors.left: listView.left
         anchors.right: listView.right
         anchors.bottom: parent.bottom
 
+        HusSpin {
+            Layout.alignment: Qt.AlignVCenter
+            spinning: service.status === DataStreamService.Connecting
+            sizeHint: 'small'
+        }
+
         HusText {
+            Layout.alignment: Qt.AlignVCenter
             id: statusText
             text: {
                 switch (service.status) {
