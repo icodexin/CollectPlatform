@@ -1,6 +1,8 @@
 #include "WristbandData.h"
-#include <QJsonObject>
-#include <QJsonArray>
+#include <QtCore/QJsonArray>
+#include <QtCore/QJsonObject>
+
+#include "ISensorSerializer.h"
 
 namespace {
     // 手环数据采样间隔为20毫秒, 即采样率50Hz
@@ -63,6 +65,14 @@ WristbandPacket WristbandPacket::fromJsonObject(const QJsonObject& json) {
     }
     Q_ASSERT(pulseWaveArr.size() == gsrArr.size() && pulseWaveArr.size() == accArr.size());
     return packet;
+}
+
+QByteArray WristbandPacket::serialize(const ISensorSerializer& serializer) const {
+    return serializer.serialize(*this);
+}
+
+QString WristbandPacket::type() const {
+    return "wristband";
 }
 
 qint64 WristbandPacket::timestamp(const qsizetype index) const {

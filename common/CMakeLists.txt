@@ -13,6 +13,9 @@ set(CMAKE_AUTOMOC ON)
 set(H_FILES
     src/singleton.h
     src/SettingsManager.h
+    src/model/CQueue.h
+    src/model/ISensorData.h
+    src/model/ISensorSerializer.h
     src/model/serialize.h
     src/model/EEGData.h
     src/model/WristbandData.h
@@ -20,6 +23,9 @@ set(H_FILES
 
 set(CPP_FILES
     src/SettingsManager.cpp
+    src/model/CQueue.cpp
+    src/model/ISensorData.cpp
+    src/model/ISensorSerializer.cpp
     src/model/EEGData.cpp
     src/model/WristbandData.cpp
 )

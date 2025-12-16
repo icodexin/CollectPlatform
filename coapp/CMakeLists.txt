@@ -33,6 +33,8 @@ set(H_FILES
     src/components/RecordingIndicator.h
     src/components/SvgIconHelper.h
     src/services/log.h
+    src/services/DataPipe.h
+    src/services/DataSerializer.h
     src/services/CameraService.h
     src/services/BandServer.h
     src/services/EEGReceiver.h
@@ -60,6 +62,8 @@ set(CPP_FILES
     src/components/RecordingIndicator.cpp
     src/components/SvgIconHelper.cpp
     src/services/log.cpp
+    src/services/DataPipe.cpp
+    src/services/DataSerializer.cpp
     src/services/CameraService.cpp
     src/services/BandServer.cpp
     src/services/EEGReceiver.cpp

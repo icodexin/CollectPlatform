@@ -2,6 +2,8 @@
 #define SERIALIZE_H
 
 #include <msgpack.hpp>
+#include <QtCore/QVariant>
+#include <QtCore/QVariantMap>
 #include "EEGData.h"
 #include "WristbandData.h"
 
@@ -269,6 +271,32 @@ struct object_with_zone<EEGEventData> {
             default:
                 msg_ptr.type = msgpack::type::NIL;
         }
+    }
+};
+
+template<>
+struct convert<EEGPacket> {
+    msgpack::object const& operator()(msgpack::object const& o, EEGPacket& v) const {
+        o.convert(v.data);
+        return o;
+    }
+};
+
+template<>
+struct pack<EEGPacket> {
+    template <typename Stream>
+    msgpack::packer<Stream>& operator()(msgpack::packer<Stream>& o, EEGPacket const& v) const {
+        o.pack(v.data);
+        return o;
+    }
+};
+
+template<>
+struct object_with_zone<EEGPacket> {
+    void operator()(msgpack::object::with_zone& o, EEGPacket const& v) const {
+        const msgpack::object tmp(v.data, o.zone);
+        o.type = tmp.type;
+        o.via = tmp.via;
     }
 };
 

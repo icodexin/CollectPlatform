@@ -3,6 +3,8 @@
 
 #include <QObject>
 
+#include "ISensorData.h"
+
 using HrValue = qreal;
 using GsrValue = qreal;
 
@@ -23,16 +25,21 @@ struct AccValue {
     explicit AccValue(const QJsonObject& json);
 };
 
-class WristbandPacket {
+class WristbandPacket: public ISensorData {
 public:
     WristbandPacket() = default;
-    ~WristbandPacket() = default;
+    ~WristbandPacket() override = default;
     WristbandPacket(const WristbandPacket&) = default;
     WristbandPacket& operator=(const WristbandPacket&) = default;
+    WristbandPacket(WristbandPacket&& other) noexcept = default;
+    WristbandPacket& operator=(WristbandPacket&& other) noexcept = default;
 
     WristbandPacket(qint64 timestamp, HrValue hr, const QList<PulseWaveValue>& pulseWaves,
                     const QList<GsrValue>& gsrs, const QList<AccValue>& accs);
     static WristbandPacket fromJsonObject(const QJsonObject& json);
+
+    QByteArray serialize(const ISensorSerializer& serializer) const override;
+    QString type() const override;
 
     qint64 timestamp(qsizetype index = 0) const;
     HrValue hr(qsizetype index = 0) const;
