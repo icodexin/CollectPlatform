@@ -62,11 +62,12 @@ signals:
 
     void msgReceived(const QJsonObject& msg);
     void wristbandReceived(const WristbandPacket& data, const QString& studentId);
-    void eegReceived(const EEGSensorData& data, const QString& studentId);
+    void eegReceived(const EEGPacket& data, const QString& studentId);
 
 private:
     void setStatus(Status status);
     void setConnectTimes(int times);
+    void start();
     void subscribe(const QString& studentId, DataType type);
     void attachClientSignals(const QString& key);
     void handleTextMessage(const QString& text);

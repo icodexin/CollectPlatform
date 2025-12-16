@@ -10,7 +10,7 @@
 
 namespace {
     constexpr const char* kDataStreamKey = "datastream";
-    constexpr const char* kWebsocketUrl = "ws://localhost:8765/datastream";
+    constexpr const char* kWebsocketUrl = "ws://localhost:8000/datastream/ws";
 }
 
 Q_LOGGING_CATEGORY(dsService, "Services.DataStreamService")
@@ -28,9 +28,7 @@ void DataStreamService::classBegin() {
 }
 
 void DataStreamService::componentComplete() {
-    if (!m_subStudentId.isEmpty()) {
-        subscribe(m_subStudentId, m_subDataType);
-    }
+    start();
 }
 
 QString DataStreamService::subStudentId() const {
@@ -79,17 +77,27 @@ void DataStreamService::setConnectTimes(const int times) {
     emit connectTimesChanged(times);
 }
 
-void DataStreamService::subscribe(const QString& studentId, const DataType type) {
+void DataStreamService::start() {
     if (!MuWebsocketMgr.hasConnection(kDataStreamKey)) {
         MuWebsocketMgr.setReconnectParam({.maxAttempts = 0, .baseNumber = 1}); // infinite reconnect
         MuWebsocketMgr.createConnection(kDataStreamKey, QUrl(kWebsocketUrl));
         MuWebsocketMgr.open(kDataStreamKey);
         attachClientSignals(kDataStreamKey);
     }
+}
+
+void DataStreamService::subscribe(const QString& studentId, const DataType type) {
+    if (m_status == Offline) {
+        qCDebug(dsService) << "Cannot subscribe, WebSocket is not connected.";
+        return;
+    }
     MuWebsocketMgr.sendJson(kDataStreamKey, {
         {"msg_type", "subscribe"},
-        {"student_id", studentId},
-        {"data_type", QVariant::fromValue(type).toString().toLower()}
+        {
+            "subscriptions", QJsonObject{
+                {studentId, QVariant::fromValue(type).toString().toLower()}
+            }
+        }
     });
 }
 
@@ -106,6 +114,9 @@ void DataStreamService::attachClientSignals(const QString& key) {
             }
             case WebsocketClient::Open: {
                 setStatus(Online);
+                if (!m_subStudentId.isEmpty())
+                    // todo: change subscription when studentId or dataType changed at runtime
+                    subscribe(m_subStudentId, m_subDataType);
                 break;
             }
             default: {
@@ -115,9 +126,10 @@ void DataStreamService::attachClientSignals(const QString& key) {
         }
     });
     connect(client, &WebsocketClient::reconnectAttemptsChanged, this, &DataStreamService::setConnectTimes);
-    connect(client, &WebsocketClient::errorOccurred, this, [](const QAbstractSocket::SocketError error, const QString& errorString) {
-        qCDebug(dsService).noquote() << QString("WebSocket error occurred: %1 - %2").arg(error).arg(errorString);
-    });
+    connect(client, &WebsocketClient::errorOccurred, this,
+        [](const QAbstractSocket::SocketError error, const QString& errorString) {
+            qCDebug(dsService).noquote() << QString("WebSocket error occurred: %1 - %2").arg(error).arg(errorString);
+        });
 }
 
 void DataStreamService::handleTextMessage(const QString& text) {
@@ -133,17 +145,17 @@ void DataStreamService::handleBinaryMessage(const QByteArray& data) {
         const msgpack::object_handle oh = msgpack::unpack(data.constData(), data.size());
         auto msg_map = oh.get().as<std::map<QString, msgpack::object>>();
 
-        if (msg_map.find("student_id") == msg_map.end()) {
+        if (!msg_map.contains("student_id")) {
             throw std::runtime_error("student_id field missing");
         }
         auto student_id = msg_map["student_id"].as<QString>();
 
-        if (msg_map.find("data_type") == msg_map.end()) {
+        if (!msg_map.contains("data_type")) {
             throw std::runtime_error("data_type field missing");
         }
         auto data_type = msg_map["data_type"].as<QString>();
 
-        if (msg_map.find("data") == msg_map.end()) {
+        if (!msg_map.contains("data")) {
             throw std::runtime_error("data field missing");
         }
         auto data_obj = msg_map["data"];
@@ -153,7 +165,7 @@ void DataStreamService::handleBinaryMessage(const QByteArray& data) {
             emit wristbandReceived(wristband_data, student_id);
         }
         else if (data_type == "eeg") {
-            auto eeg_data = data_obj.as<EEGSensorData>();
+            auto eeg_data = data_obj.as<EEGPacket>();
             emit eegReceived(eeg_data, student_id);
         }
         else {
