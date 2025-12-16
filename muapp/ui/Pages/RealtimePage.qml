@@ -146,12 +146,24 @@ MuPage {
         }
     }
 
+    EEGViewController {
+        id: eegViewController
+
+        onFrameUpdated: (frame) => {
+            eegView.updateFrame(frame)
+        }
+    }
+
     DataStreamService {
         id: service
         subStudentId: "10001" // todo: replace with real student id
 
         onWristbandReceived: (data) => {
             bandViewController.pushData(data);
+        }
+
+        onEegReceived: (data) => {
+            eegViewController.pushData(data);
         }
 
         onConnectTimesChanged: (times) =>{

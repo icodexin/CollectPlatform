@@ -52,11 +52,16 @@ set(QML_FILES
 set(QML_CPP_FILES
     src/models/MinMaxQueue.h src/models/MinMaxQueue.cpp
     src/models/BandViewFrame.h src/models/BandViewFrame.cpp
+    src/models/EEGViewFrame.h src/models/EEGViewFrame.cpp
     src/services/MuSettingsMgr.h src/services/MuSettingsMgr.cpp
+    src/services/DataStreamService.h src/services/DataStreamService.cpp
+    src/controllers/BandViewController.h src/controllers/BandViewController.cpp
+    src/controllers/EEGViewController.h src/controllers/EEGViewController.cpp
+)
+
+set(CXX_SOURCE_FILES
     src/services/network/WebsocketClient.h src/services/network/WebsocketClient.cpp
     src/services/network/WebsocketMgr.h src/services/network/WebsocketMgr.cpp
-    src/services/DataStreamService.h src/services/DataStreamService.cpp
-    src/BandViewController.h src/BandViewController.cpp
 )
 
 set_source_files_properties(AppController.qml
@@ -70,11 +75,16 @@ qt_add_qml_module(${PROJECT_NAME}
     SOURCES ${QML_CPP_FILES}
 )
 
+target_sources(${PROJECT_NAME} PRIVATE
+    ${CXX_SOURCE_FILES}
+)
+
 target_include_directories(${PROJECT_NAME}
     PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/src
     ${CMAKE_CURRENT_SOURCE_DIR}/src/models
     ${CMAKE_CURRENT_SOURCE_DIR}/src/services
+    ${CMAKE_CURRENT_SOURCE_DIR}/src/controllers
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE

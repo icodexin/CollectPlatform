@@ -120,6 +120,10 @@ Item {
                 marginTop: 0
                 marginRight: 0
             }
+
+            function append_point(point) {
+                chChart.append_point(point);
+            }
         }
     }
 
@@ -157,16 +161,11 @@ Item {
         }
     }
 
-    Timer {
-        interval: 33; running: true; repeat: true
-        onTriggered: {
-            for (let i = 0; i < chNames.length; i++) {
-                const chItem = chCol.children[i];
-                const chChart = chItem.chart;
-                const now = Date.now();
-                const value = Math.sin(now / 500) * 50; // 绘制带高斯噪声的 sin 曲线，范围在 -50 到 50 之间
-                chChart.append_point(Qt.point(now, value));
-            }
+    function updateFrame(frame) {
+        console.assert(frame.length === chNames.length, "EEG frame length mismatch");
+        for (let i = 0; i < chNames.length; i++) {
+            const item = chCol.children[i];
+            item.append_point(frame.channelAt(i));
         }
     }
 }
