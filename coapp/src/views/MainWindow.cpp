@@ -12,6 +12,7 @@
 #include "components/LogBox.h"
 #include "services/BandServer.h"
 #include "services/CameraService.h"
+#include "services/DataPipe.h"
 #include "services/EEGReceiver.h"
 #include "services/MqttPublisher.h"
 
@@ -67,13 +68,22 @@ void MainWindow::initUI() {
 }
 
 void MainWindow::initServices() {
+    m_dataPipe = new DataPipe(this);
+    auto dataFetchedCbk = [this](std::unique_ptr<ISensorData> data_ptr) {
+        if (m_dataPipe)
+            m_dataPipe->push(std::move(data_ptr));
+    };
+
     m_eegReceiver = new EEGReceiver(nullptr);
+    m_eegReceiver->onDataFetched(dataFetchedCbk);
+
     m_eegThread = new QThread(this);
     m_eegReceiver->moveToThread(m_eegThread);
-    m_eegThread->start();
     connect(m_eegThread, &QThread::finished, m_eegReceiver, &QObject::deleteLater);
+    m_eegThread->start();
 
     m_bandServer = new BandServer(this);
+    m_bandServer->onDataReceived(dataFetchedCbk);
 
     m_cameraService = new CameraService(this);
     m_cameraService->updateCamera(ui_settingView->cameraDevice(), ui_settingView->cameraFormat());
@@ -124,9 +134,12 @@ void MainWindow::initConnection() {
     connect(m_mqttPubService, &MqttPublishService::started, ui_settingView, &SettingView::onMqttConnected);
     connect(m_mqttPubService, &MqttPublishService::stopped, ui_settingView, &SettingView::onMqttDisconnected);
     connect(m_mqttPubService, &MqttPublishService::started, this, [=] {
+        m_dataPipe->setStudentId(ui_settingView->mqttUserId());
+        m_dataPipe->allowPush(true);
         ui_logBox->log(LogMessage::SUCCESS, tr("MQTT connected"));
     });
     connect(m_mqttPubService, &MqttPublishService::stopped, this, [=] {
+        m_dataPipe->allowPush(false);
         ui_logBox->log(LogMessage::WARN, tr("MQTT disconnected"));
     });
     connect(m_mqttPubService, &MqttPublishService::errorOccurred,
@@ -137,9 +150,7 @@ void MainWindow::initConnection() {
         ui_logBox->log(LogMessage::INFO, tr("MQTT message sent, ID: %1").arg(msgId));
     });
 
-    connect(m_eegReceiver, &EEGReceiver::dataFetched, m_mqttPubService, &MqttPublishService::publishEEGData);
-    connect(m_bandServer, &BandServer::dataReceived, this, [=](const QString& id, const QByteArray& data) {
-        Q_UNUSED(id)
-        m_mqttPubService->publishBandData(data);
-    });
+    connect(m_dataPipe, &DataPipe::dataReady, m_mqttPubService,
+        qOverload<const QString&, const QByteArray&>(&MqttPublishService::publish)
+    );
 }

@@ -252,12 +252,8 @@ void MqttPublishService::publish(const QString& topic, const QByteArray& message
     );
 }
 
-void MqttPublishService::publishEEGData(const QByteArray& data) {
-    return publish("eeg", data);
-}
-
-void MqttPublishService::publishBandData(const QByteArray& data) {
-    return publish("wristband", data);
+void MqttPublishService::publish(const QString& topic, const QByteArray& message) {
+    publish(topic, message, 0, false);
 }
 
 void MqttPublishService::setStatus(const Status status) {

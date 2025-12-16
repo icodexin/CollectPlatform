@@ -20,6 +20,7 @@ public:
     int bandServicePort() const;
     QCameraDevice cameraDevice() const;
     QCameraFormat cameraFormat() const;
+    QString mqttUserId() const;
 
 signals:
     void requestConnectEEG(const QString& address, int port);

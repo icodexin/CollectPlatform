@@ -7,8 +7,6 @@
 
 BandClientHandler::BandClientHandler(qintptr socketDescriptor, QObject* parent)
     : QObject(parent), m_socketDescriptor(socketDescriptor) {
-    m_buffer.setBuffer(&m_serialized);
-    m_buffer.open(QIODevice::WriteOnly);
 }
 
 void BandClientHandler::start() {
@@ -69,13 +67,7 @@ void BandClientHandler::onReadyRead() {
             continue;
         }
 
-        auto data = WristbandPacket::fromJsonObject(doc.object());
-
-        m_serialized.clear();
-        m_buffer.seek(0);
-        msgpack::pack(m_buffer, data);
-
-        emit dataReceived(m_id, m_serialized);
+        emit dataReceived(m_id, WristbandPacket::fromJsonObject(doc.object()));
     }
 }
 
@@ -84,6 +76,14 @@ BandServer::BandServer(QObject* parent) : QTcpServer(parent) {
 
 BandServer::~BandServer() {
     stop();
+}
+
+void BandServer::onDataReceived(const std::function<void(std::unique_ptr<WristbandPacket>)>& callback) {
+    m_callback = callback;
+}
+
+void BandServer::onDataReceived(std::function<void(std::unique_ptr<WristbandPacket>)>&& callback) {
+    m_callback = std::move(callback);
 }
 
 bool BandServer::start(const quint16 port) {
@@ -125,7 +125,17 @@ void BandServer::incomingConnection(const qintptr socketDescriptor) {
 
     connect(handler, &BandClientHandler::clientConnected, this, &BandServer::clientConnected);
     connect(handler, &BandClientHandler::clientDisconnected, this, &BandServer::clientDisconnected);
-    connect(handler, &BandClientHandler::dataReceived, this, &BandServer::dataReceived);
+    connect(handler, &BandClientHandler::dataReceived,
+        this, [this] (const QString& id, const WristbandPacket& data) {
+        emit dataReceived(id, data.length());
+    });
+    connect(handler, &BandClientHandler::dataReceived,
+        handler, [this](const QString& _, const WristbandPacket& data) {
+            if (m_callback) {
+                m_callback(std::make_unique<WristbandPacket>(data));
+            }
+        }
+    );
     connect(handler, &BandClientHandler::errorOccurred, this, &BandServer::onClientErrorOccurred);
 
     connect(thread, &QThread::started, handler, &BandClientHandler::start);

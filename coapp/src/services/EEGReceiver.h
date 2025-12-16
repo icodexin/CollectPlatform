@@ -1,8 +1,7 @@
 #ifndef EEGRECEIVER_H
 #define EEGRECEIVER_H
 
-#include <QBuffer>
-#include <QTcpSocket>
+#include <QtNetwork/QTcpSocket>
 #include "log.h"
 #include "model/EEGData.h"
 
@@ -15,17 +14,21 @@ public:
     void operator()(const QByteArray& raw);
     void parse(const QByteArray& raw);
 
+    void onParsed(const std::function<void(std::unique_ptr<EEGPacket>)>& callback);
+    void onParsed(std::function<void(std::unique_ptr<EEGPacket>)>&& callback);
+
 signals:
-    void dataParsed(const QByteArray& serialized, size_t rawSize, size_t packetCount);
+    // just use this to notify ui or logging system,
+    // you need use callback to receive packet data
+    void dataParsed(size_t rawSize, size_t packetCount);
     void eventParsed(const EEGEventData& event);
 
 private:
     QByteArray m_token = "@ABCD"; // 数据包起始标记
     QByteArray m_cache;           // 存储未解析的数据
-    QByteArray m_serialized;      // 存储序列化后的数据
-    QBuffer m_buffer;             // 用于序列化数据的缓冲区
     qint64 m_startLocalTime = 0;  // 第一个数据包的本地毫秒级时间戳
     qint64 m_startDeviceTime = 0; // 第一个数据包的设备毫秒级时间戳
+    std::function<void(std::unique_ptr<EEGPacket>)> m_callback; // 解析出EEGPack时的回调
 
     enum Status {
         Initial,  // 初始状态
@@ -40,11 +43,15 @@ class EEGReceiver final : public QObject {
 public:
     explicit EEGReceiver(QObject* parent = nullptr);
 
+    // register callback function to receive packet in background thread
+    void onDataFetched(const std::function<void(std::unique_ptr<EEGPacket>)>& callback);
+    void onDataFetched(std::function<void(std::unique_ptr<EEGPacket>)>&& callback);
+
 signals:
     void connected();
     void disconnected();
     void errorOccurred(QAbstractSocket::SocketError error, const QString& errorString);
-    void dataFetched(const QByteArray& serialized, size_t rawSize, size_t packetCount);
+    void dataFetched(size_t rawSize, size_t packetCount);
     void eventFetched(const EEGEventData& event);
     void logFetched(LogMessage::Level level, const QString& msg);
 

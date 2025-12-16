@@ -40,8 +40,8 @@ void BandView::onClientDisconnected(const QString& id) const {
     log(LogMessage::INFO, tr("Client %1 disconnected.").arg(id));
 }
 
-void BandView::onDataReceived(const QString& id, const QByteArray& data) const {
-    log(LogMessage::INFO, tr("Received %1 bytes of data from client %2.").arg(data.size()).arg(id));
+void BandView::onDataReceived(const QString& id, const qsizetype length) const {
+    log(LogMessage::INFO, tr("Received data from client %1, length: %2.").arg(id).arg(length));
 }
 
 void BandView::initUI() {

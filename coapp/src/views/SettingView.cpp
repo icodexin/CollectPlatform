@@ -34,6 +34,10 @@ QCameraFormat SettingView::cameraFormat() const {
     return ui_cameraPanel->format();
 }
 
+QString SettingView::mqttUserId() const {
+    return ui_mqttPanel->id();
+}
+
 void SettingView::onEEGConnected() const {
     ui_eegPanel->handleConnected();
 }

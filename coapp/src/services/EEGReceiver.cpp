@@ -38,10 +38,7 @@ namespace {
     constexpr int k_recvSize = 6000; // 0.04s * 4 bytes * 25 channels * 300Hz * 5
 }
 
-EEGDataParser::EEGDataParser(QObject* parent) {
-    m_serialized.reserve(k_recvSize);
-    m_buffer.setBuffer(&m_serialized);
-    m_buffer.open(QIODevice::WriteOnly);
+EEGDataParser::EEGDataParser(QObject* parent) : QObject(parent) {
 }
 
 void EEGDataParser::operator()(const QByteArray& raw) {
@@ -166,19 +163,35 @@ void EEGDataParser::parse(const QByteArray& raw) {
     }
 
     if (!parsedData.empty()) {
-        m_serialized.clear();
-        m_buffer.seek(0);
-        msgpack::pack(m_buffer, parsedData);
-
-        const size_t count = parsedData.length();
-        emit dataParsed(m_serialized, n, count);
+        emit dataParsed(n, parsedData.length());
+        if (m_callback) {
+            auto packet = std::make_unique<EEGPacket>();
+            packet->data = std::move(parsedData);
+            m_callback(std::move(packet));
+        }
     }
+}
+
+void EEGDataParser::onParsed(const std::function<void(std::unique_ptr<EEGPacket>)>& callback) {
+    m_callback = callback;
+}
+
+void EEGDataParser::onParsed(std::function<void(std::unique_ptr<EEGPacket>)>&& callback) {
+    m_callback = std::move(callback);
 }
 
 EEGReceiver::EEGReceiver(QObject* parent) : QObject(parent) {
     m_parser = new EEGDataParser(this);
     connect(m_parser, &EEGDataParser::dataParsed, this, &EEGReceiver::dataFetched);
     connect(m_parser, &EEGDataParser::eventParsed, this, &EEGReceiver::eventFetched);
+}
+
+void EEGReceiver::onDataFetched(const std::function<void(std::unique_ptr<EEGPacket>)>& callback) {
+    m_parser->onParsed(callback);
+}
+
+void EEGReceiver::onDataFetched(std::function<void(std::unique_ptr<EEGPacket>)>&& callback) {
+    m_parser->onParsed(std::move(callback));
 }
 
 void EEGReceiver::start(const QString& host, const quint16 port) {

@@ -85,9 +85,8 @@ public slots:
     void start();
     void stop();
 
-    void publish(const QString& topic, const QByteArray& message, quint8 qos = 0, bool retain = false);
-    void publishEEGData(const QByteArray& data);
-    void publishBandData(const QByteArray& data);
+    void publish(const QString& topic, const QByteArray& message, quint8 qos, bool retain);
+    void publish(const QString& topic, const QByteArray& message /* quint8 qos = 0, bool retain = false */);
 
 private slots:
     void setStatus(Status status);

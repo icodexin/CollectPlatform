@@ -19,7 +19,7 @@ public slots:
     void onErrorOccurred(const QVariantMap& error) const;
     void onClientConnected(const QString& id) const;
     void onClientDisconnected(const QString& id) const;
-    void onDataReceived(const QString& id, const QByteArray& data) const;
+    void onDataReceived(const QString& id, qsizetype length) const;
 
 private:
     void initUI();

@@ -3,6 +3,7 @@
 
 #include <QMainWindow>
 
+class DataPipe;
 class MqttPublishService;
 class MqttPublisher;
 class LogBox;
@@ -39,6 +40,7 @@ private:
     BandServer* m_bandServer = nullptr;
     CameraService* m_cameraService = nullptr;
     MqttPublishService* m_mqttPubService = nullptr;
+    DataPipe* m_dataPipe = nullptr;
 };
 
 #endif //MAINWINDOW_H

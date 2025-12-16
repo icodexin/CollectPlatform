@@ -8,8 +8,7 @@ EEGView::EEGView(QWidget* parent)
     initUI();
 }
 
-void EEGView::onDataFetched(const QByteArray& serialized, const size_t rawSize, const size_t packetCount) const {
-    Q_UNUSED(serialized);
+void EEGView::onDataFetched(const size_t rawSize, const size_t packetCount) const {
     log(LogMessage::INFO, tr("Received %1 bytes of data, %2 EEG Data packets").arg(rawSize).arg(packetCount));
 }
 

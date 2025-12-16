@@ -15,7 +15,7 @@ public:
     explicit EEGView(QWidget* parent = nullptr);
 
 public slots:
-    void onDataFetched(const QByteArray& serialized, size_t rawSize, size_t packetCount) const;
+    void onDataFetched(size_t rawSize, size_t packetCount) const;
     void onEventFetched(const EEGEventData& event) const;
     void onErrorOccurred(QAbstractSocket::SocketError error, const QString& errorString) const;
     void log(LogMessage::Level level, const QString& message) const;
