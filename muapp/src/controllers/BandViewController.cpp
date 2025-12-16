@@ -11,12 +11,12 @@ BandViewWorker::BandViewWorker(QObject* parent) : QObject(parent) {
 }
 
 void BandViewWorker::pushData(const WristbandPacket& data) {
+    Q_ASSERT(thread() == QThread::currentThread());
     constexpr double ratio = static_cast<double>(k_sampleRate) / k_renderRate;
     double counter = 0.0;
     for (qsizetype i = 0; i < data.length(); i++) {
         counter += 1.0;
         if (counter >= ratio) {
-            QMutexLocker locker(&m_mutex);
             m_queue.enqueue(BandViewFrame(data, i));
             counter -= ratio;
         }
@@ -24,7 +24,7 @@ void BandViewWorker::pushData(const WristbandPacket& data) {
 }
 
 void BandViewWorker::fetchNextFrame() {
-    QMutexLocker locker(&m_mutex);
+    Q_ASSERT(thread() == QThread::currentThread());
     if (!m_queue.isEmpty()) {
         const BandViewFrame frame = m_queue.dequeue();
         emit frameReady(frame);

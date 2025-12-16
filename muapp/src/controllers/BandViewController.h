@@ -1,13 +1,11 @@
 #ifndef WRISTBANDVIEWCONTROLLER_H
 #define WRISTBANDVIEWCONTROLLER_H
 
-#include <QtCore/QMutex>
 #include <QtCore/QPointer>
 #include <QtCore/QQueue>
 #include <QtCore/QTimer>
 #include <QtQml/QQmlParserStatus>
-#include "BandViewFrame.h"
-#include "model/WristbandData.h"
+#include "models/BandViewFrame.h"
 
 class BandViewWorker final : public QObject {
     Q_OBJECT
@@ -24,7 +22,6 @@ public slots:
 
 private:
     QQueue<BandViewFrame> m_queue;
-    QMutex m_mutex;
 };
 
 class BandViewController : public QObject, public QQmlParserStatus {
