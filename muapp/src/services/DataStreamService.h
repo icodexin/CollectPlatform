@@ -7,7 +7,7 @@
 #include <QtQml/qqmlregistration.h>
 #include "model/EEGData.h"
 #include "model/WristbandData.h"
-
+#include "./models/EmotionModel.h"
 class DataStreamService : public QObject, public QQmlParserStatus {
     Q_OBJECT
     Q_PROPERTY(QString subStudentId READ subStudentId WRITE setSubStudentId NOTIFY subStudentIdChanged)
@@ -16,13 +16,13 @@ class DataStreamService : public QObject, public QQmlParserStatus {
     Q_PROPERTY(int connectTimes READ connectTimes NOTIFY connectTimesChanged)
     QML_ELEMENT
     Q_INTERFACES(QQmlParserStatus)
-
+    Q_PROPERTY(EmotionModel* emotionModel READ emotionModel CONSTANT)
 public:
     enum DataType {
         ALL       = 0,
         EEG       = 1,
         Wristband = 2,
-        Emotion   = 3,
+        Emotion = 3,
         Cognition = 4,
     };
     Q_ENUM(DataType)
@@ -54,6 +54,8 @@ public:
     /// 尝试连接次数
     int connectTimes() const;
 
+    //读取函数
+    EmotionModel* emotionModel() const;
 signals:
     void subStudentIdChanged(const QString& studentId);
     void subDataTypeChanged(DataType type);
@@ -78,6 +80,7 @@ private:
     DataType m_subDataType = ALL;
     Status m_status = Offline;
     int m_connectTimes = 0;
+    EmotionModel *m_emotion_model = NULL;
 };
 
 #endif //DATASTREAMSERVICE_H
