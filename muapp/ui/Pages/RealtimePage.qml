@@ -122,7 +122,8 @@ MuPage {
         anchors.left: listView.right
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.bottom: parent.bottom
+        anchors.bottom: bottomPanel.top
+
         anchors.leftMargin: 10
 
         BandView {
@@ -137,6 +138,67 @@ MuPage {
             height: parent.height
         }
     }
+
+    Rectangle {
+        id: bottomPanel
+        anchors.left: listView.right
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        height: 100
+        color: HusTheme.HusCard.bgColor || "#ffffff"
+        border.color: HusTheme.HusCard.borderColor || "#e5e5e5"
+        border.width: 1
+
+        GridLayout {
+            anchors.fill: parent
+            columns: 4
+
+
+            EmotionResultCard {
+                Layout.fillWidth: true  // 占满列的宽度（每列占1/4）
+                Layout.fillHeight: true // 占满行的高度，垂直居中显示
+                title: "EEG"
+                emotion: "高兴"
+                emotionColor: "#52c41a"
+            }
+
+            EmotionResultCard {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                title: "PPG"
+                // 绑定情绪名称：从service.emotionModel获取，默认显示"无"
+                emotion: service.emotionModel.emotionName || "无"
+                // 绑定情绪颜色：根据情绪名称动态匹配，默认灰色
+                emotionColor: {
+                    // 情绪与颜色的映射表（可根据需求扩展）
+                    switch (service.emotionModel.emotionName) {
+                        case "困惑": return "#52c41a"; // 绿色
+                        case "中性": return "#1890ff"; // 蓝色
+                        case "无聊": return "#f5222d"; // 红色
+                        case "专注": return "#fa8c16"; // 橙色
+                        default: return "#bfbfbf"; // 默认灰色
+                    }
+                }
+            }
+
+            EmotionResultCard {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                title: "视频"
+                emotion: "中性"
+                emotionColor: "#bfbfbf"
+            }
+
+            EmotionResultCard {
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                title: "汇总结果"
+                emotion: "高兴"
+                emotionColor: "#faad14"
+            }
+        }
+    }
+
 
     BandViewController {
         id: bandViewController

@@ -25,16 +25,14 @@ int VideoFromCamera::init() {
         std::cerr << "avformat_alloc_context failed" << std::endl;
         return -1;
     }
-    // ftx_->video_codec_id = AV_CODEC_ID_MJPEG;   // ★★ 核心：等价于 -vcodec mjpeg（对输入端）
 
     // 2) 常规参数仍用（这些在你这套库里会被吃到）
     AVDictionary *options = nullptr;
     av_dict_set(&options, "video_size", "640x480", 0);
     av_dict_set(&options, "framerate",  "30",      0);
 
-    // av_log_set_level(AV_LOG_DEBUG);
 
-    // 3) 打开输入（注意这里传的是 &ftx_，且 ftx_ 不是空指针）
+    // 3) 打开输入
     int ret = avformat_open_input(&ftx_, deviceName, inputformat, &options);
     if (ret < 0) {
         char errbuf[64] = {0};
@@ -46,7 +44,7 @@ int VideoFromCamera::init() {
         return -1;
     }
 
-    // 4) 打印未被消费的选项（便于确认哪些键真正生效）
+    // 4) 打印未被消费的选项
     if (options) {
         AVDictionaryEntry* t = nullptr;
         while ((t = av_dict_get(options, "", t, AV_DICT_IGNORE_SUFFIX))) {
@@ -68,8 +66,8 @@ int VideoFromCamera::init() {
     for (unsigned int i = 0; i < ftx_->nb_streams; ++i) {
         if (ftx_->streams[i]->codecpar->codec_type == AVMEDIA_TYPE_VIDEO) {
             this->video_stream_index = static_cast<int>(i);
-            AVCodecID codec_id = ftx_->streams[i]->codecpar->codec_id;
-            std::cout << "Video: " << avcodec_get_name(codec_id) << " (ID: " << codec_id << ")\n";
+            // AVCodecID codec_id = ftx_->streams[i]->codecpar->codec_id;
+            // std::cout << "Video: " << avcodec_get_name(codec_id) << " (ID: " << codec_id << ")\n";
             break;
         }
     }
@@ -81,8 +79,8 @@ int VideoFromCamera::init() {
 
     // 7) 创建解码器
     pCodecParameters = ftx_->streams[video_stream_index]->codecpar;
-    std::cout << "Codec ID: "   << pCodecParameters->codec_id << std::endl;
-    std::cout << "Codec name: " << avcodec_get_name(pCodecParameters->codec_id) << std::endl;
+    // std::cout << "Codec ID: "   << pCodecParameters->codec_id << std::endl;
+    // std::cout << "Codec name: " << avcodec_get_name(pCodecParameters->codec_id) << std::endl;
 
     codec_ = avcodec_find_decoder(pCodecParameters->codec_id);
     if (!codec_) {

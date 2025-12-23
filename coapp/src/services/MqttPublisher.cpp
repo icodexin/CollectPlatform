@@ -77,7 +77,7 @@ void MqttPublisher::setUid(const QString& uid) {
         QMqttUserProperties userProperties;
         userProperties.emplace_back("uid", m_uid);
 
-        // 遗嘱消息属性
+        // 消息属性
         m_willProperties.setContentType("application/json");
         m_willProperties.setPayloadFormatIndicator(QMqtt::PayloadFormatIndicator::UTF8Encoded);
         m_willProperties.setUserProperties(userProperties);

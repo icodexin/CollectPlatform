@@ -37,13 +37,9 @@ HusWindow {
             anchors.top: navModeButton.bottom
             anchors.topMargin: -5
             anchors.bottom: settingButton.top
-            compactMode: MuSettingsMgr.navMenuCompactMode
             showToolTip: compactMode === HusMenu.Mode_Compact
             defaultSelectedKey: ["home"]
             initModel: app.getNavMenuModel()
-            onCompactModeChanged: {
-                MuSettingsMgr.navMenuCompactMode = compactMode
-            }
             onClickMenu: (deep, key, keyPath, data) => {
                 console.debug('onClickMenu', deep, key, keyPath, JSON.stringify(data));
                 if (data && data.source)
@@ -143,10 +139,12 @@ HusWindow {
     Component.onCompleted: {
         setWindowEffect()
         HusTheme.darkMode = MuSettingsMgr.appDarkMode
+        navMenu.compactMode = MuSettingsMgr.navMenuCompactMode
     }
 
     Component.onDestruction: {
         MuSettingsMgr.appDarkMode = HusTheme.darkMode
+        MuSettingsMgr.navMenuCompactMode = navMenu.compactMode
     }
 
     component MenuButton: HusButton {

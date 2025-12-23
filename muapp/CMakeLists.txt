@@ -58,6 +58,7 @@ set(QML_FILES
     ui/Components/Charts/util.js
     ui/Views/EEGView.qml
     ui/Views/BandView.qml
+    ui/Views/EmotionResultCard.qml
     ui/Pages/HomePage.qml
     ui/Pages/RealtimePage.qml
     ui/Pages/OfflinePage.qml
@@ -69,6 +70,7 @@ set(QML_FILES
 set(QML_CPP_FILES
     src/models/MinMaxQueue.h src/models/MinMaxQueue.cpp
     src/models/BandViewFrame.h src/models/BandViewFrame.cpp
+    src/models/EmotionModel.h src/models/EmotionModel.cpp
     src/models/EEGViewFrame.h src/models/EEGViewFrame.cpp
     src/services/MuSettingsMgr.h src/services/MuSettingsMgr.cpp
     src/services/DataStreamService.h src/services/DataStreamService.cpp
@@ -130,7 +132,7 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     MACOSX_BUNDLE_BUNDLE_VERSION ${PROJECT_VERSION}
     MACOSX_BUNDLE_SHORT_VERSION_STRING ${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}
     MACOSX_BUNDLE TRUE
-    WIN32_EXECUTABLE TRUE # 如果使用CLion / VS Code等IDE进行调试时无法看到js console输出，则需要屏蔽此属性
+    WIN32_EXECUTABLE FALSE # 如果使用CLion / VS Code等IDE进行调试时无法看到js console输出，则需要屏蔽此属性
 )
 
 target_link_libraries(${PROJECT_NAME}

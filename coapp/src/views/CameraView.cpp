@@ -6,7 +6,6 @@ VideoWidget::VideoWidget(QWidget *parent):QWidget(parent) {
     init();
     videofromcamera = new VideoFromCamera;
     pushwork_ = new pushwork;
-    initrtmp();
 
 
 }
@@ -31,7 +30,14 @@ void VideoWidget::init() {
     m_loadingText = tr("等待视频流打开中...");
 }
 void VideoWidget::startVideo() {
-    videofromcamera->init();
+    if (initrtmp() == -1) {
+        std::cout << "连接流媒体服务器失败" << std::endl;
+        return;
+    }
+    if (videofromcamera->init() == -1) {
+        std::cout << "初始化视频失败" << std::endl;
+        return;
+    }
     videofromcamera->setVideoWidget(this);
     setVideoReady(true);
 

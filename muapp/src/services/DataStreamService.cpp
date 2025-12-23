@@ -16,8 +16,11 @@ namespace {
 Q_LOGGING_CATEGORY(dsService, "Services.DataStreamService")
 
 DataStreamService::DataStreamService(QObject* parent) : QObject(parent) {
+    m_emotion_model = new EmotionModel(this);
 }
-
+EmotionModel* DataStreamService::emotionModel() const {
+    return m_emotion_model;
+}
 DataStreamService::~DataStreamService() {
     if (MuWebsocketMgr.hasConnection(kDataStreamKey)) {
         MuWebsocketMgr.removeConnection(kDataStreamKey);
@@ -91,6 +94,10 @@ void DataStreamService::subscribe(const QString& studentId, const DataType type)
         qCDebug(dsService) << "Cannot subscribe, WebSocket is not connected.";
         return;
     }
+
+    QString typeStr = QVariant::fromValue(type).toString().toLower();
+    qCDebug(dsService) << "发送订阅请求：学生ID=" << studentId << "，类型=" << typeStr;
+
     MuWebsocketMgr.sendJson(kDataStreamKey, {
         {"msg_type", "subscribe"},
         {
@@ -105,6 +112,7 @@ void DataStreamService::attachClientSignals(const QString& key) {
     const QPointer<WebsocketClient> client = MuWebsocketMgr.client(key);
     connect(client, &WebsocketClient::textReceived, this, &DataStreamService::handleTextMessage);
     connect(client, &WebsocketClient::binaryReceived, this, &DataStreamService::handleBinaryMessage);
+
     connect(client, &WebsocketClient::statusChanged, this, [this](const WebsocketClient::Status status) {
         switch (status) {
             case WebsocketClient::Closed:
@@ -162,11 +170,24 @@ void DataStreamService::handleBinaryMessage(const QByteArray& data) {
 
         if (data_type == "wristband") {
             auto wristband_data = data_obj.as<WristbandPacket>();
+
             emit wristbandReceived(wristband_data, student_id);
         }
         else if (data_type == "eeg") {
             auto eeg_data = data_obj.as<EEGPacket>();
             emit eegReceived(eeg_data, student_id);
+        }
+        else if (data_type == "wristbandemotion") {
+            auto emotion_map = data_obj.as<std::map<std::string, msgpack::object>>();
+
+            int pred_class = emotion_map["pred_class"].as<int>();
+            QString pred_name = QString::fromStdString(emotion_map["pred_name"].as<std::string>());
+
+            // 直接更新EmotionModel（用于QML渲染，线程安全调用）
+            QMetaObject::invokeMethod(m_emotion_model, "updateEmotionData",
+                                      Qt::QueuedConnection,
+                                      Q_ARG(int, pred_class),
+                                      Q_ARG(QString, pred_name));
         }
         else {
             throw std::runtime_error("unknown data_type: " + data_type.toStdString());

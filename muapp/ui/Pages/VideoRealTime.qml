@@ -7,8 +7,8 @@ import VideoComponents 1.0
 
 MuPage {
     id: page
+    title: "实时视频采集"
     titleIconSource: HusIcon.DotChartOutlined
-    titleText: "实时视频采集"
 
     ColumnLayout {
         anchors.fill: parent
