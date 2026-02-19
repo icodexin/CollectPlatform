@@ -32,7 +32,7 @@ Item {
         anchors.horizontalCenter: parent.horizontalCenter
     }
 
-    Flickable {
+    MuFlickable {
         clip: true
         anchors.left: parent.left
         anchors.top: title.bottom

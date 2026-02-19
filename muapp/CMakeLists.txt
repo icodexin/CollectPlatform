@@ -30,6 +30,7 @@ qt_policy(SET QTP0004 NEW)
 set(QML_FILES
     App.qml
     AppController.qml
+    ui/Components/MuFlickable.qml
     ui/Components/MuPage.qml
     ui/Components/MuScrollablePage.qml
     ui/Components/MuPanel.qml
