@@ -1,4 +1,5 @@
 #include "MqttPublisher.h"
+#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QThread>
 
