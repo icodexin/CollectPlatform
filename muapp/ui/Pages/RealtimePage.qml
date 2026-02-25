@@ -1,5 +1,6 @@
 import QtQuick
 import QtQuick.Layouts
+import QtMultimedia
 import HuskarUI.Basic
 import MuApp
 
@@ -90,6 +91,49 @@ MuPage {
         }
     }
 
+    Item {
+        id: camView
+        height: parent.height / 2
+        anchors.left: listView.right
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.leftMargin: 10
+
+        Rectangle {
+            id: background
+            anchors.fill: parent
+            color: HusTheme.HusCard.colorBg
+            border.color: HusTheme.isDark ? HusTheme.HusCard.colorBorderDark : HusTheme.HusCard.colorBorder
+            opacity: 0.8
+            radius: 10
+        }
+
+        Text {
+            anchors.centerIn: parent
+            text: vpService.url + " 连接中..."
+            opacity: vpService.status === VideoPullService.Playing ? 0 : 1
+        }
+
+        VideoOutput {
+            id: videoOutput
+            anchors.left: parent.left
+            anchors.top: parent.top
+            anchors.right: parent.right
+            anchors.bottom: camHint.top
+            anchors.margins: 8
+            opacity: vpService.status === VideoPullService.Playing ? 1 : 0
+        }
+
+        Text {
+            id: camHint
+            anchors.horizontalCenter: parent.horizontalCenter
+            anchors.bottom: parent.bottom
+            anchors.bottomMargin: 8
+            text: "摄像头画面"
+        }
+    }
+
+
     RowLayout {
         id: statusBar
         anchors.left: listView.left
@@ -120,7 +164,7 @@ MuPage {
 
     Row {
         anchors.left: listView.right
-        anchors.top: parent.top
+        anchors.top: camView.bottom
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.leftMargin: 10
@@ -136,6 +180,12 @@ MuPage {
             width: parent.width / 2
             height: parent.height
         }
+    }
+
+    VideoPullService {
+        id: vpService
+        url: "rtsp://127.0.0.1:8554/live/10001"  // todo: replace with real student id
+        videoOutput: videoOutput
     }
 
     BandViewController {

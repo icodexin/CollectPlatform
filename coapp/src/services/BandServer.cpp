@@ -1,5 +1,6 @@
 #include "BandServer.h"
 #include <model/serialize.h>
+#include <QtCore/QJsonDocument>
 #include <QtCore/QJsonObject>
 #include <QtCore/QThread>
 #include <QtNetwork/QTcpSocket>

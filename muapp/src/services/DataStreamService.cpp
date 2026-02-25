@@ -79,7 +79,7 @@ void DataStreamService::setConnectTimes(const int times) {
 
 void DataStreamService::start() {
     if (!MuWebsocketMgr.hasConnection(kDataStreamKey)) {
-        MuWebsocketMgr.setReconnectParam({.maxAttempts = 0, .baseNumber = 1}); // infinite reconnect
+        MuWebsocketMgr.setReconnectParam({.maxAttempts = 0, .baseNumber = 2}); // exponential reconnect
         MuWebsocketMgr.createConnection(kDataStreamKey, QUrl(kWebsocketUrl));
         MuWebsocketMgr.open(kDataStreamKey);
         attachClientSignals(kDataStreamKey);

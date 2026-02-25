@@ -11,7 +11,8 @@ set(TARGET_OUTPUT_NAME "Multimodal App")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 20)
 
-find_package(Qt6 COMPONENTS Core WebSockets Quick Qml Graphs REQUIRED)
+find_package(FFMPEG REQUIRED)
+find_package(Qt6 COMPONENTS Core WebSockets Quick Qml Graphs Multimedia REQUIRED)
 find_package(HuskarUI REQUIRED)
 qt_standard_project_setup(REQUIRES 6.5)
 
@@ -56,6 +57,7 @@ set(QML_CPP_FILES
     src/models/EEGViewFrame.h src/models/EEGViewFrame.cpp
     src/services/MuSettingsMgr.h src/services/MuSettingsMgr.cpp
     src/services/DataStreamService.h src/services/DataStreamService.cpp
+    src/services/VideoPullService.h src/services/VideoPullService.cpp
     src/controllers/BandViewController.h src/controllers/BandViewController.cpp
     src/controllers/EEGViewController.h src/controllers/EEGViewController.cpp
 )
@@ -86,6 +88,7 @@ target_include_directories(${PROJECT_NAME}
     ${CMAKE_CURRENT_SOURCE_DIR}/src/models
     ${CMAKE_CURRENT_SOURCE_DIR}/src/services
     ${CMAKE_CURRENT_SOURCE_DIR}/src/controllers
+    ${FFMPEG_INCLUDE_DIRS}
 )
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
@@ -106,8 +109,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     WIN32_EXECUTABLE TRUE # 如果使用CLion / VS Code等IDE进行调试时无法看到js console输出，则需要屏蔽此属性
 )
 
+target_link_directories(${PROJECT_NAME} PRIVATE
+    ${FFMPEG_LIBRARY_DIRS}
+)
+
 target_link_libraries(${PROJECT_NAME}
-    PRIVATE Qt6::Core Qt6::WebSockets Qt6::Quick Qt6::Qml Qt6::Graphs HuskarUI::Basic PlatformCommon
+    PRIVATE Qt6::Core Qt6::WebSockets Qt6::Quick Qt6::Qml Qt6::Graphs Qt6::Multimedia HuskarUI::Basic PlatformCommon
+    ${FFMPEG_LIBRARIES}
 )
 
 if (WIN32)
