@@ -1,15 +1,17 @@
 #ifndef CAMERAVIEW_H
 #define CAMERAVIEW_H
 
-#include <QVideoFrame>
+#include <QtMultimedia/QVideoFrame>
 #include "DeviceView.h"
+
+class QLabel;
 
 class ViewFinder final : public QWidget {
     Q_OBJECT
 
 public:
     explicit ViewFinder(QWidget* parent = nullptr);
-    void setPlaying(const bool playing);
+    void setPlaying(bool playing);
     void setCurrentFrame(const QVideoFrame& frame);
 
 protected:
@@ -34,6 +36,8 @@ signals:
 public slots:
     void setPlaying(bool playing);
     void setFrame(const QVideoFrame& frame);
+    void setStreamStats(double fps, double kbps);
+    void clearStreamStats();
 
 private:
     void initUI();
@@ -41,6 +45,7 @@ private:
 
 private:
     ViewFinder* ui_viewFinder;
+    QLabel* ui_fpsLabel = nullptr;
     bool m_playing = false;
 };
 #endif //CAMERAVIEW_H

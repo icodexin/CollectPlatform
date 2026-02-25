@@ -3,11 +3,13 @@
 
 #include <QWidget>
 #include <QCameraDevice>
+#include "services/VideoPushService.h"
 
 class InfoPanel;
 class EEGSettingPanel;
 class BandSettingPanel;
 class CameraSettingPanel;
+class StreamSettingPanel;
 class MqttSettingPanel;
 
 class SettingView final : public QWidget {
@@ -35,6 +37,8 @@ signals:
     void requestStartMqtt(const QString& address, int port, const QString& id,
                           const QString& username, const QString& password);
     void requestStopMqtt();
+    void requestStartVideoPush(const PushConfig& config);
+    void requestStopVideoPush();
 
 public slots:
     void onEEGConnected() const;
@@ -48,6 +52,7 @@ public slots:
     void onCameraRunningChanged(bool running) const;
     void onMqttConnected() const;
     void onMqttDisconnected() const;
+    void onVideoPushStateChanged(PushWorkerState state) const;
 
 private:
     void initUI();
@@ -57,6 +62,7 @@ private:
     EEGSettingPanel* ui_eegPanel = nullptr;
     BandSettingPanel* ui_bandPanel = nullptr;
     CameraSettingPanel* ui_cameraPanel = nullptr;
+    StreamSettingPanel* ui_streamPanel = nullptr;
     MqttSettingPanel* ui_mqttPanel = nullptr;
     InfoPanel* ui_infoPanel = nullptr;
 };

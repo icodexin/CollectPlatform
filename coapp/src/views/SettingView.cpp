@@ -1,12 +1,14 @@
 #include "SettingView.h"
 
-#include <QVBoxLayout>
+#include <QtWidgets/QScrollArea>
+#include <QtWidgets/QVBoxLayout>
 
 #include "settings/BandSettingPanel.h"
 #include "settings/CameraSettingPanel.h"
 #include "settings/EEGSettingPanel.h"
 #include "settings/InfoPanel.h"
 #include "settings/MqttSettingPanel.h"
+#include "settings/StreamSettingPanel.h"
 
 SettingView::SettingView(QWidget* parent)
     : QWidget(parent) {
@@ -86,20 +88,38 @@ void SettingView::onMqttDisconnected() const {
     ui_mqttPanel->handleDisconnected();
 }
 
+void SettingView::onVideoPushStateChanged(const PushWorkerState state) const {
+    ui_streamPanel->handleStateChanged(state);
+}
+
 void SettingView::initUI() {
-    ui_eegPanel = new EEGSettingPanel(this);
-    ui_bandPanel = new BandSettingPanel(this);
-    ui_cameraPanel = new CameraSettingPanel(this);
-    ui_mqttPanel = new MqttSettingPanel(this);
-    ui_infoPanel = new InfoPanel(this);
+    ui_eegPanel = new EEGSettingPanel();
+    ui_bandPanel = new BandSettingPanel();
+    ui_cameraPanel = new CameraSettingPanel();
+    ui_mqttPanel = new MqttSettingPanel();
+    ui_streamPanel = new StreamSettingPanel();
+    ui_infoPanel = new InfoPanel();
+
+    auto* container = new QWidget();
+    container->setMinimumWidth(250);
+    ui_infoPanel->setMinimumWidth(250);
+    auto* containerLayout = new QVBoxLayout(container);
+    containerLayout->setSpacing(8);
+    containerLayout->setContentsMargins(0, 0, 2, 0);
+    containerLayout->addWidget(ui_eegPanel);
+    containerLayout->addWidget(ui_bandPanel);
+    containerLayout->addWidget(ui_cameraPanel);
+    containerLayout->addWidget(ui_streamPanel);
+    containerLayout->addWidget(ui_mqttPanel);
+
+    auto* scrollArea = new QScrollArea(this);
+    scrollArea->setWidget(container);
+    scrollArea->setWidgetResizable(true);
+    scrollArea->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    scrollArea->setFrameShape(QFrame::NoFrame);
 
     auto* layout = new QVBoxLayout(this);
-    layout->setSpacing(8);
-    layout->addWidget(ui_eegPanel);
-    layout->addWidget(ui_bandPanel);
-    layout->addWidget(ui_cameraPanel);
-    layout->addWidget(ui_mqttPanel);
-    layout->addStretch(1);
+    layout->addWidget(scrollArea);
     layout->addWidget(ui_infoPanel);
 }
 
@@ -120,4 +140,7 @@ void SettingView::initConnection() {
 
     connect(ui_mqttPanel, &MqttSettingPanel::requestConnect, this, &SettingView::requestStartMqtt);
     connect(ui_mqttPanel, &MqttSettingPanel::requestDisconnect, this, &SettingView::requestStopMqtt);
+
+    connect(ui_streamPanel, &StreamSettingPanel::requestStart, this, &SettingView::requestStartVideoPush);
+    connect(ui_streamPanel, &StreamSettingPanel::requestStop, this, &SettingView::requestStopVideoPush);
 }

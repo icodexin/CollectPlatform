@@ -22,6 +22,8 @@ set(H_FILES
     src/views/settings/BandSettingPanel.h
     src/views/settings/MqttSettingPanel.h
     src/views/settings/InfoPanel.h
+    src/views/settings/StreamSettingPanel.h
+    src/views/settings/StreamAdvancedSettingDialog.h
     src/views/MainWindow.h
     src/views/DeviceView.h
     src/views/SettingView.h
@@ -53,6 +55,8 @@ set(CPP_FILES
     src/views/settings/BandSettingPanel.cpp
     src/views/settings/MqttSettingPanel.cpp
     src/views/settings/InfoPanel.cpp
+    src/views/settings/StreamSettingPanel.cpp
+    src/views/settings/StreamAdvancedSettingDialog.cpp
     src/views/MainWindow.cpp
     src/views/DeviceView.cpp
     src/views/SettingView.cpp

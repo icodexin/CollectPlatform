@@ -147,7 +147,7 @@ QComboBox {
     background: white;
     border: 1px solid #e0e6ea;
     border-radius: 5px;
-    padding: 4px 8px;
+    padding: 2px 8px;
     selection-background-color: #3376cd;
 }
 
@@ -172,7 +172,7 @@ QComboBox:disabled {
 QComboBox::drop-down {
     subcontrol-origin: padding;
     subcontrol-position: top right;
-    width: 20px;
+    width: 15px;
     border-left: 1px solid #e0e6ea;
     background: white;
     border-top-right-radius: 5px;

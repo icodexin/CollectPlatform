@@ -76,8 +76,8 @@
     </message>
     <message>
         <location filename="../../src/views/BandView.cpp" line="44"/>
-        <source>Received %1 bytes of data from client %2.</source>
-        <translation>从客户端%2接收到%1字节数据。</translation>
+        <source>Received data from client %1, length: %2.</source>
+        <translation>从客户端%1收到数据, 长度: %2。</translation>
     </message>
     <message>
         <location filename="../../src/views/BandView.cpp" line="48"/>
@@ -144,30 +144,51 @@
 <context>
     <name>CameraView</name>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="56"/>
+        <location filename="../../src/views/CameraView.cpp" line="57"/>
         <source>Camera</source>
         <translation>相机</translation>
     </message>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="73"/>
+        <location filename="../../src/views/CameraView.cpp" line="74"/>
         <source>Inactive</source>
         <translation>未激活</translation>
     </message>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="73"/>
+        <location filename="../../src/views/CameraView.cpp" line="74"/>
         <source>Running</source>
         <translation>运行中</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/CameraView.cpp" line="76"/>
+        <location filename="../../src/views/CameraView.cpp" line="95"/>
+        <source>-- fps  -- kbps</source>
+        <translation>-- fps  -- kbps</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/CameraView.cpp" line="88"/>
+        <source>%1 Mbps</source>
+        <translation>%1 Mbps</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/CameraView.cpp" line="90"/>
+        <source>%1 kbps</source>
+        <translation>%1 kbps</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/CameraView.cpp" line="91"/>
+        <source>%1 fps  %2</source>
+        <translation>%1 fps  %2</translation>
     </message>
 </context>
 <context>
     <name>EEGReceiver</name>
     <message>
-        <location filename="../../src/services/EEGReceiver.cpp" line="189"/>
+        <location filename="../../src/services/EEGReceiver.cpp" line="201"/>
         <source>Connected to DSI-Streamer at %1:%2</source>
         <translation>已连接到位于%1:%2的DSI-Streamer</translation>
     </message>
     <message>
-        <location filename="../../src/services/EEGReceiver.cpp" line="193"/>
+        <location filename="../../src/services/EEGReceiver.cpp" line="205"/>
         <source>Disconnected from DSI-Streamer at %1:%2</source>
         <translation>已断开位于%1:%2的DSI-Streamer</translation>
     </message>
@@ -231,82 +252,82 @@
         <translation>EEG</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="13"/>
+        <location filename="../../src/views/EEGView.cpp" line="12"/>
         <source>Received %1 bytes of data, %2 EEG Data packets</source>
         <translation>收到%1字节的数据，包含%2个EEG数据包</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="20"/>
+        <location filename="../../src/views/EEGView.cpp" line="19"/>
         <source>Version: %1</source>
         <translation>版本：%1</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="23"/>
+        <location filename="../../src/views/EEGView.cpp" line="22"/>
         <source>Original Sensor Map: %1</source>
         <translation>原始传感器排布图：%1</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="26"/>
+        <location filename="../../src/views/EEGView.cpp" line="25"/>
         <source>Mains Frequency: %1 Hz, Sample Frequency: %2 Hz</source>
         <translation>电源频率：%1 Hz，采样频率：%2 Hz</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="31"/>
+        <location filename="../../src/views/EEGView.cpp" line="30"/>
         <source>Start receiving EEG from DSI-Streamer.</source>
         <translation>开始从DSI Streamer接收EEG。</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="34"/>
+        <location filename="../../src/views/EEGView.cpp" line="33"/>
         <source>Stop receiving EEG from DSI-Streamer.</source>
         <translation>停止从DSI Streamer接收EEG。</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="47"/>
+        <location filename="../../src/views/EEGView.cpp" line="46"/>
         <source>Connection refused. There may be no DSI-Streamer running on the specified IP and port.</source>
         <translation>连接被拒绝。指定的IP和端口上可能没有运行DSI Streamer。</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="50"/>
+        <location filename="../../src/views/EEGView.cpp" line="49"/>
         <source>The remote host closed the connection.</source>
         <translation>远程主机关闭了连接。</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="53"/>
+        <location filename="../../src/views/EEGView.cpp" line="52"/>
         <source>The host was not found. Please check the IP address.</source>
         <translation>找不到主机，请检查IP地址。</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="56"/>
+        <location filename="../../src/views/EEGView.cpp" line="55"/>
         <source>The socket operation failed due to insufficient permissions.</source>
         <translation>由于权限不足，套接字操作失败。</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="59"/>
+        <location filename="../../src/views/EEGView.cpp" line="58"/>
         <source>The operation timed out.</source>
         <translation>操作超时。</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="62"/>
+        <location filename="../../src/views/EEGView.cpp" line="61"/>
         <source>A network error occurred accidentally.</source>
         <translation>意外发生网络错误。</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="76"/>
+        <location filename="../../src/views/EEGView.cpp" line="75"/>
         <source>Disconnected</source>
         <translation>已断开</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="76"/>
+        <location filename="../../src/views/EEGView.cpp" line="75"/>
         <source>Connecting</source>
         <translation>连接中</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="76"/>
+        <location filename="../../src/views/EEGView.cpp" line="75"/>
         <source>Connected</source>
         <translation>已连接</translation>
     </message>
     <message>
-        <location filename="../../src/views/EEGView.cpp" line="76"/>
+        <location filename="../../src/views/EEGView.cpp" line="75"/>
         <source>Disconnecting</source>
         <translation>终止中</translation>
     </message>
@@ -325,8 +346,8 @@
     </message>
     <message>
         <location filename="../../src/views/settings/InfoPanel.cpp" line="26"/>
-        <source>©️2025 Intelligent Perception Laboratory</source>
-        <translation>©️2025 智能感知实验室</translation>
+        <source>©️2026 Intelligent Perception Laboratory</source>
+        <translation>©️2026 智能感知实验室</translation>
     </message>
     <message>
         <location filename="../../src/views/settings/InfoPanel.cpp" line="56"/>
@@ -337,75 +358,105 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="40"/>
+        <location filename="../../src/views/MainWindow.cpp" line="41"/>
         <source>Log</source>
         <translation>日志</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="127"/>
+        <location filename="../../src/views/MainWindow.cpp" line="143"/>
         <source>MQTT connected</source>
         <translation>已连接到MQTT</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="130"/>
+        <location filename="../../src/views/MainWindow.cpp" line="147"/>
         <source>MQTT disconnected</source>
         <translation>已断开和MQTT的连接</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="134"/>
+        <location filename="../../src/views/MainWindow.cpp" line="151"/>
         <source>MQTT error: %1</source>
         <translation>MQTT错误：%1</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="137"/>
+        <location filename="../../src/views/MainWindow.cpp" line="154"/>
         <source>MQTT message sent, ID: %1</source>
         <translation>已发送MQTT消息，ID:%1</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="169"/>
+        <source>Video push starting...</source>
+        <translation>正在视频推流...</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="172"/>
+        <source>Video push started</source>
+        <translation>视频推流已启动</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="175"/>
+        <source>Video push stopping...</source>
+        <translation>正在视频推流...</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="178"/>
+        <source>Video push stopped</source>
+        <translation>已停止视频推流</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="181"/>
+        <source>Video push error</source>
+        <translation>视频推流错误</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="186"/>
+        <source>Video push error: %1</source>
+        <translation>视频推流错误: %1</translation>
     </message>
 </context>
 <context>
     <name>MqttPublishService</name>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="275"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="271"/>
         <source>The broker does not accept a connection using the specified protocol version.</source>
         <translation>此代理不接受使用指定协议版本的连接。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="278"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="274"/>
         <source>The client ID is malformed. This might be related to its length.</source>
         <translation>此客户端ID的格式不正确。这可能与它的长度有关。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="281"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="277"/>
         <source>The network connection has been established, but the service is unavailable on the broker side.</source>
         <translation>网络连接已建立，但服务在代理端不可用。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="285"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="281"/>
         <source>The data in the username or password is malformed.</source>
         <translation>用户名或密码中的数据格式不正确。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="288"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="284"/>
         <source>The client is not authorized to connect.</source>
         <translation>此客户端未被授权连接。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="291"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="287"/>
         <source>The underlying transport caused an error. For example, the connection might have been interrupted unexpectedly.</source>
         <translation>基础传输导致错误。例如，连接可能已意外中断。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="295"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="291"/>
         <source>The client encountered a protocol violation, and therefore closed the connection.</source>
         <translation>此客户端遇到协议冲突，因此关闭了连接。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="298"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="294"/>
         <source>The error is related to MQTT protocol level 5. More details may be help: Code: 0x%1, Reason: %2</source>
         <translation>该错误与MQTT协议级别5有关。更多详细信息可能有帮助：代码：0x%1，原因：%2</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="305"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="301"/>
         <source>An unknown error occurred.</source>
         <translation>发生未知错误。</translation>
     </message>
@@ -498,7 +549,7 @@
     <name>QObject</name>
     <message>
         <location filename="../../src/services/CameraService.cpp" line="22"/>
-        <location filename="../../src/services/CameraService.cpp" line="31"/>
+        <location filename="../../src/services/CameraService.cpp" line="32"/>
         <source>Camera Permission</source>
         <translation>相机权限</translation>
     </message>
@@ -508,20 +559,189 @@
         <translation>已授予相机权限。您需要重新启动应用程序才能生效。</translation>
     </message>
     <message>
-        <location filename="../../src/services/CameraService.cpp" line="32"/>
+        <location filename="../../src/services/CameraService.cpp" line="33"/>
         <source>Camera permission has been denied. Please allow camera access in system settings.</source>
         <translation>相机权限被拒绝。请在系统设置中允许相机访问。</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="34"/>
+        <location filename="../../main.cpp" line="35"/>
         <source>Student Collection Terminal</source>
         <translation>学生采集终端</translation>
     </message>
 </context>
 <context>
+    <name>StreamAdvancedSettingDialog</name>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="30"/>
+        <source>Stream Advanced Settings</source>
+        <translation>流媒体高级设置</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="55"/>
+        <source>0s (Auto)</source>
+        <translation>0s (自动)</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="93"/>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="148"/>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="175"/>
+        <source>Preset</source>
+        <translation>预设</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="94"/>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="176"/>
+        <source>Tune</source>
+        <translation>Tune</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="102"/>
+        <source>No Options.
+
+OpenH264 is a software encoder provided by Cisco. It has a smaller feature set and lower performance compared to libx264. However, it is royalty-free and may be used in commercial applications without licensing fees.</source>
+        <translation>没有选项。
+
+OpenH264 is a software encoder provided by Cisco. It has a smaller feature set and lower performance compared to libx264. However, it is royalty-free and may be used in commercial applications without licensing fees.</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="116"/>
+        <source>Realtime Encoding</source>
+        <translation>实时编码</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="117"/>
+        <source>Allow SW Fallback</source>
+        <translation>允许回退到软件编码</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="118"/>
+        <source>Prioritize Speed</source>
+        <translation>优先考虑编码速度</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="119"/>
+        <source>Spatial Adaptive Quantization</source>
+        <translation>空间自适应量化</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="149"/>
+        <source>Async Depth</source>
+        <translation>异步深度</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="61"/>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="173"/>
+        <source>0 (Disabled)</source>
+        <translation>0 (禁用)</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="177"/>
+        <source>Lookahead</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="192"/>
+        <source>Encoder Options</source>
+        <translation>编码器选项</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="203"/>
+        <source>Bitrate</source>
+        <translation>码率</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="204"/>
+        <source>Profile</source>
+        <translation>配置文件</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="205"/>
+        <source>GOP Size</source>
+        <translation>关键帧间隔</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="206"/>
+        <source>B-Frames</source>
+        <translation>B帧数</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="207"/>
+        <source>Encoder</source>
+        <translation>编码器</translation>
+    </message>
+</context>
+<context>
+    <name>StreamSettingPanel</name>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="77"/>
+        <source>Stream</source>
+        <translation>流</translation>
+    </message>
+    <message>
+        <source>Auto</source>
+        <translation type="vanished">自动</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="117"/>
+        <source>More Settings</source>
+        <translation>更多设置</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="126"/>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="185"/>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="207"/>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="236"/>
+        <source>Start Streaming</source>
+        <translation>开启推流</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="135"/>
+        <source>URL</source>
+        <translation>URL</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="136"/>
+        <source>Resolution</source>
+        <translation>分辨率</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="137"/>
+        <source>Frame Rate</source>
+        <translation>帧率</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="187"/>
+        <source>Warning</source>
+        <translation>警告</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="187"/>
+        <source>Please enter a valid RTSP URL.</source>
+        <translation>请输入一个有效的RTSL URL。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="190"/>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="221"/>
+        <source>Starting...</source>
+        <translation>启动中...</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="194"/>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="202"/>
+        <source>Stop Streaming</source>
+        <translation>停止推流</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="195"/>
+        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="232"/>
+        <source>Stopping...</source>
+        <translation>停止中...</translation>
+    </message>
+</context>
+<context>
     <name>ViewFinder</name>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="12"/>
+        <location filename="../../src/views/CameraView.cpp" line="13"/>
         <source>Preview has been closed.</source>
         <translation>预览已关闭。</translation>
     </message>

@@ -1,8 +1,7 @@
 #include "MainWindow.h"
 
-#include <QGridLayout>
-#include <QSplitter>
-#include <QThread>
+#include <QtWidgets/QGridLayout>
+#include <QtWidgets/QSplitter>
 
 #include "BandView.h"
 #include "CameraView.h"
@@ -15,6 +14,7 @@
 #include "services/DataPipe.h"
 #include "services/EEGReceiver.h"
 #include "services/MqttPublisher.h"
+#include "services/VideoPushService.h"
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent) {
@@ -39,13 +39,14 @@ void MainWindow::initUI() {
     ui_cameraView = new CameraView;
 
     auto* logView = new BarCard(tr("Log"), ":/res/icons/history.svg");
-    ui_logBox = new LogBox;
     auto* logLayout = new QVBoxLayout;
+    ui_logBox = new LogBox;
+    ui_logBox->setStyleSheet("QPlainTextEdit { background-color: rgba(255, 255, 255, 0);}");
+    logView->setContentsMargins(12, 12, 12, 12);
     logLayout->addWidget(ui_logBox);
+    logLayout->setContentsMargins(4, 4, 4, 4);
     logView->setContentLayout(logLayout);
-    auto* logWidget = new QWidget;
-    auto* logWidgetLayout = new QVBoxLayout(logWidget);
-    logWidgetLayout->addWidget(logView);
+    logView->setMaximumHeight(150);
 
     auto* devicesWidget = new QWidget;
     auto* devicesLayout = new QGridLayout(devicesWidget);
@@ -55,8 +56,9 @@ void MainWindow::initUI() {
 
     auto* contentSplitter = new QSplitter(Qt::Vertical);
     contentSplitter->addWidget(devicesWidget);
-    contentSplitter->addWidget(logWidget);
+    contentSplitter->addWidget(logView);
     contentSplitter->setCollapsible(0, false);
+    contentSplitter->setCollapsible(1, false);
 
     auto* mainSplitter = new QSplitter(Qt::Horizontal);
     mainSplitter->addWidget(ui_settingView);
@@ -89,6 +91,8 @@ void MainWindow::initServices() {
     m_cameraService->updateCamera(ui_settingView->cameraDevice(), ui_settingView->cameraFormat());
 
     m_mqttPubService = new MqttPublishService(this);
+
+    m_videoPushService = new VideoPushService(this);
 }
 
 void MainWindow::initConnection() {
@@ -153,4 +157,40 @@ void MainWindow::initConnection() {
     connect(m_dataPipe, &DataPipe::dataReady, m_mqttPubService,
         qOverload<const QString&, const QByteArray&>(&MqttPublishService::publish)
     );
+
+    /********** SettingView <-> VideoPushService **********/
+    connect(ui_settingView, &SettingView::requestStartVideoPush, m_videoPushService, &VideoPushService::start);
+    connect(ui_settingView, &SettingView::requestStopVideoPush, m_videoPushService, &VideoPushService::stop);
+    connect(m_videoPushService, &VideoPushService::stateChanged, ui_settingView, &SettingView::onVideoPushStateChanged);
+    connect(m_cameraService, &CameraService::videoFrameChanged, m_videoPushService, &VideoPushService::pushFrame);
+    connect(m_videoPushService, &VideoPushService::stateChanged, this, [=](PushWorkerState state) {
+        switch (state) {
+            case PushWorkerState::Starting:
+                ui_logBox->log(LogMessage::INFO, tr("Video push starting..."));
+                break;
+            case PushWorkerState::Streaming:
+                ui_logBox->log(LogMessage::SUCCESS, tr("Video push started"));
+                break;
+            case PushWorkerState::Stopping:
+                ui_logBox->log(LogMessage::INFO, tr("Video push stopping..."));
+                break;
+            case PushWorkerState::Idle:
+                ui_logBox->log(LogMessage::WARN, tr("Video push stopped"));
+                break;
+            case PushWorkerState::Error:
+                ui_logBox->log(LogMessage::ERROR, tr("Video push error"));
+                break;
+        }
+    });
+    connect(m_videoPushService, &VideoPushService::errorOccurred, this, [=](int /*code*/, const QString& msg) {
+        ui_logBox->log(LogMessage::ERROR, tr("Video push error: %1").arg(msg));
+    });
+    connect(m_videoPushService, &VideoPushService::statsUpdated, this, [=](const PushStats& st) {
+        ui_cameraView->setStreamStats(st.currentFps, st.currentBitrateKbps);
+    });
+    connect(m_videoPushService, &VideoPushService::stateChanged, this, [=](PushWorkerState state) {
+        if (state == PushWorkerState::Idle || state == PushWorkerState::Error) {
+            ui_cameraView->clearStreamStats();
+        }
+    });
 }

@@ -1,7 +1,8 @@
 #include "CameraView.h"
-#include <QBoxLayout>
-#include <QLabel>
-#include <QPainter>
+
+#include <QtGui/QPainter>
+#include <QtWidgets/QBoxLayout>
+#include <QtWidgets/QLabel>
 #include "SettingView.h"
 
 ViewFinder::ViewFinder(QWidget* parent) : QWidget(parent) {
@@ -71,10 +72,27 @@ void CameraView::setFrame(const QVideoFrame& frame) {
 
 void CameraView::initUI() {
     setIndicatorHint(tr("Inactive"), {}, tr("Running"), {});
+
+    ui_fpsLabel = new QLabel(tr("-- fps  -- kbps"));
+    addBarWidget(ui_fpsLabel);
+
     ui_viewFinder = new ViewFinder;
     auto* contentLayout = new QVBoxLayout;
     contentLayout->addWidget(ui_viewFinder);
     setContentLayout(contentLayout);
+}
+
+void CameraView::setStreamStats(const double fps, const double kbps) {
+    QString bitrateStr;
+    if (kbps >= 1000.0)
+        bitrateStr = tr("%1 Mbps").arg(kbps / 1000.0, 0, 'f', 2);
+    else
+        bitrateStr = tr("%1 kbps").arg(kbps, 0, 'f', 0);
+    ui_fpsLabel->setText(tr("%1 fps  %2").arg(fps, 0, 'f', 1).arg(bitrateStr));
+}
+
+void CameraView::clearStreamStats() {
+    ui_fpsLabel->setText(tr("-- fps  -- kbps"));
 }
 
 void CameraView::initConnection() {

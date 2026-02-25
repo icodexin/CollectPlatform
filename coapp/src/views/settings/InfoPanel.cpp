@@ -23,7 +23,7 @@ InfoPanel::InfoPanel(QWidget* parent) : QWidget(parent) {
     ui_refreshBtn = new QPushButton;
     ui_refreshBtn->setIcon(QIcon(":/res/icons/refresh.svg"));
     ui_refreshBtn->setToolTip(tr("Refresh"));
-    auto* copyrightLabel = new QLabel(tr("©️2025 Intelligent Perception Laboratory"));
+    auto* copyrightLabel = new QLabel(tr("©️2026 Intelligent Perception Laboratory"));
     auto* appVersionLabel = new QLabel(qApp->applicationDisplayName() % " v" % qApp->applicationVersion());
 
     ui_ipListLayout = new QVBoxLayout;
@@ -35,7 +35,7 @@ InfoPanel::InfoPanel(QWidget* parent) : QWidget(parent) {
 
     auto* layout = new QVBoxLayout(this);
     layout->setSpacing(4);
-    layout->setContentsMargins(5, 5, 5, 5);
+    layout->setContentsMargins(0, 0, 0, 0);
     layout->addLayout(hLayout);
     layout->addWidget(copyrightLabel);
     layout->addWidget(appVersionLabel);

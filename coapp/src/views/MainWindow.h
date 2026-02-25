@@ -3,17 +3,18 @@
 
 #include <QMainWindow>
 
+class BandServer;
+class BandView;
+class CameraService;
+class CameraView;
 class DataPipe;
+class EEGReceiver;
+class EEGView;
 class MqttPublishService;
 class MqttPublisher;
 class LogBox;
-class EEGReceiver;
-class BandServer;
-class CameraService;
-class CameraView;
-class BandView;
-class EEGView;
 class SettingView;
+class VideoPushService;
 
 class MainWindow final : public QMainWindow {
     Q_OBJECT
@@ -41,6 +42,7 @@ private:
     CameraService* m_cameraService = nullptr;
     MqttPublishService* m_mqttPubService = nullptr;
     DataPipe* m_dataPipe = nullptr;
+    VideoPushService* m_videoPushService = nullptr;
 };
 
 #endif //MAINWINDOW_H
