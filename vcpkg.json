@@ -1,11 +1,23 @@
 {
   "name": "collect-platform",
   "version": "1.0.0",
-  "builtin-baseline": "275a29dcdb864aa9ce57042eadf95f4a28482280",
+  "builtin-baseline": "05442024c3fda64320bd25d2251cc9807b84fb6f",
   "dependencies": [
     {
       "name": "msgpack",
       "version>=": "7.0.0"
+    },
+    {
+      "name": "ffmpeg",
+      "platform": "linux | (windows & !arm64)",
+      "features": ["avcodec", "avformat", "x264", "qsv", "nvcodec"],
+      "version>=": "7.1.1"
+    },
+    {
+      "name": "ffmpeg",
+      "platform": "osx | (windows & arm64)",
+      "features": ["avcodec", "avformat", "x264"],
+      "version>=": "7.1.1"
     }
   ]
 }

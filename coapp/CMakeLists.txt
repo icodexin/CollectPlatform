@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20)
 
 if (NOT APP_VERSION)
     set(APP_VERSION "0.1.1")
-endif()
+endif ()
 
 project(CoApp VERSION ${APP_VERSION} LANGUAGES CXX)
 
@@ -11,7 +11,9 @@ set(TARGET_OUTPUT_NAME "Collection App")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
+find_package(FFMPEG REQUIRED)
 find_package(Qt6 COMPONENTS Core Widgets Svg Network Mqtt Multimedia LinguistTools REQUIRED)
+
 qt_standard_project_setup(REQUIRES 6.5 I18N_TRANSLATED_LANGUAGES zh_CN)
 
 set(H_FILES
@@ -38,8 +40,10 @@ set(H_FILES
     src/services/CameraService.h
     src/services/BandServer.h
     src/services/EEGReceiver.h
+    src/services/FFmpegHelper.h
     src/services/MqttPublisher.h
     src/services/CoSettingsMgr.h
+    src/services/VideoPushService.h
 )
 
 set(CPP_FILES
@@ -67,8 +71,10 @@ set(CPP_FILES
     src/services/CameraService.cpp
     src/services/BandServer.cpp
     src/services/EEGReceiver.cpp
+    src/services/FFmpegHelper.cpp
     src/services/MqttPublisher.cpp
     src/services/CoSettingsMgr.cpp
+    src/services/VideoPushService.cpp
 )
 
 qt_add_resources(RESOURCES resources/resources.qrc)
@@ -109,8 +115,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_libraries(${PROJECT_NAME}
-    PRIVATE Qt6::Core Qt6::Widgets Qt6::Svg Qt6::Network Qt6::Mqtt Qt6::Multimedia PlatformCommon
+target_link_directories(${PROJECT_NAME} PRIVATE
+    ${FFMPEG_LIBRARY_DIRS}
+)
+
+target_link_libraries(${PROJECT_NAME} PRIVATE
+    Qt6::Core Qt6::Widgets Qt6::Svg Qt6::Network Qt6::Mqtt Qt6::Multimedia PlatformCommon
+    ${FFMPEG_LIBRARIES}
 )
 
 if (WIN32)
@@ -122,12 +133,12 @@ if (WIN32)
         $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:--debug>
         $<$<NOT:$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>>:--release>
     )
-elseif(APPLE)
+elseif (APPLE)
     find_program(QT_DEPLOY_QT NAMES macdeployqt)
     set(QT_DEPLOY_ARGS
         ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app
     )
-endif()
+endif ()
 
 if (QT_DEPLOY_QT)
     add_custom_target(Deploy_${PROJECT_NAME} ALL
@@ -136,4 +147,4 @@ if (QT_DEPLOY_QT)
         WORKING_DIRECTORY ${APP_PACKAGE_DIR}
         DEPENDS ${PROJECT_NAME}
     )
-endif()
+endif ()
