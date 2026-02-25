@@ -1,7 +1,6 @@
 #include "MqttPublisher.h"
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QThread>
+#include <QtCore/QJsonObject>
+#include <QtCore/QThread>
 
 namespace {
     QByteArray createOnlineMessage() {

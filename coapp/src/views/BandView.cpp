@@ -1,5 +1,5 @@
 #include "BandView.h"
-#include <QVBoxLayout>
+#include <QtWidgets/QVBoxLayout>
 #include "components/LogBox.h"
 
 BandView::BandView(QWidget* parent)

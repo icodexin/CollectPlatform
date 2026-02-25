@@ -1,8 +1,8 @@
 #ifndef MQTTPUBLISHER_H
 #define MQTTPUBLISHER_H
 
-#include <QObject>
-#include <QMqttClient>
+#include <QtCore/QObject>
+#include <QtMqtt/QMqttClient>
 
 class MqttPublisher final : public QObject {
     Q_OBJECT

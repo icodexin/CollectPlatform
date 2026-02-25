@@ -1,6 +1,6 @@
-#include <QApplication>
-#include <QFile>
-#include <QTranslator>
+#include <QtCore/QFile>
+#include <QtCore/QTranslator>
+#include <QtWidgets/QApplication>
 
 #include "views/MainWindow.h"
 

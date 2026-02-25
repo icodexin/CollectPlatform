@@ -1,7 +1,7 @@
 #ifndef EEGVIEW_H
 #define EEGVIEW_H
 
-#include <QAbstractSocket>
+#include <QtNetwork/QAbstractSocket>
 #include "DeviceView.h"
 #include "services/log.h"
 

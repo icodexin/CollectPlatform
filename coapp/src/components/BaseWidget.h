@@ -1,7 +1,7 @@
 #ifndef BASEWIDGET_H
 #define BASEWIDGET_H
 
-#include <QWidget>
+#include <QtWidgets/QWidget>
 
 class BaseWidget : public QWidget {
 public:

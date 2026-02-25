@@ -1,6 +1,6 @@
 #include "DeviceView.h"
-#include <QPointer>
-#include <QHBoxLayout>
+#include <QtCore/QPointer>
+#include <QtWidgets/QHBoxLayout>
 #include "components/RecordingIndicator.h"
 
 DeviceView::DeviceView(QWidget* parent)

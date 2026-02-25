@@ -1,9 +1,9 @@
 #include "EEGSettingPanel.h"
 
-#include <QFormLayout>
-#include <QMessageBox>
-#include <QPushButton>
-#include <QSpinBox>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpinBox>
 
 #include "components/IPv4Edit.h"
 #include "services/CoSettingsMgr.h"

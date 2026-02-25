@@ -1,9 +1,9 @@
 #ifndef CAMERASETTINGPANEL_H
 #define CAMERASETTINGPANEL_H
 
-#include <QGroupBox>
-#include <QCameraDevice>
-#include <QMediaDevices>
+#include <QtMultimedia/QCameraDevice>
+#include <QtMultimedia/QMediaDevices>
+#include <QtWidgets/QGroupBox>
 
 class QComboBox;
 class QPushButton;

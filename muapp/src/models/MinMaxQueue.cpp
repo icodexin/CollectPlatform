@@ -1,5 +1,5 @@
 #include "MinMaxQueue.h"
-#include <QDebug>
+#include <QtCore/QDebug>
 
 namespace {
     class MinMaxGuard {

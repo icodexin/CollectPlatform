@@ -1,7 +1,7 @@
 #ifndef BANDSETTINGPANEL_H
 #define BANDSETTINGPANEL_H
 
-#include <QGroupBox>
+#include <QtWidgets/QGroupBox>
 
 class QSpinBox;
 class QPushButton;

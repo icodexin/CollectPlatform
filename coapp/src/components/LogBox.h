@@ -1,7 +1,7 @@
 #ifndef LOGBOX_H
 #define LOGBOX_H
 
-#include <QPlainTextEdit>
+#include <QtWidgets/QPlainTextEdit>
 #include "services/log.h"
 
 class QThread;

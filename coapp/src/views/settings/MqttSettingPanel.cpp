@@ -1,10 +1,10 @@
 #include "MqttSettingPanel.h"
 
-#include <QFormLayout>
-#include <QLineEdit>
-#include <QMessageBox>
-#include <QPushButton>
-#include <QSpinBox>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QMessageBox>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpinBox>
 
 #include "components/IPv4Edit.h"
 #include "services/CoSettingsMgr.h"

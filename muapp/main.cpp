@@ -1,5 +1,5 @@
-#include <QQmlApplicationEngine>
-#include <QQuickWindow>
+#include <QtQml/QQmlApplicationEngine>
+#include <QtQuick/QQuickWindow>
 #include "HuskarUI/husapp.h"
 
 int main(int argc, char* argv[]) {

@@ -1,8 +1,8 @@
 #include "BarCard.h"
-#include <QBoxLayout>
-#include <QLabel>
-#include <QPointer>
-#include <qstyle.h>
+#include <QtCore/QPointer>
+#include <QtWidgets/QBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QStyle>
 
 Bar::Bar(QWidget* parent) : BaseWidget(parent, "bar") {
     ui_layout = new QHBoxLayout(this);

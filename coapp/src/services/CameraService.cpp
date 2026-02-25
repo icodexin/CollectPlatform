@@ -3,10 +3,9 @@
 #include <QVideoSink>
 
 #if QT_CONFIG(permissions)
-#include <QCoreApplication>
-#include <QPermissions>
-#include <QMessageBox>
-#include <memory>
+#include <QtCore/QCoreApplication>
+#include <QtCore/QPermissions>
+#include <QtWidgets/QMessageBox>
 #endif
 
 namespace {

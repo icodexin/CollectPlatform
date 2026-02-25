@@ -1,6 +1,6 @@
 #include "BaseWidget.h"
-#include <QStyleOption>
-#include <QPainter>
+#include <QtGui/QPainter>
+#include <QtWidgets/QStyleOption>
 
 BaseWidget::BaseWidget(QWidget* parent, const QString& objectName)
     : QWidget(parent) {

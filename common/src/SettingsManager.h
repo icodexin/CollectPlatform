@@ -1,8 +1,8 @@
 #ifndef SETTINGSMANAGER_H
 #define SETTINGSMANAGER_H
 
-#include <QMutex>
-#include <QSettings>
+#include <QtCore/QMutex>
+#include <QtCore/QSettings>
 
 class SettingsManager {
 public:

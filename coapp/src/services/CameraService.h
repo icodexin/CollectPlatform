@@ -1,8 +1,8 @@
 #ifndef CAMERASERVICE_H
 #define CAMERASERVICE_H
 
-#include <QObject>
-#include <QCamera>
+#include <QtCore/QObject>
+#include <QtMultimedia/QCamera>
 
 class QVideoSink;
 

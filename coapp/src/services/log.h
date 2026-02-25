@@ -1,8 +1,8 @@
 #ifndef LOG_H
 #define LOG_H
 
-#include <QDateTime>
-#include <QObject>
+#include <QtCore/QDateTime>
+#include <QtCore/QObject>
 
 struct LogMessage {
     Q_GADGET

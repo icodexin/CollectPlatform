@@ -1,8 +1,8 @@
 #ifndef SVGICONHELPER_H
 #define SVGICONHELPER_H
 
-#include <QPixmap>
-#include <QHash>
+#include <QtCore/QHash>
+#include <QtGui/QPixmap>
 
 class SvgIconHelper {
 public:

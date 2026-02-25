@@ -1,7 +1,7 @@
 #ifndef EEGSETTINGPANEL_H
 #define EEGSETTINGPANEL_H
 
-#include <QGroupBox>
+#include <QtWidgets/QGroupBox>
 
 class IPv4Edit;
 class QSpinBox;

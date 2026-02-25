@@ -2,8 +2,8 @@
 #define MINMAXQUEUE_H
 
 #include <deque>
-#include <QObject>
-#include <QPointF>
+#include <QtCore/QObject>
+#include <QtCore/QPointF>
 #include <QtQmlIntegration/qqmlintegration.h>
 
 class MinMaxQueue : public QObject {

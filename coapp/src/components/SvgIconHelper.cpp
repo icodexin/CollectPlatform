@@ -1,8 +1,8 @@
 #include "SvgIconHelper.h"
-#include <QApplication>
-#include <QPainter>
-#include <QSvgRenderer>
-#include <QFile>
+#include <QtCore/QFile>
+#include <QtGui/QPainter>
+#include <QtSvg/QSvgRenderer>
+#include <QtWidgets/QApplication>
 
 SvgIconHelper& SvgIconHelper::instance() {
     static SvgIconHelper instance;

@@ -1,7 +1,7 @@
 #ifndef INFOPANEL_H
 #define INFOPANEL_H
 
-#include <QWidget>
+#include <QtWidgets/QWidget>
 
 class QPushButton;
 class QVBoxLayout;

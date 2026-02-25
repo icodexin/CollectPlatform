@@ -1,10 +1,10 @@
 #include "RecordingIndicator.h"
-#include <QLabel>
-#include <QTime>
-#include <QTimer>
-#include <QPainter>
-#include <QBoxLayout>
-#include <QPainterPath>
+#include <QtCore/QTime>
+#include <QtCore/QTimer>
+#include <QtGui/QPainter>
+#include <QtGui/QPainterPath>
+#include <QtWidgets/QBoxLayout>
+#include <QtWidgets/QLabel>
 
 namespace {
     constexpr auto kInactiveColor = Qt::red;

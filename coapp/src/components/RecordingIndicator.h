@@ -1,8 +1,8 @@
 #ifndef RECORDINGINDICATOR_H
 #define RECORDINGINDICATOR_H
 
-#include <QWidget>
-#include <QTime>
+#include <QtCore/QTime>
+#include <QtWidgets/QWidget>
 
 class QLabel;
 class RecordingIconWidget;

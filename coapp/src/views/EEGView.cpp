@@ -1,5 +1,5 @@
 #include "EEGView.h"
-#include <QVBoxLayout>
+#include <QtWidgets/QVBoxLayout>
 #include "components/LogBox.h"
 #include "model/EEGData.h"
 

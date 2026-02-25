@@ -1,9 +1,8 @@
 #include "BandServer.h"
-#include <QTcpSocket>
-#include <QJsonDocument>
-#include <QJsonObject>
-#include <QThread>
 #include <model/serialize.h>
+#include <QtCore/QJsonObject>
+#include <QtCore/QThread>
+#include <QtNetwork/QTcpSocket>
 
 BandClientHandler::BandClientHandler(qintptr socketDescriptor, QObject* parent)
     : QObject(parent), m_socketDescriptor(socketDescriptor) {

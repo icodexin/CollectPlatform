@@ -1,7 +1,7 @@
 #ifndef MQTTSETTINGPANEL_H
 #define MQTTSETTINGPANEL_H
 
-#include <QGroupBox>
+#include <QtWidgets/QGroupBox>
 
 class IPv4Edit;
 class QPushButton;

@@ -1,8 +1,8 @@
 #include "CameraSettingPanel.h"
 
-#include <QComboBox>
-#include <QFormLayout>
-#include <QPushButton>
+#include <QtWidgets/QComboBox>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QPushButton>
 
 namespace {
     QString format2String(const QCameraFormat& cameraFormat) {

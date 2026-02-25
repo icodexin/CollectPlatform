@@ -1,10 +1,10 @@
 #include "InfoPanel.h"
 
-#include <QBoxLayout>
-#include <QGuiApplication>
-#include <QLabel>
-#include <QNetworkInterface>
-#include <QPushButton>
+#include <QtGui/QGuiApplication>
+#include <QtNetwork/QNetworkInterface>
+#include <QtWidgets/QBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QPushButton>
 
 namespace {
     QList<QString> getLocalIpv4Address() {

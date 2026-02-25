@@ -1,13 +1,12 @@
 #include "IPv4Edit.h"
 
-#include <QApplication>
-#include <QClipboard>
-#include <QHBoxLayout>
-#include <QKeyEvent>
-#include <QLabel>
-#include <QLineEdit>
-#include <QStyleOption>
-#include <QValidator>
+#include <QtGui/QClipboard>
+#include <QtGui/QKeyEvent>
+#include <QtWidgets/QApplication>
+#include <QtWidgets/QHBoxLayout>
+#include <QtWidgets/QLabel>
+#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QStyleOption>
 
 IPv4Edit::IPv4Edit(QWidget* parent)
     : BaseWidget(parent) {

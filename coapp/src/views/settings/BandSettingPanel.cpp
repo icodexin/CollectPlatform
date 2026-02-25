@@ -1,8 +1,8 @@
 #include "BandSettingPanel.h"
 
-#include <QFormLayout>
-#include <QPushButton>
-#include <QSpinBox>
+#include <QtWidgets/QFormLayout>
+#include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpinBox>
 
 #include "services/CoSettingsMgr.h"
 

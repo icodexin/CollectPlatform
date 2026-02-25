@@ -1,8 +1,8 @@
 #ifndef SETTINGVIEW_H
 #define SETTINGVIEW_H
 
-#include <QWidget>
-#include <QCameraDevice>
+#include <QtMultimedia/QCameraDevice>
+#include <QtWidgets/QWidget>
 #include "services/VideoPushService.h"
 
 class InfoPanel;

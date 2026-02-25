@@ -1,7 +1,7 @@
 #ifndef WRISTBANDDATA_H
 #define WRISTBANDDATA_H
 
-#include <QObject>
+#include <QtCore/QObject>
 
 #include "ISensorData.h"
 

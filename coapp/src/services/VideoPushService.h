@@ -1,20 +1,16 @@
 #ifndef VIDEOPUSHSERVICE_H
 #define VIDEOPUSHSERVICE_H
 
-
 extern "C" {
 #include <libavutil/pixfmt.h>
 #include <libavutil/rational.h>
 #include <libswscale/swscale.h>
 }
 
-#include <QElapsedTimer>
-#include <QHash>
-#include <QList>
-#include <QMutex>
-#include <QObject>
-#include <QVideoFrame>
-#include <QVideoFrameFormat>
+#include <QtCore/QElapsedTimer>
+#include <QtCore/QMutex>
+#include <QtCore/QObject>
+#include <QtMultimedia/QVideoFrame>
 
 #include <functional>
 #include <variant>
@@ -91,7 +87,7 @@ struct PushConfig {
     int resHeight = 720;
     int connectTimeoutUs = 3'000'000; // 连接 / IO 超时（微秒），0 = 不超时
 
-    void setResolution(const QSize &sz);
+    void setResolution(const QSize& sz);
 };
 
 /// 色彩格式
@@ -202,7 +198,7 @@ private:
     FFColorFormat m_encColorFmt;                 ///< 编码器色彩格式
 
     // 格式转换
-    LetterboxScaler420 scaler;  /// 实现像素格式转换+分辨率缩放+黑色背景填充
+    LetterboxScaler420 scaler; /// 实现像素格式转换+分辨率缩放+黑色背景填充
 
     // 动态参数
     int64_t m_frameIndex = 0; ///< 帧序号，用作 pts（按 time_base 递增）
@@ -213,12 +209,12 @@ private:
     mutable QMutex m_mutex; ///< 保护 m_state / m_stats 的跨线程读取
 
     // 计数器/计时器
-    QElapsedTimer m_fpsTimer;                ///< 帧率与码率统计共用计时器（每秒由 m_statsReportTimer 触发 restart）
-    quint64 m_fpsCounter = 0;                ///< 当前计时周期内已编码帧数
-    quint64 m_bytesInWindow = 0;             ///< 当前计时周期内已写出字节数（用于码率计算）
-    QTimer* m_statsReportTimer = nullptr;    ///< 定时触发 statsUpdated 信号（1 秒）
-    QElapsedTimer m_frameRateTimer;          ///< 帧率控制计时器（丢帧策略，与 m_fpsTimer 独立）
-    qint64 m_lastEncodeTimestampUs = -1;     ///< 上次编码帧的时间戳（μs），-1 表示尚未编码任何帧
+    QElapsedTimer m_fpsTimer;             ///< 帧率与码率统计共用计时器（每秒由 m_statsReportTimer 触发 restart）
+    quint64 m_fpsCounter = 0;             ///< 当前计时周期内已编码帧数
+    quint64 m_bytesInWindow = 0;          ///< 当前计时周期内已写出字节数（用于码率计算）
+    QTimer* m_statsReportTimer = nullptr; ///< 定时触发 statsUpdated 信号（1 秒）
+    QElapsedTimer m_frameRateTimer;       ///< 帧率控制计时器（丢帧策略，与 m_fpsTimer 独立）
+    qint64 m_lastEncodeTimestampUs = -1;  ///< 上次编码帧的时间戳（μs），-1 表示尚未编码任何帧
 };
 
 /// 视频推流服务

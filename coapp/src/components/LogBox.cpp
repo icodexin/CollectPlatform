@@ -1,9 +1,9 @@
 #include "LogBox.h"
-#include <QThread>
-#include <QMutexLocker>
-#include <QQueue>
-#include <QTimer>
-#include <QScrollBar>
+#include <QtCore/QMutexLocker>
+#include <QtCore/QQueue>
+#include <QtCore/QThread>
+#include <QtCore/QTimer>
+#include <QtWidgets/QScrollBar>
 
 class LogBuffer {
 public:
