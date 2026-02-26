@@ -111,6 +111,7 @@ void SettingView::initUI() {
     containerLayout->addWidget(ui_cameraPanel);
     containerLayout->addWidget(ui_streamPanel);
     containerLayout->addWidget(ui_mqttPanel);
+    containerLayout->addStretch(1);
 
     auto* scrollArea = new QScrollArea(this);
     scrollArea->setWidget(container);
