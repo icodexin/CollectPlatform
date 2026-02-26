@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.20)
 
 if (NOT APP_VERSION)
-    set(APP_VERSION "0.1.1")
+    set(APP_VERSION "0.2.0")
 endif ()
 
 project(CoApp VERSION ${APP_VERSION} LANGUAGES CXX)
