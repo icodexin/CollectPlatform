@@ -108,7 +108,7 @@ MuPage {
             radius: 10
         }
 
-        Text {
+        HusText {
             anchors.centerIn: parent
             text: vpService.url + " 连接中..."
             opacity: vpService.status === VideoPullService.Playing ? 0 : 1
@@ -124,7 +124,7 @@ MuPage {
             opacity: vpService.status === VideoPullService.Playing ? 1 : 0
         }
 
-        Text {
+        HusText {
             id: camHint
             anchors.horizontalCenter: parent.horizontalCenter
             anchors.bottom: parent.bottom
