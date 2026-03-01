@@ -30,6 +30,23 @@ int CoSettingsMgr::mqttPort() {
     return instance().getValueImpl("network/mqtt/port", 1883).toInt();
 }
 
+QByteArray CoSettingsMgr::cameraDeviceId() {
+    return instance().getValueImpl("device/camera/device_id", QByteArray{}).toByteArray();
+}
+
+QSize CoSettingsMgr::cameraFormatRes() {
+    return instance().getValueImpl("device/camera/format/res", QSize{}).toSize();
+}
+
+qreal CoSettingsMgr::cameraFormatMaxFps() {
+    return instance().getValueImpl("device/camera/format/max_fps", 0.0).toDouble();
+}
+
+QVideoFrameFormat::PixelFormat CoSettingsMgr::cameraFormatPixelFormat() {
+    return instance().getValueImpl("device/camera/format/pixel_format",
+        QVideoFrameFormat::Format_Invalid).value<QVideoFrameFormat::PixelFormat>();
+}
+
 void CoSettingsMgr::setServerHostname(const QString& host) {
     return instance().setValueImpl("network/server/host", host);
 }
@@ -52,6 +69,22 @@ void CoSettingsMgr::setMQTTAddress(const QString& address) {
 
 void CoSettingsMgr::setMQTTPort(const int port) {
     return instance().setValueImpl("network/mqtt/port", port);
+}
+
+void CoSettingsMgr::setCameraDeviceId(const QByteArray& deviceId) {
+    instance().setValueImpl("device/camera/device_id", deviceId);
+}
+
+void CoSettingsMgr::setCameraFormatRes(const QSize& res) {
+    instance().setValueImpl("device/camera/format/res", res);
+}
+
+void CoSettingsMgr::setCameraFormatMaxFps(const qreal fps) {
+    instance().setValueImpl("device/camera/format/max_fps", fps);
+}
+
+void CoSettingsMgr::setCameraFormatPixelFormat(const QVideoFrameFormat::PixelFormat pixelFormat) {
+    instance().setValueImpl("device/camera/format/pixel_format", pixelFormat);
 }
 
 QString CoSettingsMgr::streamUrl() {

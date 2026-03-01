@@ -1,6 +1,8 @@
 #ifndef COSETTINGSMGR_H
 #define COSETTINGSMGR_H
 
+#include <QtMultimedia/QVideoFrameFormat>
+
 #include "SettingsManager.h"
 #include "singleton.h"
 
@@ -28,6 +30,10 @@ public:
     static int bandPort();
     static QString mqttAddress();
     static int mqttPort();
+    static QByteArray cameraDeviceId();
+    static QSize cameraFormatRes();
+    static qreal cameraFormatMaxFps();
+    static QVideoFrameFormat::PixelFormat cameraFormatPixelFormat();
 
     static void setServerHostname(const QString& host);
     static void setEEGAddress(const QString& address);
@@ -35,6 +41,10 @@ public:
     static void setBandPort(int port);
     static void setMQTTAddress(const QString& address);
     static void setMQTTPort(int port);
+    static void setCameraDeviceId(const QByteArray& deviceId);
+    static void setCameraFormatRes(const QSize& res);
+    static void setCameraFormatMaxFps(qreal fps);
+    static void setCameraFormatPixelFormat(QVideoFrameFormat::PixelFormat pixelFormat);
 
     static QString streamUrl();
     static QSize streamRes();

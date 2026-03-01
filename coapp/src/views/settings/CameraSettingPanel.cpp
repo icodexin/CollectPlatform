@@ -1,8 +1,11 @@
 #include "CameraSettingPanel.h"
 
+#include <QtCore/QtMath>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QPushButton>
+
+#include "services/CoSettingsMgr.h"
 
 namespace {
     QString format2String(const QCameraFormat& cameraFormat) {
@@ -35,9 +38,26 @@ CameraSettingPanel::CameraSettingPanel(QWidget* parent)
     connect(this, &CameraSettingPanel::requestUpdateDevice, this, &CameraSettingPanel::updateOpenBtn);
     connect(m_deviceComboBox, &QComboBox::currentTextChanged, this, &CameraSettingPanel::updateCurrentDevice);
     connect(m_formatComboBox, &QComboBox::currentTextChanged, this, &CameraSettingPanel::updateCurrentFormat);
+    loadPersistedSettings();
     updateDeviceComboBox();
     updateFormatComboBox();
     updateOpenBtn();
+}
+
+void CameraSettingPanel::loadPersistedSettings() {
+    m_savedDeviceId = CoSettingsMgr::cameraDeviceId();
+    m_savedFormatRes = CoSettingsMgr::cameraFormatRes();
+    m_savedFormatMaxFps = CoSettingsMgr::cameraFormatMaxFps();
+    m_savedFormatPixelFormat = CoSettingsMgr::cameraFormatPixelFormat();
+}
+
+bool CameraSettingPanel::isSavedFormat(const QCameraFormat& format) const {
+    if (m_savedFormatRes.isEmpty() || m_savedFormatPixelFormat < 0 || m_savedFormatMaxFps <= 0) {
+        return false;
+    }
+    return format.resolution() == m_savedFormatRes
+        && format.pixelFormat() == m_savedFormatPixelFormat
+        && qFuzzyCompare(format.maxFrameRate() + 1.0, m_savedFormatMaxFps + 1.0);
 }
 
 QCameraDevice CameraSettingPanel::device() const {
@@ -92,6 +112,7 @@ void CameraSettingPanel::setDevice(const QCameraDevice& device) {
     if (m_device == device)
         return;
     m_device = device;
+    CoSettingsMgr::setCameraDeviceId(device.id());
     emit requestUpdateDevice(device);
 }
 
@@ -99,6 +120,11 @@ void CameraSettingPanel::setFormat(const QCameraFormat& format) {
     if (m_format == format)
         return;
     m_format = format;
+    if (!format.isNull()) {
+        CoSettingsMgr::setCameraFormatRes(format.resolution());
+        CoSettingsMgr::setCameraFormatMaxFps(format.maxFrameRate());
+        CoSettingsMgr::setCameraFormatPixelFormat(format.pixelFormat());
+    }
     emit requestUpdateFormat(format);
 }
 
@@ -107,14 +133,22 @@ void CameraSettingPanel::updateDeviceComboBox() {
 
     m_deviceComboBox->clear();
     QList<QCameraDevice> allDevices = QMediaDevices::videoInputs();
+    int savedIndex = -1;
     bool isOldExist = false;
-    for (const auto& device : allDevices) {
+    for (int i = 0; i < allDevices.size(); ++i) {
+        const auto& device = allDevices[i];
         m_deviceComboBox->addItem(device.description(), QVariant::fromValue(device));
         isOldExist = isOldExist || (device == m_device);
+        if (!m_savedDeviceId.isEmpty() && device.id() == m_savedDeviceId) {
+            savedIndex = i;
+        }
     }
 
     if (isOldExist) {
         m_deviceComboBox->setCurrentText(m_device.description());
+    }
+    else if (savedIndex >= 0) {
+        m_deviceComboBox->setCurrentIndex(savedIndex);
     }
     else {
         const QCameraDevice defaultDevice = QMediaDevices::defaultVideoInput();
@@ -133,8 +167,20 @@ void CameraSettingPanel::updateFormatComboBox() {
     m_formatComboBox->clear();
     if (!m_device.isNull()) {
         auto allFormats = m_device.videoFormats();
+        int savedIndex = -1;
         for (const auto& format : allFormats) {
-            m_formatComboBox->addItem(format2String(format), QVariant::fromValue(format));
+            if (format.maxFrameRate() > 20 && format.resolution().height() >= 480) { // 筛选fps>20, 分辨率>=480p
+                m_formatComboBox->addItem(format2String(format), QVariant::fromValue(format));
+                if (savedIndex < 0 && isSavedFormat(format)) {
+                    savedIndex = m_formatComboBox->count() - 1;
+                }
+            }
+        }
+        if (!m_format.isNull()) {
+            m_formatComboBox->setCurrentText(format2String(m_format));
+        }
+        else if (savedIndex >= 0) {
+            m_formatComboBox->setCurrentIndex(savedIndex);
         }
     }
     updateCurrentFormat();

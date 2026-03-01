@@ -1,6 +1,8 @@
 #ifndef CAMERASETTINGPANEL_H
 #define CAMERASETTINGPANEL_H
 
+#include <QtCore/QByteArray>
+#include <QtCore/QSize>
 #include <QtMultimedia/QCameraDevice>
 #include <QtMultimedia/QMediaDevices>
 #include <QtWidgets/QGroupBox>
@@ -33,6 +35,8 @@ private slots:
     void updateCurrentFormat();
 
 private:
+    void loadPersistedSettings();
+    bool isSavedFormat(const QCameraFormat& format) const;
     void setDevice(const QCameraDevice& device);
     void setFormat(const QCameraFormat& format);
     void updateDeviceComboBox();
@@ -46,5 +50,9 @@ private:
     QMediaDevices m_mediaDevices;
     QCameraDevice m_device;
     QCameraFormat m_format;
+    QByteArray m_savedDeviceId;
+    QSize m_savedFormatRes;
+    qreal m_savedFormatMaxFps = 0;
+    QVideoFrameFormat::PixelFormat m_savedFormatPixelFormat = QVideoFrameFormat::Format_Invalid;
 };
 #endif // CAMERASETTINGPANEL_H
