@@ -38,7 +38,7 @@ HusWindow {
             anchors.topMargin: -5
             anchors.bottom: settingButton.top
             showToolTip: compactMode === HusMenu.Mode_Compact
-            defaultSelectedKey: ["home"]
+            defaultSelectedKeys: ["home"]
             initModel: app.getNavMenuModel()
             onClickMenu: (deep, key, keyPath, data) => {
                 console.debug('onClickMenu', deep, key, keyPath, JSON.stringify(data));
