@@ -20,8 +20,9 @@ Item {
     property int yTickCount: 5
     property alias yLabelFormat: axisY.labelFormat
     property bool autoScaleY: true
-    property real lineWidth: 2.0
-    property var lineNames: []
+    property real lineWidth: 2.0            // 默认线宽
+    property var lineProperties: []  // [{"name": "series1", "color": "#ff0000", "width": 2.0}, ...], 键name是必须的，color和width可选, 如果color或width未指定，则使用lineColor和lineWidth
+    property alias legendVisible: legend.visible
     property alias legendRightMargin: legend.anchors.rightMargin
     property alias marginLeft: view.marginLeft
     property alias marginTop: view.marginTop
@@ -95,7 +96,7 @@ Item {
             padding: 5
 
             Repeater {
-                model: legendModel
+                model: control.lineProperties
                 delegate: legendEntryDelegate
             }
         }
@@ -111,10 +112,6 @@ Item {
         }
     }
 
-    ListModel {
-        id: legendModel
-    }
-
     Component {
         id: legendEntryDelegate
         Row {
@@ -122,8 +119,8 @@ Item {
             spacing: 8
             required property var model
             required property int index
-            property color lineColor: model.color
-            property real lineWidth: model.width
+            property color lineColor: model.color !== undefined ? model.color : view.theme.seriesColors[index % view.theme.seriesColors.length]
+            property real lineWidth: model.width !== undefined ? model.width : control.lineWidth
             property string lineName: model.name
 
             Shape {
@@ -151,20 +148,19 @@ Item {
 
     Component.onCompleted: {
         let component = Qt.createComponent("MuApp", "MuLineSeries");
-        for (let i = 0; i < lineNames.length; i++) {
-            const lineName = lineNames[i]
-            ChartUtil.createObject(component, view, {name: lineName, width: lineWidth})
+        for (let i = 0; i < control.lineProperties.length; i++) {
+            const prop = control.lineProperties[i]
+            ChartUtil.createObject(component, view, {
+                name: prop.name,
+                width: prop.width !== undefined ? prop.width : control.lineWidth,
+                color: prop.color !== undefined ? prop.color : view.theme.seriesColors[i % view.theme.seriesColors.length]
+            })
                 .then(series => {
-                    view.addSeries(series)
-                    legendModel.append({
-                        name: series.name,
-                        width: series.width,
-                        color: view.theme.seriesColors[i % view.theme.seriesColors.length]
-                    })
-                })
+                view.addSeries(series)
+            })
                 .catch(err => {
-                    console.error("Error:", err)
-                })
+                console.error("Error:", err)
+            })
         }
     }
 

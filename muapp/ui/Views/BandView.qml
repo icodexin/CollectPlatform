@@ -63,7 +63,7 @@ Item {
 
             titleText: qsTr("加速度 ACC (m<sup>2</sup>/s)")
             titleFormat: Text.RichText
-            lineNames: ["X", "Y", "Z"]
+            lineProperties: [{name: "X"}, {name: "Y"}, {name: "Z"}]
         }
     }
 

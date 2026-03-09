@@ -1,3 +1,4 @@
+import QtQml
 import QtQuick
 import QtQuick.Layouts
 import QtMultimedia
@@ -23,6 +24,23 @@ MuPage {
             "status": "在线"
         }
     ]
+
+    property var emotionMetrics: [
+        { name: "困惑", value: 20.0, color: "#5B8FF9" },
+        { name: "无聊", value: 30.0, color: "#5AD8A6" },
+        { name: "投入", value: 40.0, color: "#5D7092" },
+        { name: "中性", value: 60.0, color: "#F6BD16" }
+    ]
+
+    property var cognitiveMetrics: [
+        { name: "压力程度", value: 20.0, color: "#D03050" },
+        { name: "脑力负荷", value: 30.0, color: "#389E0D" },
+        { name: "专注程度", value: 40.0, color: "#1677FF" }
+    ]
+
+    function clampPercent(value) {
+        return Math.max(0, Math.min(100, value));
+    }
 
     ListView {
         id: listView
@@ -91,48 +109,207 @@ MuPage {
         }
     }
 
-    Item {
-        id: camView
-        height: parent.height / 2
+    ColumnLayout {
+        id: mainPanels
         anchors.left: listView.right
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.leftMargin: 10
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 8
+        spacing: 5
 
-        Rectangle {
-            id: background
-            anchors.fill: parent
-            color: HusTheme.HusCard.colorBg
-            border.color: HusTheme.isDark ? HusTheme.HusCard.colorBorderDark : HusTheme.HusCard.colorBorder
-            opacity: 0.8
-            radius: 10
-        }
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 5
 
-        HusText {
-            anchors.centerIn: parent
-            text: vpService.url + " 连接中..."
-            opacity: vpService.status === VideoPullService.Playing ? 0 : 1
-        }
+            Item {
+                id: cameraPanel
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-        VideoOutput {
-            id: videoOutput
-            anchors.left: parent.left
-            anchors.top: parent.top
-            anchors.right: parent.right
-            anchors.bottom: camHint.top
-            anchors.margins: 8
-            opacity: vpService.status === VideoPullService.Playing ? 1 : 0
-        }
+                Rectangle {
+                    anchors.fill: parent
+                    color: HusTheme.HusCard.colorBg
+                    border.color: HusTheme.isDark ? HusTheme.HusCard.colorBorderDark : HusTheme.HusCard.colorBorder
+                    opacity: 0.8
+                    radius: 10
+                }
 
-        HusText {
-            id: camHint
-            anchors.horizontalCenter: parent.horizontalCenter
-            anchors.bottom: parent.bottom
-            anchors.bottomMargin: 8
-            text: "摄像头画面"
-        }
-    }
+                HusText {
+                    id: camTitle
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 8
+                    text: "摄像头画面"
+                    font.weight: Font.Bold
+                }
 
+                HusText {
+                    anchors.centerIn: parent
+                    text: vpService.url + " 连接中..."
+                    opacity: vpService.status === VideoPullService.Playing ? 0 : 1
+                }
+
+                VideoOutput {
+                    id: videoOutput
+                    anchors.left: parent.left
+                    anchors.top: camTitle.bottom
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 8
+                    opacity: vpService.status === VideoPullService.Playing ? 1 : 0
+                }
+            } // Item
+
+            Item {
+                id: insightPanel
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                clip: true
+
+                Rectangle {
+                    anchors.fill: parent
+                    color: HusTheme.HusCard.colorBg
+                    border.color: HusTheme.isDark ? HusTheme.HusCard.colorBorderDark : HusTheme.HusCard.colorBorder
+                    opacity: 0.8
+                    radius: 10
+                }
+
+                HusText {
+                    id: insightTitle
+                    anchors.horizontalCenter: parent.horizontalCenter
+                    anchors.top: parent.top
+                    anchors.topMargin: 8
+                    text: "情绪与认知面板"
+                    font.weight: Font.Bold
+                }
+
+                HusDivider {
+                    id: emoTitle
+                    title: "情绪状态"
+                    anchors.left: parent.left
+                    anchors.top: insightTitle.bottom
+                    anchors.right: parent.right
+                    anchors.margins: 8
+                    anchors.topMargin: 12
+                }
+
+                ColumnLayout {
+                    id: emoView
+                    anchors.left: parent.left
+                    anchors.top: emoTitle.bottom
+                    anchors.right: parent.right
+                    anchors.margins: 8
+                    Repeater {
+                        model: emotionMetrics
+                        delegate: Item {
+                            Layout.alignment: Qt.AlignHCenter
+                            Layout.preferredWidth: Math.min(800, emoView.width)
+                            height: childrenRect.height
+
+                            required property var modelData
+
+                            HusText {
+                                id: _emoName
+                                text: modelData.name
+                                anchors.left: parent.left
+                            }
+
+                            HusProgress {
+                                Layout.fillWidth: true
+                                anchors.left: _emoName.right
+                                anchors.leftMargin: 8
+                                anchors.right: parent.right
+                                anchors.verticalCenter: _emoName.verticalCenter
+                                percent: clampPercent(modelData.value)
+                                colorBar: modelData.color
+                            }
+                        }
+                    }
+                }
+
+                HusDivider {
+                    id: cogTitle
+                    title: "认知状态"
+                    anchors.left: parent.left
+                    anchors.top: emoView.bottom
+                    anchors.right: parent.right
+                    anchors.margins: 8
+                    anchors.topMargin: parent.height < 400 ? 8 : 20
+                }
+
+                RowLayout {
+                    id: cogRow
+                    anchors.left: parent.left
+                    anchors.top: cogTitle.bottom
+                    anchors.right: parent.right
+                    anchors.bottom: parent.bottom
+                    anchors.margins: 8
+                    spacing: 0
+
+                    ColumnLayout {
+                        Layout.fillHeight: true
+                        Repeater {
+                            model: cognitiveMetrics
+                            delegate: Column {
+                                required property var modelData
+                                spacing: 2
+
+                                HusProgress {
+                                    id: _cogProgress
+                                    width: height
+                                    height: Math.min(120, Math.max(20, cogRow.height / 5))
+                                    type: HusProgress.Type_Dashboard
+                                    percent: clampPercent(modelData.value)
+                                    colorBar: modelData.color
+                                    font.pixelSize: 8
+                                }
+
+                                HusText {
+                                    anchors.horizontalCenter: _cogProgress.horizontalCenter
+                                    text: modelData.name
+                                }
+                            }
+                        }
+                    }
+
+                    MultiLineChart {
+                        id: cognitiveTrendChart
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+                        titleVisible: false
+                        lineProperties: cognitiveMetrics
+                        marginLeft: -25
+                        legendVisible: false
+                        autoScaleY: false
+                        minY: 0
+                        maxY: 100
+                        minYRange: 100
+                        yLabelFormat: "%.0f"
+                    }
+                }
+            } // Item
+        } // RowLayout
+
+        RowLayout {
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 5
+
+            BandView {
+                id: bandView
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+
+            EEGView {
+                id: eegView
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+            }
+        } // RowLayout
+    } // ColumnLayout
 
     RowLayout {
         id: statusBar
@@ -159,26 +336,6 @@ MuPage {
                     return "服务已断开，连接中...";
                 }
             }
-        }
-    }
-
-    Row {
-        anchors.left: listView.right
-        anchors.top: camView.bottom
-        anchors.right: parent.right
-        anchors.bottom: parent.bottom
-        anchors.leftMargin: 10
-
-        BandView {
-            id: bandView
-            width: parent.width / 2
-            height: parent.height
-        }
-
-        EEGView {
-            id: eegView
-            width: parent.width / 2
-            height: parent.height
         }
     }
 
