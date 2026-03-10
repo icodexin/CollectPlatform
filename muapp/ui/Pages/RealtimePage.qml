@@ -131,7 +131,7 @@ MuPage {
                 Rectangle {
                     anchors.fill: parent
                     color: HusTheme.HusCard.colorBg
-                    border.color: HusTheme.isDark ? HusTheme.HusCard.colorBorderDark : HusTheme.HusCard.colorBorder
+                    border.color: HusTheme.HusCard.colorBorder
                     opacity: 0.8
                     radius: 10
                 }
@@ -168,10 +168,12 @@ MuPage {
                 Layout.fillHeight: true
                 clip: true
 
+                property var compactMode: parent.height < 400
+
                 Rectangle {
                     anchors.fill: parent
                     color: HusTheme.HusCard.colorBg
-                    border.color: HusTheme.isDark ? HusTheme.HusCard.colorBorderDark : HusTheme.HusCard.colorBorder
+                    border.color: HusTheme.HusCard.colorBorder
                     opacity: 0.8
                     radius: 10
                 }
@@ -192,7 +194,7 @@ MuPage {
                     anchors.top: insightTitle.bottom
                     anchors.right: parent.right
                     anchors.margins: 8
-                    anchors.topMargin: 12
+                    anchors.topMargin: parent.compactMode ? 8 : 20
                 }
 
                 ColumnLayout {
@@ -201,6 +203,8 @@ MuPage {
                     anchors.top: emoTitle.bottom
                     anchors.right: parent.right
                     anchors.margins: 8
+                    spacing: parent.compactMode ? 0 : 8
+
                     Repeater {
                         model: emotionMetrics
                         delegate: Item {
@@ -236,7 +240,7 @@ MuPage {
                     anchors.top: emoView.bottom
                     anchors.right: parent.right
                     anchors.margins: 8
-                    anchors.topMargin: parent.height < 400 ? 8 : 20
+                    anchors.topMargin: parent.compactMode ? 8 : 20
                 }
 
                 RowLayout {
@@ -252,22 +256,24 @@ MuPage {
                         Layout.fillHeight: true
                         Repeater {
                             model: cognitiveMetrics
-                            delegate: Column {
+                            delegate: ColumnLayout {
                                 required property var modelData
                                 spacing: 2
 
                                 HusProgress {
                                     id: _cogProgress
-                                    width: height
-                                    height: Math.min(120, Math.max(20, cogRow.height / 5))
+                                    Layout.alignment: Qt.AlignHCenter
+                                    Layout.preferredHeight: Math.min(120, Math.max(20, cogRow.height / 6))
+                                    Layout.preferredWidth: height
                                     type: HusProgress.Type_Dashboard
+                                    barThickness: insightPanel.compactMode ? 3 : 6
                                     percent: clampPercent(modelData.value)
                                     colorBar: modelData.color
-                                    font.pixelSize: 8
+                                    font.pixelSize: 4
                                 }
 
                                 HusText {
-                                    anchors.horizontalCenter: _cogProgress.horizontalCenter
+                                    Layout.alignment: Qt.AlignHCenter
                                     text: modelData.name
                                 }
                             }
@@ -280,7 +286,7 @@ MuPage {
                         Layout.fillHeight: true
                         titleVisible: false
                         lineProperties: cognitiveMetrics
-                        marginLeft: -25
+                        marginLeft: -20
                         legendVisible: false
                         autoScaleY: false
                         minY: 0

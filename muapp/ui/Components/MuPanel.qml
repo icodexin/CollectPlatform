@@ -24,7 +24,7 @@ Column {
         id: card
         width: parent.width
         color: HusTheme.HusCard.colorBg
-        border.color: HusTheme.isDark ? HusTheme.HusCard.colorBorderDark : HusTheme.HusCard.colorBorder
+        border.color: HusTheme.HusCard.colorBorder
         opacity: 0.8
         radius: 10
 

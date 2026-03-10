@@ -85,8 +85,7 @@ HusWindow {
             anchors.top: parent.top
             anchors.right: parent.right
             anchors.bottom: parent.bottom
-            anchors.margins: 8
-            anchors.leftMargin: 0
+            anchors.margins: 0
             clip: true
 
             // 背景遮罩
@@ -95,7 +94,8 @@ HusWindow {
                 color: HusTheme.HusCard.colorBg
                 border.color: HusTheme.HusCard.colorBorder
                 opacity: 0.6
-                radius: 10
+                topLeftRadius: 10
+                bottomLeftRadius: 10
             }
 
             Loader {

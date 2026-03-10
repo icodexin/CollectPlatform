@@ -85,7 +85,7 @@ Item {
         Rectangle {
             anchors.fill: parent
             color: HusTheme.Primary.colorBgContainer
-            border.color: HusTheme.isDark ? HusTheme.HusCard.colorBorderDark : HusTheme.HusCard.colorBorder
+            border.color: HusTheme.HusCard.colorBorder
             opacity: 0.7
             radius: 2
         }
