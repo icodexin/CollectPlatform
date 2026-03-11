@@ -15,7 +15,7 @@ int main(int argc, char* argv[]) {
     app.setApplicationDisplayName(QObject::tr("多模态数据采集与学习者状态实时感知平台"));
 
     QQmlApplicationEngine engine;
-    HusApp::initialize(&engine);
+    engine.singletonInstance<QJSValue>("HuskarUI.Basic", "HusApp");
 
     QObject::connect(
         &engine, &QQmlApplicationEngine::objectCreationFailed,

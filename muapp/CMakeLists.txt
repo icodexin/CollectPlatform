@@ -148,6 +148,7 @@ if (WIN32)
     set(DEBUG_SUFFIX $<$<OR:$<CONFIG:Debug>,$<CONFIG:RelWithDebInfo>>:d>)
     set(THIRD_DLIBS
         ${HuskarUI_DIR}/../../../bin/HuskarUIBasic${DEBUG_SUFFIX}.dll
+        ${HuskarUI_DIR}/../../../bin/HuskarUIImpl${DEBUG_SUFFIX}.dll
     )
     add_custom_target(Deploy_${PROJECT_NAME} ALL
         COMMAND ${CMAKE_COMMAND} -E echo "Copy Qt6 dependencies ..."
