@@ -92,7 +92,6 @@ HusWindow {
             Rectangle {
                 anchors.fill: parent
                 color: HusTheme.HusCard.colorBg
-                border.color: HusTheme.HusCard.colorBorder
                 opacity: 0.6
                 topLeftRadius: 10
                 bottomLeftRadius: 10
