@@ -155,11 +155,21 @@ MuPage {
 
 
             EmotionResultCard {
-                Layout.fillWidth: true  // 占满列的宽度（每列占1/4）
-                Layout.fillHeight: true // 占满行的高度，垂直居中显示
+                Layout.fillWidth: true
+                Layout.fillHeight: true
                 title: "EEG"
-                emotion: "高兴"
-                emotionColor: "#52c41a"
+                // 绑定情绪名称：从service.emotionModel获取，默认显示"无"
+                emotion: service.EEGemotionModel.emotionName || "无"
+                // 绑定情绪颜色：根据情绪名称动态匹配，默认灰色
+                emotionColor: {
+                    // 情绪与颜色的映射表
+                    switch (service.EEGemotionModel.emotionName) {
+                        case "高兴": return "#52c41a"; // 绿色
+                        case "中性": return "#1890ff"; // 蓝色
+                        case "难过": return "#f5222d"; // 红色
+                        default: return "#bfbfbf"; // 默认灰色
+                    }
+                }
             }
 
             EmotionResultCard {
@@ -167,11 +177,11 @@ MuPage {
                 Layout.fillHeight: true
                 title: "PPG"
                 // 绑定情绪名称：从service.emotionModel获取，默认显示"无"
-                emotion: service.emotionModel.emotionName || "无"
+                emotion: service.PPGemotionModel.emotionName || "无"
                 // 绑定情绪颜色：根据情绪名称动态匹配，默认灰色
                 emotionColor: {
-                    // 情绪与颜色的映射表（可根据需求扩展）
-                    switch (service.emotionModel.emotionName) {
+                    // 情绪与颜色的映射表
+                    switch (service.PPGemotionModel.emotionName) {
                         case "困惑": return "#52c41a"; // 绿色
                         case "中性": return "#1890ff"; // 蓝色
                         case "无聊": return "#f5222d"; // 红色
@@ -185,7 +195,7 @@ MuPage {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 title: "视频"
-                emotion: "中性"
+                emotion: "无"
                 emotionColor: "#bfbfbf"
             }
 
@@ -193,7 +203,7 @@ MuPage {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 title: "汇总结果"
-                emotion: "高兴"
+                emotion: "无"
                 emotionColor: "#faad14"
             }
         }

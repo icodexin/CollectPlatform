@@ -11,7 +11,7 @@ Rectangle {
 
     // ===== 对外属性 =====
     property string title: ""          // EEG / PPG / 视频 / 汇总
-    property string emotion: "未知"     // 高兴 / 难过 / 中性
+    property string emotion: "无"     // 高兴 / 难过 / 中性
     property color emotionColor: "#bfbfbf"
 
 
@@ -60,7 +60,7 @@ Rectangle {
                 id: emotionText
                 anchors.centerIn: parent
                 text: root.emotion
-                font.pixelSize: 24
+                font.pixelSize: 20
                 font.bold: true
                 color: root.emotionColor
             }
