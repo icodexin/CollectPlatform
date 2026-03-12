@@ -16,7 +16,8 @@ class DataStreamService : public QObject, public QQmlParserStatus {
     Q_PROPERTY(int connectTimes READ connectTimes NOTIFY connectTimesChanged)
     QML_ELEMENT
     Q_INTERFACES(QQmlParserStatus)
-    Q_PROPERTY(EmotionModel* emotionModel READ emotionModel CONSTANT)
+    Q_PROPERTY(EmotionModel* PPGemotionModel READ PPGemotionModel CONSTANT)
+    Q_PROPERTY(EmotionModel* EEGemotionModel READ EEGemotionModel CONSTANT)
 public:
     enum DataType {
         ALL       = 0,
@@ -55,7 +56,8 @@ public:
     int connectTimes() const;
 
     //读取函数
-    EmotionModel* emotionModel() const;
+    EmotionModel* PPGemotionModel() const;
+    EmotionModel* EEGemotionModel() const;
 signals:
     void subStudentIdChanged(const QString& studentId);
     void subDataTypeChanged(DataType type);
@@ -80,7 +82,8 @@ private:
     DataType m_subDataType = ALL;
     Status m_status = Offline;
     int m_connectTimes = 0;
-    EmotionModel *m_emotion_model = NULL;
+    EmotionModel *ppgemotionModel = NULL;
+    EmotionModel* eegemotionModel = NULL;
 };
 
 #endif //DATASTREAMSERVICE_H

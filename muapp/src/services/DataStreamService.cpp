@@ -16,10 +16,14 @@ namespace {
 Q_LOGGING_CATEGORY(dsService, "Services.DataStreamService")
 
 DataStreamService::DataStreamService(QObject* parent) : QObject(parent) {
-    m_emotion_model = new EmotionModel(this);
+    ppgemotionModel = new EmotionModel(this);
+    eegemotionModel = new EmotionModel(this);
 }
-EmotionModel* DataStreamService::emotionModel() const {
-    return m_emotion_model;
+EmotionModel* DataStreamService::PPGemotionModel() const {
+    return ppgemotionModel;
+}
+EmotionModel* DataStreamService::EEGemotionModel() const {
+    return eegemotionModel;
 }
 DataStreamService::~DataStreamService() {
     if (MuWebsocketMgr.hasConnection(kDataStreamKey)) {
@@ -184,7 +188,20 @@ void DataStreamService::handleBinaryMessage(const QByteArray& data) {
             QString pred_name = QString::fromStdString(emotion_map["pred_name"].as<std::string>());
 
             // 直接更新EmotionModel（用于QML渲染，线程安全调用）
-            QMetaObject::invokeMethod(m_emotion_model, "updateEmotionData",
+            QMetaObject::invokeMethod(ppgemotionModel, "updateEmotionData",
+                                      Qt::QueuedConnection,
+                                      Q_ARG(int, pred_class),
+                                      Q_ARG(QString, pred_name));
+        }
+        else if (data_type == "eegemotion") {
+            //这里用于接收EEG模型识别结并且渲染到qml页面
+            auto emotion_map = data_obj.as<std::map<std::string, msgpack::object>>();
+
+            int pred_class = emotion_map["pred_class"].as<int>();
+            QString pred_name = QString::fromStdString(emotion_map["pred_name"].as<std::string>());
+
+            // 直接更新EmotionModel（用于QML渲染，线程安全调用）
+            QMetaObject::invokeMethod(eegemotionModel, "updateEmotionData",
                                       Qt::QueuedConnection,
                                       Q_ARG(int, pred_class),
                                       Q_ARG(QString, pred_name));
