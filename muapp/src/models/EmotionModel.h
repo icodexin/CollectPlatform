@@ -35,7 +35,7 @@ public slots:
 
     signals:
         // 属性变化的信号（Q_PROPERTY的NOTIFY必须对应）
-    void emotionNameChanged();
+        void emotionNameChanged();
     void emotionClassChanged();
     void timestampChanged();
 
