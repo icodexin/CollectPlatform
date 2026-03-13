@@ -32,13 +32,13 @@ Item {
 
 
         SingleLineChart {
-            id: gsrChart
+            id: dbpChart
             marginLeft: -10
             marginRight: 0
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            titleText: qsTr("皮电 GSR (μS)")
+            titleText: qsTr("舒张压")
             lineColor: 'green'
             minY: 0
             maxY: 0.01
@@ -47,12 +47,12 @@ Item {
         }
 
         SingleLineChart {
-            id: hrChart
+            id: sbpChart
             marginLeft: -10
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            titleText: qsTr("心率 HR (bpm)")
+            titleText: qsTr("收缩压")
             lineColor: 'darkmagenta'
         }
 

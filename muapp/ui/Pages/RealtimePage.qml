@@ -6,28 +6,22 @@ import MuApp
 MuPage {
     title: "实时采集"
     titleIconSource: HusIcon.DotChartOutlined
-
+    property bool summarySelected: false
     // todo: replace with real model
     property var stuModel: [
-        {
-            "name": "Student 1",
-            "status": "在线"
-        },
-        {
-            "name": "Student 2",
-            "status": "离线"
-        },
-        {
-            "name": "Student 3",
-            "status": "在线"
-        }
+        { "studentId": "10001", "name": "Student 1", "status": "在线" },
+        { "studentId": "10002", "name": "Student 2", "status": "离线" },
+        { "studentId": "10003", "name": "Student 3", "status": "在线" },
+        { "studentId": "10004", "name": "Student 4", "status": "在线" },
+        { "studentId": "10005", "name": "Student 4", "status": "在线" },
+        { "studentId": "10006", "name": "Student 4", "status": "在线" },
     ]
 
     ListView {
         id: listView
         anchors.left: parent.left
         anchors.top: parent.top
-        anchors.bottom: statusBar.top
+        anchors.bottom: summaryEntry.top
         model: stuModel
         delegate: stuDelegate
         highlight: Rectangle { radius: 10; color: "lightsteelblue" }
@@ -36,7 +30,58 @@ MuPage {
         focus: true
         clip: true
     }
+    Rectangle {
+        id: summaryEntry
+        anchors.left: listView.left
+        anchors.right: listView.right
+        anchors.bottom: statusBar.top
+        anchors.bottomMargin: 8
+        height: 46
+        radius: 10
+        border.color: "#d9d9d9"
 
+        color: {
+            if (summarySelected) return "#595959"      // 选中：深灰
+            if (summaryMouse.pressed) return "#4a4a4a" // 按下：更深一点
+            if (summaryMouse.containsMouse) return "#737373" // 悬浮：深灰
+            return "#f3f3f3"                           // 默认：浅灰
+        }
+
+        Behavior on color {
+            ColorAnimation { duration: 120 }
+        }
+
+        Row {
+            anchors.fill: parent
+            anchors.leftMargin: 12
+            anchors.rightMargin: 12
+            spacing: 8
+
+            HusAvatar {
+                anchors.verticalCenter: parent.verticalCenter
+                size: 28
+                iconSource: HusIcon.AppstoreOutlined
+            }
+
+            HusText {
+                anchors.verticalCenter: parent.verticalCenter
+                text: "结果展示"
+                font.bold: true
+                color: summarySelected || summaryMouse.containsMouse ? "white" : "#262626"
+            }
+        }
+
+        MouseArea {
+            id: summaryMouse
+            anchors.fill: parent
+            hoverEnabled: true
+
+            onClicked: {
+                summarySelected = true
+                listView.currentIndex = -1
+            }
+        }
+    }
     Component {
         id: stuDelegate
         Item {
@@ -85,7 +130,11 @@ MuPage {
 
             MouseArea {
                 anchors.fill: parent
-                onClicked: { listView.currentIndex = index; }
+                onClicked: {
+                    listView.currentIndex = index
+                    summarySelected = false
+                    service.subStudentId = modelData.studentId
+                }
             }
         }
     }
@@ -118,103 +167,177 @@ MuPage {
         }
     }
 
-    Row {
+    // Row {
+    //     anchors.left: listView.right
+    //     anchors.top: parent.top
+    //     anchors.right: parent.right
+    //     anchors.bottom: bottomPanel.top
+    //
+    //     anchors.leftMargin: 10
+    //
+    //     BandView {
+    //         id: bandView
+    //         width: parent.width / 2
+    //         height: parent.height
+    //     }
+    //
+    //     // EEGView {
+    //     //     id: eegView
+    //     //     width: parent.width / 2
+    //     //     height: parent.height
+    //     // }
+    // }
+    Item {
+        id: monitorPanel
+        visible: !summarySelected
         anchors.left: listView.right
         anchors.top: parent.top
         anchors.right: parent.right
-        anchors.bottom: bottomPanel.top
-
-        anchors.leftMargin: 10
-
-        BandView {
-            id: bandView
-            width: parent.width / 2
-            height: parent.height
-        }
-
-        EEGView {
-            id: eegView
-            width: parent.width / 2
-            height: parent.height
-        }
-    }
-
-    Rectangle {
-        id: bottomPanel
-        anchors.left: listView.right
-        anchors.right: parent.right
         anchors.bottom: parent.bottom
-        height: 100
-        color: HusTheme.HusCard.bgColor || "#ffffff"
-        border.color: HusTheme.HusCard.borderColor || "#e5e5e5"
-        border.width: 1
+        anchors.leftMargin: 10
 
         GridLayout {
             anchors.fill: parent
-            columns: 4
+            columns: 2
+            rowSpacing: 0
+            columnSpacing: 0
 
-
-            EmotionResultCard {
-                Layout.fillWidth: true  // 占满列的宽度（每列占1/4）
-                Layout.fillHeight: true // 占满行的高度，垂直居中显示
-                title: "EEG"
-                emotion: "高兴"
-                emotionColor: "#52c41a"
-            }
-
-            EmotionResultCard {
+            BandView {
+                id: viewmmWAV
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                title: "PPG"
-                // 绑定情绪名称：从service.emotionModel获取，默认显示"无"
-                emotion: service.emotionModel.emotionName || "无"
-                // 绑定情绪颜色：根据情绪名称动态匹配，默认灰色
-                emotionColor: {
-                    // 情绪与颜色的映射表（可根据需求扩展）
-                    switch (service.emotionModel.emotionName) {
-                        case "困惑": return "#52c41a"; // 绿色
-                        case "中性": return "#1890ff"; // 蓝色
-                        case "无聊": return "#f5222d"; // 红色
-                        case "专注": return "#fa8c16"; // 橙色
-                        default: return "#bfbfbf"; // 默认灰色
-                    }
-                }
+                Layout.preferredWidth: 1
+                Layout.preferredHeight: 1
             }
 
-            EmotionResultCard {
+            BCGView {
+                id: viewBCG
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                title: "视频"
-                emotion: "中性"
-                emotionColor: "#bfbfbf"
+                Layout.preferredWidth: 1
+                Layout.preferredHeight: 1
             }
 
-            EmotionResultCard {
+            MMWAVView {
+                id: viewPPG
                 Layout.fillWidth: true
                 Layout.fillHeight: true
-                title: "汇总结果"
-                emotion: "高兴"
-                emotionColor: "#faad14"
+                Layout.preferredWidth: 1
+                Layout.preferredHeight: 1
+            }
+
+            RPPGView {
+                id: viewrPPG
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                Layout.preferredWidth: 1
+                Layout.preferredHeight: 1
             }
         }
+
+        Rectangle {
+            z: 10
+            width: 1
+            color: "#d9d9d9"
+            anchors.top: parent.top
+            anchors.bottom: parent.bottom
+            anchors.horizontalCenter: parent.horizontalCenter
+        }
+
+        Rectangle {
+            z: 10
+            height: 1
+            color: "#d9d9d9"
+            anchors.left: parent.left
+            anchors.right: parent.right
+            anchors.verticalCenter: parent.verticalCenter
+        }
     }
+    SummaryView {
+        id: summaryPanel
+        visible: summarySelected
+        anchors.left: listView.right
+        anchors.top: parent.top
+        anchors.right: parent.right
+        anchors.bottom: parent.bottom
+        anchors.leftMargin: 10
+    }
+    // Rectangle {
+    //     id: bottomPanel
+    //     anchors.left: listView.right
+    //     anchors.right: parent.right
+    //     anchors.bottom: parent.bottom
+    //     height: 100
+    //     color: HusTheme.HusCard.bgColor || "#ffffff"
+    //     border.color: HusTheme.HusCard.borderColor || "#e5e5e5"
+    //     border.width: 1
+    //
+    //     GridLayout {
+    //         anchors.fill: parent
+    //         columns: 4
+    //
+    //
+    //         EmotionResultCard {
+    //             Layout.fillWidth: true  // 占满列的宽度（每列占1/4）
+    //             Layout.fillHeight: true // 占满行的高度，垂直居中显示
+    //             title: "EEG"
+    //             emotion: "高兴"
+    //             emotionColor: "#52c41a"
+    //         }
+    //
+    //         EmotionResultCard {
+    //             Layout.fillWidth: true
+    //             Layout.fillHeight: true
+    //             title: "PPG"
+    //             // 绑定情绪名称：从service.emotionModel获取，默认显示"无"
+    //             emotion: service.emotionModel.emotionName || "无"
+    //             // 绑定情绪颜色：根据情绪名称动态匹配，默认灰色
+    //             emotionColor: {
+    //                 // 情绪与颜色的映射表（可根据需求扩展）
+    //                 switch (service.emotionModel.emotionName) {
+    //                     case "困惑": return "#52c41a"; // 绿色
+    //                     case "中性": return "#1890ff"; // 蓝色
+    //                     case "无聊": return "#f5222d"; // 红色
+    //                     case "专注": return "#fa8c16"; // 橙色
+    //                     default: return "#bfbfbf"; // 默认灰色
+    //                 }
+    //             }
+    //         }
+    //
+    //         EmotionResultCard {
+    //             Layout.fillWidth: true
+    //             Layout.fillHeight: true
+    //             title: "视频"
+    //             emotion: "中性"
+    //             emotionColor: "#bfbfbf"
+    //         }
+    //
+    //         EmotionResultCard {
+    //             Layout.fillWidth: true
+    //             Layout.fillHeight: true
+    //             title: "汇总结果"
+    //             emotion: "高兴"
+    //             emotionColor: "#faad14"
+    //         }
+    //     }
+    // }
 
 
     BandViewController {
         id: bandViewController
 
         onFrameUpdated: (frame) => {
-            bandView.updateFrame(frame)
+            viewPPG.updateFrame(frame)
         }
     }
 
-    EEGViewController {
-        id: eegViewController
-
-        onFrameUpdated: (frame) => {
-            eegView.updateFrame(frame)
-        }
-    }
+    // EEGViewController {
+    //     id: eegViewController
+    //
+    //     onFrameUpdated: (frame) => {
+    //         eegView.updateFrame(frame)
+    //     }
+    // }
 
     DataStreamService {
         id: service
@@ -224,9 +347,9 @@ MuPage {
             bandViewController.pushData(data);
         }
 
-        onEegReceived: (data) => {
-            eegViewController.pushData(data);
-        }
+        // onEegReceived: (data) => {
+        //     eegViewController.pushData(data);
+        // }
 
         onConnectTimesChanged: (times) =>{
             if (times === 5) {

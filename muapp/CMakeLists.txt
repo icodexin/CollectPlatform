@@ -58,6 +58,10 @@ set(QML_FILES
     ui/Components/Charts/util.js
     ui/Views/EEGView.qml
     ui/Views/BandView.qml
+    ui/Views/MMWAVView.qml
+    ui/Views/BCGView.qml
+    ui/Views/RPPGView.qml
+    ui/Views/SummaryView.qml
     ui/Views/EmotionResultCard.qml
     ui/Pages/HomePage.qml
     ui/Pages/RealtimePage.qml

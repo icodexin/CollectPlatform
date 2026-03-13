@@ -5,8 +5,8 @@
 #include <QThread>
 
 #include "BandView.h"
-#include "CameraView.h"
 #include "EEGView.h"
+#include "CameraView.h"
 #include "SettingView.h"
 #include "components/BarCard.h"
 #include "components/LogBox.h"

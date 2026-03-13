@@ -32,13 +32,13 @@ Item {
 
 
         SingleLineChart {
-            id: gsrChart
+            id: rrChart
             marginLeft: -10
             marginRight: 0
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            titleText: qsTr("皮电 GSR (μS)")
+            titleText: qsTr("呼吸")
             lineColor: 'green'
             minY: 0
             maxY: 0.01
