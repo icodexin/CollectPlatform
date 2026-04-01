@@ -4,74 +4,80 @@ import HuskarUI.Basic
 import MuApp
 
 Item {
+    id: root
+
+    property real currentHeartRate: -1
+    property real currentRespiratoryRate: -1
+
+    property string heartTitle: currentHeartRate > 0
+        ? qsTr("BCG 心率  %1 bpm").arg(Number(currentHeartRate).toFixed(1))
+        : qsTr("BCG 心率")
+
+    property string respTitle: currentRespiratoryRate > 0
+        ? qsTr("BCG 呼吸波  %1 次/分").arg(Number(currentRespiratoryRate).toFixed(1))
+        : qsTr("BCG 呼吸波")
 
     Rectangle {
-        id: background
         anchors.fill: parent
         color: HusTheme.HusCard.colorBg
-        border.color: HusTheme.isDark ? HusTheme.HusCard.colorBorderDark : HusTheme.HusCard.colorBorder
+        border.color: HusTheme.isDark
+            ? HusTheme.HusCard.colorBorderDark
+            : HusTheme.HusCard.colorBorder
         opacity: 0.8
         radius: 10
     }
 
-    RowLayout  {
+    RowLayout {
         anchors.fill: parent
         anchors.margins: 8
         spacing: 0
 
-        // SingleLineChart {
-        //     id: pulseWaveChart
-        //     marginLeft: -10
-        //     marginRight: 0
-        //     Layout.fillWidth: true
-        //     Layout.fillHeight: true
-        //
-        //     titleText: qsTr("脉搏波 Pulse Wave")
-        //     lineColor: 'red'
-        // }
-
-
         SingleLineChart {
-            id: dbpChart
-            marginLeft: -10
-            marginRight: 0
+            id: bcgHeartChart
             Layout.fillWidth: true
             Layout.fillHeight: true
-
-            titleText: qsTr("舒张压")
-            lineColor: 'green'
-            minY: 0
-            maxY: 0.01
-            minYRange: 0.01
-            yLabelFormat: '%.3f'
+            titleText: root.heartTitle
+            lineColor: "red"
         }
 
         SingleLineChart {
-            id: sbpChart
-            marginLeft: -10
+            id: bcgRespChart
             Layout.fillWidth: true
             Layout.fillHeight: true
-
-            titleText: qsTr("收缩压")
-            lineColor: 'darkmagenta'
+            titleText: root.respTitle
+            lineColor: "blue"
         }
-
-        // MultiLineChart {
-        //     id: accChart
-        //     marginLeft: -10
-        //     Layout.fillWidth: true
-        //     Layout.fillHeight: true
-        //
-        //     titleText: qsTr("加速度 ACC (m<sup>2</sup>/s)")
-        //     titleFormat: Text.RichText
-        //     lineNames: ["X", "Y", "Z"]
-        // }
     }
 
     function updateFrame(frame) {
-        pulseWaveChart.append_point(frame.pulseWavePoint)
-        hrChart.append_point(frame.hrPoint)
-        gsrChart.append_point(frame.gsrPoint)
-        accChart.append_point(frame.accXPoint, frame.accYPoint, frame.accZPoint)
+        if (!frame)
+            return
+
+        const heartPoint = frame.heartWavePoint
+        const respPoint  = frame.respWavePoint
+
+        if (heartPoint && heartPoint.x > 0) {
+            bcgHeartChart.append_data(heartPoint.x, heartPoint.y)
+        }
+
+        if (respPoint && respPoint.x > 0) {
+            bcgRespChart.append_data(respPoint.x, respPoint.y)
+        }
+
+        if (frame.heartRate !== undefined && frame.heartRate > 0) {
+            currentHeartRate = frame.heartRate
+        }
+
+        if (frame.respiratoryRate !== undefined && frame.respiratoryRate > 0) {
+            currentRespiratoryRate = frame.respiratoryRate
+        }
+    }
+
+    function resetView() {
+        bcgHeartChart.resetChart()
+        bcgRespChart.resetChart()
+
+        currentHeartRate = -1
+        currentRespiratoryRate = -1
     }
 }

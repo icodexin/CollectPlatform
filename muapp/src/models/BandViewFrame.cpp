@@ -1,20 +1,18 @@
 #include "BandViewFrame.h"
 
-BandViewFrame::BandViewFrame(const qint64 timestamp, const HrValue hr, const PulseWaveValue& pulseWave,
-                             const GsrValue gsr, const AccValue& acc)
+BandViewFrame::BandViewFrame(qint64 timestamp,
+                             qreal hr,
+                             qreal pulseWaveFiltered,
+                             qreal gsr,
+                             qreal accX,
+                             qreal accY,
+                             qreal accZ)
     : m_hrPoint{static_cast<qreal>(timestamp), hr},
-      m_pulseWavePoint{static_cast<qreal>(timestamp), pulseWave.filtered},
+      m_pulseWavePoint{static_cast<qreal>(timestamp), pulseWaveFiltered},
       m_gsrPoint{static_cast<qreal>(timestamp), gsr},
-      m_accXPoint{static_cast<qreal>(timestamp), acc.x},
-      m_accYPoint{static_cast<qreal>(timestamp), acc.y},
-      m_accZPoint{static_cast<qreal>(timestamp), acc.z} {
-}
-
-BandViewFrame::BandViewFrame(const WristbandPacket& packet, const qsizetype index)
-    : BandViewFrame (
-        packet.timestamp(index), packet.hr(index), packet.pulseWave(index),
-        packet.gsr(index), packet.acc(index)
-    ) {
+      m_accXPoint{static_cast<qreal>(timestamp), accX},
+      m_accYPoint{static_cast<qreal>(timestamp), accY},
+      m_accZPoint{static_cast<qreal>(timestamp), accZ} {
 }
 
 QPointF BandViewFrame::hrPoint() const {

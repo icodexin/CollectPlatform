@@ -4,6 +4,10 @@ import HuskarUI.Basic
 import MuApp
 
 Item {
+    id: root
+
+    property real currentHeartRate: -1
+    property real currentRespiratoryRate: -1
 
     Rectangle {
         id: background
@@ -19,59 +23,61 @@ Item {
         anchors.margins: 8
         spacing: 0
 
-        // SingleLineChart {
-        //     id: pulseWaveChart
-        //     marginLeft: -10
-        //     marginRight: 0
-        //     Layout.fillWidth: true
-        //     Layout.fillHeight: true
-        //
-        //     titleText: qsTr("脉搏波 Pulse Wave")
-        //     lineColor: 'red'
-        // }
-
-
         SingleLineChart {
-            id: spo2Chart
+            id: heartChart
             marginLeft: -10
             marginRight: 0
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            titleText: qsTr("血氧")
-            lineColor: 'green'
-            minY: 0
-            maxY: 0.01
-            minYRange: 0.01
-            yLabelFormat: '%.3f'
+            titleText: root.currentHeartRate > 0
+                ? qsTr("rPPG 心率波形  %1 BPM").arg(Number(root.currentHeartRate).toFixed(1))
+                : qsTr("rPPG 心率波形")
+            lineColor: "red"
         }
 
         SingleLineChart {
-            id: hrChart
+            id: respChart
             marginLeft: -10
+            marginRight: 0
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            titleText: qsTr("心率 HR (bpm)")
-            lineColor: 'darkmagenta'
+            titleText: root.currentRespiratoryRate > 0
+                ? qsTr("rPPG 呼吸波形  %1 次/分").arg(Number(root.currentRespiratoryRate).toFixed(1))
+                : qsTr("rPPG 呼吸波形")
+            lineColor: "deepskyblue"
         }
-
-        // MultiLineChart {
-        //     id: accChart
-        //     marginLeft: -10
-        //     Layout.fillWidth: true
-        //     Layout.fillHeight: true
-        //
-        //     titleText: qsTr("加速度 ACC (m<sup>2</sup>/s)")
-        //     titleFormat: Text.RichText
-        //     lineNames: ["X", "Y", "Z"]
-        // }
     }
 
     function updateFrame(frame) {
-        pulseWaveChart.append_point(frame.pulseWavePoint)
-        hrChart.append_point(frame.hrPoint)
-        gsrChart.append_point(frame.gsrPoint)
-        accChart.append_point(frame.accXPoint, frame.accYPoint, frame.accZPoint)
+        if (!frame)
+            return
+
+        if (frame.heartWavePoint)
+            heartChart.append_point(frame.heartWavePoint)
+
+        if (frame.respWavePoint)
+            respChart.append_point(frame.respWavePoint)
+
+        const hr = Number(frame.heartRate)
+        if (Number.isFinite(hr) && hr > 0) {
+            currentHeartRate = hr
+        }
+
+        const rr = Number(frame.respiratoryRate)
+        if (Number.isFinite(rr) && rr > 0) {
+            currentRespiratoryRate = rr
+        }
+    }
+
+    function resetView() {
+        if (heartChart.resetChart)
+            heartChart.resetChart()
+        if (respChart.resetChart)
+            respChart.resetChart()
+
+        currentHeartRate = -1
+        currentRespiratoryRate = -1
     }
 }

@@ -26,7 +26,7 @@ public:
     Q_INVOKABLE void appendParallelPoints(const QList<QPointF>&);
     Q_INVOKABLE void appendParallelLines(const QList<QList<QPointF> >&);
     Q_INVOKABLE void removeUntil(qint64 timestamp);
-
+    Q_INVOKABLE void clear();
 signals:
     void minChanged();
     void maxChanged();

@@ -4,6 +4,7 @@ import HuskarUI.Basic
 import MuApp
 
 Item {
+    id: root
 
     Rectangle {
         id: background
@@ -27,9 +28,8 @@ Item {
         //     Layout.fillHeight: true
         //
         //     titleText: qsTr("脉搏波 Pulse Wave")
-        //     lineColor: 'red'
+        //     lineColor: "red"
         // }
-
 
         SingleLineChart {
             id: gsrChart
@@ -38,40 +38,62 @@ Item {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            titleText: qsTr("皮电 GSR (μS)")
-            lineColor: 'green'
+            titleText: qsTr("PPG 皮电 GSR (μS)")
+            lineColor: "green"
             minY: 0
             maxY: 0.01
             minYRange: 0.01
-            yLabelFormat: '%.3f'
+            yLabelFormat: "%.3f"
         }
 
-        SingleLineChart {
-            id: hrChart
-            marginLeft: -10
-            Layout.fillWidth: true
-            Layout.fillHeight: true
-
-            titleText: qsTr("心率 HR (bpm)")
-            lineColor: 'darkmagenta'
-        }
-
-        // MultiLineChart {
-        //     id: accChart
+        // SingleLineChart {
+        //     id: hrChart
         //     marginLeft: -10
         //     Layout.fillWidth: true
         //     Layout.fillHeight: true
         //
-        //     titleText: qsTr("加速度 ACC (m<sup>2</sup>/s)")
-        //     titleFormat: Text.RichText
-        //     lineNames: ["X", "Y", "Z"]
+        //     titleText: qsTr("PPG 心率 HR (bpm)")
+        //     lineColor: "darkmagenta"
         // }
+
+        MultiLineChart {
+            id: accChart
+            marginLeft: -10
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+
+            titleText: qsTr("加速度 ACC (m<sup>2</sup>/s)")
+            titleFormat: Text.RichText
+            lineNames: ["X", "Y", "Z"]
+        }
     }
 
     function updateFrame(frame) {
-        pulseWaveChart.append_point(frame.pulseWavePoint)
-        hrChart.append_point(frame.hrPoint)
-        gsrChart.append_point(frame.gsrPoint)
-        accChart.append_point(frame.accXPoint, frame.accYPoint, frame.accZPoint)
+        if (!frame)
+            return
+
+        // if (frame.hrPoint && frame.hrPoint.x > 0) {
+        //     hrChart.append_point(frame.hrPoint)
+        // }
+
+        if (frame.gsrPoint && frame.gsrPoint.x > 0) {
+            gsrChart.append_point(frame.gsrPoint)
+        }
+
+        // if (frame.pulseWavePoint && frame.pulseWavePoint.x > 0) {
+        //     pulseWaveChart.append_point(frame.pulseWavePoint)
+        // }
+
+        if (frame.accXPoint && frame.accYPoint && frame.accZPoint) {
+            accChart.append_point(frame.accXPoint, frame.accYPoint, frame.accZPoint)
+        }
+    }
+
+    function resetView() {
+        // hrChart.resetChart()
+        gsrChart.resetChart()
+
+        // pulseWaveChart.resetChart()
+        accChart.resetChart()
     }
 }

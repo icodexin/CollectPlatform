@@ -1,10 +1,14 @@
 #ifndef DATASTREAMSERVICE_H
 #define DATASTREAMSERVICE_H
-
+#include <QtCore/QJsonObject>
 #include <QtCore/QJsonObject>
 #include <QtCore/QObject>
 #include <QtQml/QQmlParserStatus>
 #include <QtQml/qqmlregistration.h>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
+#include <QDebug>
 #include "model/EEGData.h"
 #include "model/WristbandData.h"
 #include "./models/EmotionModel.h"
@@ -56,6 +60,7 @@ public:
 
     //读取函数
     EmotionModel* emotionModel() const;
+
 signals:
     void subStudentIdChanged(const QString& studentId);
     void subDataTypeChanged(DataType type);
@@ -65,7 +70,11 @@ signals:
     void msgReceived(const QJsonObject& msg);
     void wristbandReceived(const WristbandPacket& data, const QString& studentId);
     void eegReceived(const EEGPacket& data, const QString& studentId);
-
+    void bcgReceived(const QJsonObject& obj, const QString& studentId);
+    void mmwavReceived(const QJsonObject& obj, const QString& student_id);
+    void rppgReceived(const QJsonObject& obj, const QString& studentId);
+    void wristbandJsonReceived(const QJsonObject& obj, const QString& student_id);
+    void summaryReceived(const QJsonObject& obj);
 private:
     void setStatus(Status status);
     void setConnectTimes(int times);
@@ -74,6 +83,20 @@ private:
     void attachClientSignals(const QString& key);
     void handleTextMessage(const QString& text);
     void handleBinaryMessage(const QByteArray& data);
+
+    //处理bcg信号
+    void handleBcg(const QJsonObject& obj, const QString& student_id);
+    //处理wmWav信号
+    void handleMmwav(const QJsonObject& obj, const QString& student_id);
+    //处理rppg代码
+    void handleRppg(const QJsonObject& obj, const QString& student_id);
+    //处理ppg信号
+    void handleWristband(const QJsonObject& obj, const QString& student_id);
+
+    //订阅学生id，修改数据
+    // QString dataTypeToString(DataType type) const;
+    void resubscribe();
+    // void unsubscribe(const QString& studentId, DataType type);
 
 private:
     QString m_subStudentId;

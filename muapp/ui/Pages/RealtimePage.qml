@@ -6,30 +6,62 @@ import MuApp
 MuPage {
     title: "实时采集"
     titleIconSource: HusIcon.DotChartOutlined
+
     property bool summarySelected: false
+    property string summaryStudentId: "__summary__"
+
     // todo: replace with real model
     property var stuModel: [
         { "studentId": "10001", "name": "Student 1", "status": "在线" },
-        { "studentId": "10002", "name": "Student 2", "status": "离线" },
+        { "studentId": "10002", "name": "Student 2", "status": "在线" },
         { "studentId": "10003", "name": "Student 3", "status": "在线" },
         { "studentId": "10004", "name": "Student 4", "status": "在线" },
-        { "studentId": "10005", "name": "Student 4", "status": "在线" },
-        { "studentId": "10006", "name": "Student 4", "status": "在线" },
+        { "studentId": "10005", "name": "Student 5", "status": "在线" },
+        { "studentId": "10006", "name": "Student 6", "status": "在线" },
+        { "studentId": "10007", "name": "Student 7", "status": "在线" },
+        { "studentId": "10008", "name": "Student 8", "status": "在线" },
     ]
+
+    function resetMonitorViews() {
+        bcgViewController.reset()
+        mmwavViewController.reset()
+        rppgViewController.reset()
+        bandViewController.reset()
+    }
+
+    function selectStudent(studentId, index) {
+        summarySelected = false
+        listView.currentIndex = index
+        resetMonitorViews()
+        service.subStudentId = studentId
+    }
+
+    function selectSummary() {
+        summarySelected = true
+        listView.currentIndex = -1
+        resetMonitorViews()
+        summaryController.reset()
+        service.subStudentId = summaryStudentId
+    }
 
     ListView {
         id: listView
         anchors.left: parent.left
         anchors.top: parent.top
         anchors.bottom: summaryEntry.top
+        width: 150
+
         model: stuModel
         delegate: stuDelegate
-        highlight: Rectangle { radius: 10; color: "lightsteelblue" }
+        highlight: Rectangle {
+            radius: 10
+            color: "lightsteelblue"
+        }
         highlightMoveDuration: HusTheme.animationEnabled ? HusTheme.Primary.durationFast : 0
-        width: 150
         focus: true
         clip: true
     }
+
     Rectangle {
         id: summaryEntry
         anchors.left: listView.left
@@ -41,10 +73,10 @@ MuPage {
         border.color: "#d9d9d9"
 
         color: {
-            if (summarySelected) return "#595959"      // 选中：深灰
-            if (summaryMouse.pressed) return "#4a4a4a" // 按下：更深一点
-            if (summaryMouse.containsMouse) return "#737373" // 悬浮：深灰
-            return "#f3f3f3"                           // 默认：浅灰
+            if (summarySelected) return "#595959"
+            if (summaryMouse.pressed) return "#4a4a4a"
+            if (summaryMouse.containsMouse) return "#737373"
+            return "#f3f3f3"
         }
 
         Behavior on color {
@@ -77,19 +109,22 @@ MuPage {
             hoverEnabled: true
 
             onClicked: {
-                summarySelected = true
-                listView.currentIndex = -1
+                selectSummary()
             }
         }
     }
+
     Component {
         id: stuDelegate
+
         Item {
             id: stuItem
             required property var modelData
             required property int index
+
             property int contentHeight: 30
             property int padding: 8
+
             width: listView.width
             height: contentHeight + 2 * padding
 
@@ -107,12 +142,15 @@ MuPage {
 
                 Column {
                     anchors.verticalCenter: parent.verticalCenter
+
                     HusText {
                         text: modelData.name
                         font.bold: true
                     }
+
                     Row {
                         spacing: 4
+
                         Rectangle {
                             width: stuStatusText.height / 2
                             height: stuStatusText.height / 2
@@ -120,6 +158,7 @@ MuPage {
                             color: modelData.status === "在线" ? "green" : "gray"
                             anchors.verticalCenter: parent.verticalCenter
                         }
+
                         HusText {
                             id: stuStatusText
                             text: modelData.status
@@ -131,9 +170,7 @@ MuPage {
             MouseArea {
                 anchors.fill: parent
                 onClicked: {
-                    listView.currentIndex = index
-                    summarySelected = false
-                    service.subStudentId = modelData.studentId
+                    selectStudent(modelData.studentId, index)
                 }
             }
         }
@@ -148,45 +185,25 @@ MuPage {
         HusSpin {
             Layout.alignment: Qt.AlignVCenter
             spinning: service.status === DataStreamService.Connecting
-            sizeHint: 'small'
+            sizeHint: "small"
         }
 
         HusText {
-            Layout.alignment: Qt.AlignVCenter
             id: statusText
+            Layout.alignment: Qt.AlignVCenter
             text: {
                 switch (service.status) {
-                case DataStreamService.Offline:
-                    return "服务已断开";
-                case DataStreamService.Online:
-                    return "服务已连接";
-                case DataStreamService.Connecting:
-                    return "服务已断开，连接中...";
+                    case DataStreamService.Offline:
+                        return "服务已断开"
+                    case DataStreamService.Online:
+                        return "服务已连接"
+                    case DataStreamService.Connecting:
+                        return "服务已断开，连接中..."
                 }
             }
         }
     }
 
-    // Row {
-    //     anchors.left: listView.right
-    //     anchors.top: parent.top
-    //     anchors.right: parent.right
-    //     anchors.bottom: bottomPanel.top
-    //
-    //     anchors.leftMargin: 10
-    //
-    //     BandView {
-    //         id: bandView
-    //         width: parent.width / 2
-    //         height: parent.height
-    //     }
-    //
-    //     // EEGView {
-    //     //     id: eegView
-    //     //     width: parent.width / 2
-    //     //     height: parent.height
-    //     // }
-    // }
     Item {
         id: monitorPanel
         visible: !summarySelected
@@ -196,63 +213,212 @@ MuPage {
         anchors.bottom: parent.bottom
         anchors.leftMargin: 10
 
+        property int cardRadius: 10
+        property int titleBarHeight: 42
+        property color cardBorderColor: "#d9d9d9"
+        property color cardBgColor: "#ffffff"
+        property color titleBgColor: "#f5f5f5"
+
         GridLayout {
             anchors.fill: parent
             columns: 2
-            rowSpacing: 0
-            columnSpacing: 0
+            rowSpacing: 10
+            columnSpacing: 10
 
-            BandView {
-                id: viewmmWAV
+            Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: 1
                 Layout.preferredHeight: 1
+                radius: monitorPanel.cardRadius
+                color: monitorPanel.cardBgColor
+                border.color: monitorPanel.cardBorderColor
+                clip: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 0
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: monitorPanel.titleBarHeight
+                        color: monitorPanel.titleBgColor
+
+                        HusText {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 12
+                            text: "PPG"
+                            font.bold: true
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            height: 1
+                            color: monitorPanel.cardBorderColor
+                        }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        BandView {
+                            id: viewPPG
+                            anchors.fill: parent
+                        }
+                    }
+                }
             }
 
-            BCGView {
-                id: viewBCG
+            Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: 1
                 Layout.preferredHeight: 1
+                radius: monitorPanel.cardRadius
+                color: monitorPanel.cardBgColor
+                border.color: monitorPanel.cardBorderColor
+                clip: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 0
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: monitorPanel.titleBarHeight
+                        color: monitorPanel.titleBgColor
+
+                        HusText {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 12
+                            text: "BCG"
+                            font.bold: true
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            height: 1
+                            color: monitorPanel.cardBorderColor
+                        }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        BCGView {
+                            id: viewBCG
+                            anchors.fill: parent
+                        }
+                    }
+                }
             }
 
-            MMWAVView {
-                id: viewPPG
+            Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: 1
                 Layout.preferredHeight: 1
+                radius: monitorPanel.cardRadius
+                color: monitorPanel.cardBgColor
+                border.color: monitorPanel.cardBorderColor
+                clip: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 0
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: monitorPanel.titleBarHeight
+                        color: monitorPanel.titleBgColor
+
+                        HusText {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 12
+                            text: "MMWAV"
+                            font.bold: true
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            height: 1
+                            color: monitorPanel.cardBorderColor
+                        }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        MMWAVView {
+                            id: viewmmWAV
+                            anchors.fill: parent
+                        }
+                    }
+                }
             }
 
-            RPPGView {
-                id: viewrPPG
+            Rectangle {
                 Layout.fillWidth: true
                 Layout.fillHeight: true
                 Layout.preferredWidth: 1
                 Layout.preferredHeight: 1
+                radius: monitorPanel.cardRadius
+                color: monitorPanel.cardBgColor
+                border.color: monitorPanel.cardBorderColor
+                clip: true
+
+                ColumnLayout {
+                    anchors.fill: parent
+                    spacing: 0
+
+                    Rectangle {
+                        Layout.fillWidth: true
+                        Layout.preferredHeight: monitorPanel.titleBarHeight
+                        color: monitorPanel.titleBgColor
+
+                        HusText {
+                            anchors.verticalCenter: parent.verticalCenter
+                            anchors.left: parent.left
+                            anchors.leftMargin: 12
+                            text: "RPPG"
+                            font.bold: true
+                        }
+
+                        Rectangle {
+                            anchors.left: parent.left
+                            anchors.right: parent.right
+                            anchors.bottom: parent.bottom
+                            height: 1
+                            color: monitorPanel.cardBorderColor
+                        }
+                    }
+
+                    Item {
+                        Layout.fillWidth: true
+                        Layout.fillHeight: true
+
+                        RPPGView {
+                            id: viewrPPG
+                            anchors.fill: parent
+                        }
+                    }
+                }
             }
-        }
-
-        Rectangle {
-            z: 10
-            width: 1
-            color: "#d9d9d9"
-            anchors.top: parent.top
-            anchors.bottom: parent.bottom
-            anchors.horizontalCenter: parent.horizontalCenter
-        }
-
-        Rectangle {
-            z: 10
-            height: 1
-            color: "#d9d9d9"
-            anchors.left: parent.left
-            anchors.right: parent.right
-            anchors.verticalCenter: parent.verticalCenter
         }
     }
+
     SummaryView {
         id: summaryPanel
         visible: summarySelected
@@ -261,67 +427,9 @@ MuPage {
         anchors.right: parent.right
         anchors.bottom: parent.bottom
         anchors.leftMargin: 10
-    }
-    // Rectangle {
-    //     id: bottomPanel
-    //     anchors.left: listView.right
-    //     anchors.right: parent.right
-    //     anchors.bottom: parent.bottom
-    //     height: 100
-    //     color: HusTheme.HusCard.bgColor || "#ffffff"
-    //     border.color: HusTheme.HusCard.borderColor || "#e5e5e5"
-    //     border.width: 1
-    //
-    //     GridLayout {
-    //         anchors.fill: parent
-    //         columns: 4
-    //
-    //
-    //         EmotionResultCard {
-    //             Layout.fillWidth: true  // 占满列的宽度（每列占1/4）
-    //             Layout.fillHeight: true // 占满行的高度，垂直居中显示
-    //             title: "EEG"
-    //             emotion: "高兴"
-    //             emotionColor: "#52c41a"
-    //         }
-    //
-    //         EmotionResultCard {
-    //             Layout.fillWidth: true
-    //             Layout.fillHeight: true
-    //             title: "PPG"
-    //             // 绑定情绪名称：从service.emotionModel获取，默认显示"无"
-    //             emotion: service.emotionModel.emotionName || "无"
-    //             // 绑定情绪颜色：根据情绪名称动态匹配，默认灰色
-    //             emotionColor: {
-    //                 // 情绪与颜色的映射表（可根据需求扩展）
-    //                 switch (service.emotionModel.emotionName) {
-    //                     case "困惑": return "#52c41a"; // 绿色
-    //                     case "中性": return "#1890ff"; // 蓝色
-    //                     case "无聊": return "#f5222d"; // 红色
-    //                     case "专注": return "#fa8c16"; // 橙色
-    //                     default: return "#bfbfbf"; // 默认灰色
-    //                 }
-    //             }
-    //         }
-    //
-    //         EmotionResultCard {
-    //             Layout.fillWidth: true
-    //             Layout.fillHeight: true
-    //             title: "视频"
-    //             emotion: "中性"
-    //             emotionColor: "#bfbfbf"
-    //         }
-    //
-    //         EmotionResultCard {
-    //             Layout.fillWidth: true
-    //             Layout.fillHeight: true
-    //             title: "汇总结果"
-    //             emotion: "高兴"
-    //             emotionColor: "#faad14"
-    //         }
-    //     }
-    // }
 
+        controller: summaryController
+    }
 
     BandViewController {
         id: bandViewController
@@ -329,39 +437,89 @@ MuPage {
         onFrameUpdated: (frame) => {
             viewPPG.updateFrame(frame)
         }
+
+        onResetRequested: {
+            viewPPG.resetView()
+        }
     }
 
-    // EEGViewController {
-    //     id: eegViewController
-    //
-    //     onFrameUpdated: (frame) => {
-    //         eegView.updateFrame(frame)
-    //     }
-    // }
+    BcgViewController {
+        id: bcgViewController
+
+        onFrameUpdated: (frame) => {
+            viewBCG.updateFrame(frame)
+        }
+
+        onResetRequested: {
+            viewBCG.resetView()
+        }
+    }
+
+    MmwavViewController {
+        id: mmwavViewController
+
+        onFrameUpdated: (frame) => {
+            viewmmWAV.updateFrame(frame)
+        }
+
+        onResetRequested: {
+            viewmmWAV.resetView()
+        }
+    }
+
+    RppgViewController {
+        id: rppgViewController
+
+        onFrameUpdated: (frame) => {
+            viewrPPG.updateFrame(frame)
+        }
+
+        onResetRequested: {
+            viewrPPG.resetView()
+        }
+    }
+    SummaryController {
+        id: summaryController
+        dataStreamService: service
+    }
 
     DataStreamService {
         id: service
         subStudentId: "10001" // todo: replace with real student id
 
-        onWristbandReceived: (data) => {
-            bandViewController.pushData(data);
+        onWristbandJsonReceived: (data, studentId) => {
+            bandViewController.pushJsonData(data,studentId)
         }
 
-        // onEegReceived: (data) => {
-        //     eegViewController.pushData(data);
-        // }
+        onBcgReceived: (data, studentId) => {
+            bcgViewController.pushData(data, studentId)
+        }
 
-        onConnectTimesChanged: (times) =>{
+        onMmwavReceived: (data, studentId) => {
+            mmwavViewController.pushMmwavData(data, studentId)
+        }
+
+        onRppgReceived: (data, studentId) => {
+            rppgViewController.pushData(data, studentId)
+        }
+
+        onConnectTimesChanged: (times) => {
             if (times === 5) {
                 AppController.notify.error(
                     "无法连接数据服务",
-                    `连接异常，请检查网络或联系管理员。`,
+                    "连接异常，请检查网络或联系管理员。",
                     60000,
                     "datastream-service-connection-error"
-                );
+                )
             } else if (times === 0) {
-                AppController.notify.close("datastream-service-connection-error");
+                AppController.notify.close("datastream-service-connection-error")
             }
+        }
+    }
+
+    Component.onCompleted: {
+        if (stuModel.length > 0) {
+            selectStudent(stuModel[0].studentId, 0)
         }
     }
 }

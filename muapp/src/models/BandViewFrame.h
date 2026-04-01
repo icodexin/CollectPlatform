@@ -2,8 +2,9 @@
 #define BANDVIEWFRAME_H
 
 #include <QtCore/QPointF>
+#include <QtCore/qtypes.h>
 #include <QtQml/qqmlregistration.h>
-#include "model/WristbandData.h"
+#include <QObject>
 
 class BandViewFrame {
     Q_GADGET
@@ -21,8 +22,13 @@ public:
     BandViewFrame(const BandViewFrame&) = default;
     BandViewFrame& operator=(const BandViewFrame&) = default;
 
-    BandViewFrame(qint64 timestamp, HrValue hr, const PulseWaveValue& pulseWave, GsrValue gsr, const AccValue& acc);
-    BandViewFrame(const WristbandPacket& packet, qsizetype index);
+    BandViewFrame(qint64 timestamp,
+                  qreal hr,
+                  qreal pulseWaveFiltered,
+                  qreal gsr,
+                  qreal accX,
+                  qreal accY,
+                  qreal accZ);
 
     QPointF hrPoint() const;
     QPointF pulseWavePoint() const;
@@ -40,5 +46,6 @@ private:
     QPointF m_accZPoint;
 };
 
+Q_DECLARE_METATYPE(BandViewFrame)
 
-#endif //BANDVIEWFRAME_H
+#endif // BANDVIEWFRAME_H

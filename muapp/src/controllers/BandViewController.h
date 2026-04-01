@@ -1,24 +1,28 @@
-#ifndef WRISTBANDVIEWCONTROLLER_H
-#define WRISTBANDVIEWCONTROLLER_H
+#ifndef BANDVIEWCONTROLLER_H
+#define BANDVIEWCONTROLLER_H
 
 #include <QtCore/QPointer>
 #include <QtCore/QQueue>
+#include <QtCore/QThread>
 #include <QtCore/QTimer>
+#include <QtCore/QVariantMap>
+#include <QtCore/QString>
 #include <QtQml/QQmlParserStatus>
 #include "models/BandViewFrame.h"
 
-class BandViewWorker final : public QObject {
+class BandViewWorker : public QObject {
     Q_OBJECT
 
 public:
     explicit BandViewWorker(QObject* parent = nullptr);
 
-signals:
-    void frameReady(const BandViewFrame&);
+    signals:
+        void frameReady(const BandViewFrame& frame);
 
 public slots:
-    Q_INVOKABLE void pushData(const WristbandPacket& data);
+    Q_INVOKABLE void pushJsonData(const QVariantMap& data, const QString& studentId);
     Q_INVOKABLE void fetchNextFrame();
+    Q_INVOKABLE void reset();
 
 private:
     QQueue<BandViewFrame> m_queue;
@@ -36,13 +40,15 @@ public:
     void classBegin() override;
     void componentComplete() override;
 
-signals:
-    void frameUpdated(const BandViewFrame&);
+    signals:
+        void frameUpdated(const BandViewFrame& frame);
+    void resetRequested();
 
 public slots:
-    void pushData(const WristbandPacket& data);
+    void pushJsonData(const QVariantMap& data, const QString& studentId);
     void startRendering();
     void stopRendering();
+    void reset();
 
 private slots:
     void onTimeout();
@@ -53,4 +59,4 @@ private:
     QTimer m_timer;
 };
 
-#endif //WRISTBANDVIEWCONTROLLER_H
+#endif // BANDVIEWCONTROLLER_H

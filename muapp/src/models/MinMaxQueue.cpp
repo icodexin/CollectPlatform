@@ -115,3 +115,14 @@ void MinMaxQueue::appendParallelPointsImpl(const QList<QPointF>& points) {
     appendPointImpl({timestamp, minY});
     appendPointImpl({timestamp, maxY});
 }
+
+//用来清空原来的数据
+void MinMaxQueue::clear()
+{
+    m_minQueue.clear();
+    m_maxQueue.clear();
+
+    emit minChanged();
+    emit maxChanged();
+    emit minMaxChanged();
+}

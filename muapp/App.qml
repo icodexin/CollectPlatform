@@ -5,7 +5,7 @@ import HuskarUI.Basic
 
 HusWindow {
     id: app
-    minimumWidth: 800
+    minimumWidth: 1400
     minimumHeight: 600
     title: Qt.application.displayName
     captionBar.color: HusTheme.Primary.colorFillTertiary

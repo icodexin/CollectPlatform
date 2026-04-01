@@ -110,6 +110,19 @@ Item {
         // 维护Y轴范围
         minMaxY.removeUntil(axisX.min)
     }
+    function resetChart() {
+        // console.log("resetChart called, title =", titleText)
+
+        series.clear()
+        minMaxY.clear()
+
+        axisY.min = -1
+        axisY.max = 1
+
+        const now = new Date()
+        axisX.max = now
+        axisX.min = new Date(now.getTime() - axisX.timeSize)
+    }
 
     MinMaxQueue {
         id: minMaxY

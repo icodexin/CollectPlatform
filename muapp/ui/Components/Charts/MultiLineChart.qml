@@ -211,6 +211,24 @@ Item {
         }
         minMaxY.removeUntil(axisX.min)
     }
+    function resetChart() {
+        // 1. 清空所有折线数据
+        for (let i = 0; i < view.seriesList.length; i++) {
+            view.seriesList[i].clear()
+        }
+
+        // 2. 清空Y轴最值缓存
+        minMaxY.clear()
+
+        // 3. 重置Y轴范围
+        axisY.min = -1
+        axisY.max = 1
+
+        // 4. 重置X轴时间窗口
+        const now = new Date()
+        axisX.max = now
+        axisX.min = new Date(now.getTime() - axisX.timeSize)
+    }
 
     MinMaxQueue {
         id: minMaxY

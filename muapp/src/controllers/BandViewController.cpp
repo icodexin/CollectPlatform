@@ -1,37 +1,97 @@
 #include "BandViewController.h"
-#include <QThread>
+
+#include <QtCore/QMetaType>
+#include <QtCore/QVariantList>
 #include <QDebug>
+#include <QThread>
 
 namespace {
-    constexpr int k_sampleRate = 50; // 50 Hz
-    constexpr int k_renderRate = 30; // 30 FPS
+    constexpr int kDefaultSampleRate = 30; // Hz
+    constexpr int kRenderRate = 30;        // FPS
 }
 
 BandViewWorker::BandViewWorker(QObject* parent) : QObject(parent) {
 }
 
-void BandViewWorker::pushData(const WristbandPacket& data) {
+void BandViewWorker::pushJsonData(const QVariantMap& data, const QString& studentId) {
     Q_ASSERT(thread() == QThread::currentThread());
-    constexpr double ratio = static_cast<double>(k_sampleRate) / k_renderRate;
+    Q_UNUSED(studentId);
+
+    const qint64 baseTimestamp = data.value("timestamp").toLongLong();
+
+    double samplingRate = data.value("sampling_rate").toDouble();
+    if (samplingRate <= 0.0) {
+        samplingRate = kDefaultSampleRate;
+    }
+
+    const QVariantList ppgFiltered = data.value("ppg_filtered").toList();
+    const QVariantList accelX = data.value("accel_x").toList();
+    const QVariantList accelY = data.value("accel_y").toList();
+    const QVariantList accelZ = data.value("accel_z").toList();
+
+    // 可选字段，没有就默认 0
+    const QVariantList hrList = data.value("hr").toList();
+    const QVariantList gsrList = data.value("gsr").toList();
+
+    int n = ppgFiltered.size();
+    if (accelX.size() < n) n = accelX.size();
+    if (accelY.size() < n) n = accelY.size();
+    if (accelZ.size() < n) n = accelZ.size();
+
+    if (n <= 0) {
+        qWarning() << "[BandViewWorker] wristband json has no valid data";
+        return;
+    }
+
+    const double ratio = samplingRate / static_cast<double>(kRenderRate);
     double counter = 0.0;
-    for (qsizetype i = 0; i < data.length(); i++) {
+    const qint64 sampleIntervalMs = static_cast<qint64>(1000.0 / samplingRate);
+
+    for (int i = 0; i < n; ++i) {
         counter += 1.0;
-        if (counter >= ratio) {
-            m_queue.enqueue(BandViewFrame(data, i));
-            counter -= ratio;
+        if (counter < ratio) {
+            continue;
         }
+        counter -= ratio;
+
+        const qint64 ts = baseTimestamp + i * sampleIntervalMs;
+
+        const qreal pulseWave = ppgFiltered[i].toDouble();
+        const qreal ax = accelX[i].toDouble();
+        const qreal ay = accelY[i].toDouble();
+        const qreal az = accelZ[i].toDouble();
+
+        const qreal hr = (i < hrList.size()) ? hrList[i].toDouble() : 0.0;
+        const qreal gsr = (i < gsrList.size()) ? gsrList[i].toDouble() : 0.0;
+
+        m_queue.enqueue(BandViewFrame(
+            ts,
+            hr,
+            pulseWave,
+            gsr,
+            ax,
+            ay,
+            az
+        ));
     }
 }
 
 void BandViewWorker::fetchNextFrame() {
     Q_ASSERT(thread() == QThread::currentThread());
+
     if (!m_queue.isEmpty()) {
         const BandViewFrame frame = m_queue.dequeue();
         emit frameReady(frame);
     }
 }
 
+void BandViewWorker::reset() {
+    Q_ASSERT(thread() == QThread::currentThread());
+    m_queue.clear();
+}
+
 BandViewController::BandViewController(QObject* parent) : QObject(parent) {
+    qRegisterMetaType<BandViewFrame>("BandViewFrame");
     connect(&m_timer, &QTimer::timeout, this, &BandViewController::onTimeout);
 }
 
@@ -46,11 +106,18 @@ void BandViewController::componentComplete() {
     startRendering();
 }
 
-void BandViewController::pushData(const WristbandPacket& data) {
-    if (m_worker)
-        QMetaObject::invokeMethod(m_worker, &BandViewWorker::pushData, Qt::QueuedConnection, data);
-    else
-        qWarning() << "Worker is not running, data is discarded.";
+void BandViewController::pushJsonData(const QVariantMap& data, const QString& studentId) {
+    if (m_worker) {
+        QMetaObject::invokeMethod(
+            m_worker,
+            "pushJsonData",
+            Qt::QueuedConnection,
+            Q_ARG(QVariantMap, data),
+            Q_ARG(QString, studentId)
+        );
+    } else {
+        qWarning() << "Worker is not running, json data is discarded.";
+    }
 }
 
 void BandViewController::startRendering() {
@@ -58,20 +125,26 @@ void BandViewController::startRendering() {
         qWarning() << "Already in rendering state.";
         return;
     }
+
     m_worker = new BandViewWorker();
     m_thread = new QThread(this);
     m_worker->moveToThread(m_thread);
+
     connect(m_worker, &BandViewWorker::frameReady, this, &BandViewController::frameUpdated);
     connect(m_thread, &QThread::finished, m_worker, &QObject::deleteLater);
     connect(m_thread, &QThread::finished, m_thread, &QObject::deleteLater);
-    if (m_timer.isActive())
+
+    if (m_timer.isActive()) {
         m_timer.stop();
+    }
+
     m_thread->start();
-    m_timer.start(1000 / k_renderRate);
+    m_timer.start(1000 / kRenderRate);
 }
 
 void BandViewController::stopRendering() {
     m_timer.stop();
+
     if (m_worker && m_thread) {
         m_thread->quit();
         m_thread->wait();
@@ -82,9 +155,32 @@ void BandViewController::stopRendering() {
     }
 }
 
+void BandViewController::reset() {
+    if (m_timer.isActive()) {
+        m_timer.stop();
+    }
+
+    if (m_worker) {
+        QMetaObject::invokeMethod(
+            m_worker,
+            "reset",
+            Qt::BlockingQueuedConnection
+        );
+    }
+
+    emit resetRequested();
+
+    m_timer.start(1000 / kRenderRate);
+}
+
 void BandViewController::onTimeout() {
-    if (m_worker)
-        QMetaObject::invokeMethod(m_worker, &BandViewWorker::fetchNextFrame, Qt::QueuedConnection);
-    else
+    if (m_worker) {
+        QMetaObject::invokeMethod(
+            m_worker,
+            "fetchNextFrame",
+            Qt::QueuedConnection
+        );
+    } else {
         qWarning() << "Worker is not running, cannot fetch frame.";
+    }
 }

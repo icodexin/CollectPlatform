@@ -76,9 +76,16 @@ set(QML_CPP_FILES
     src/models/BandViewFrame.h src/models/BandViewFrame.cpp
     src/models/EmotionModel.h src/models/EmotionModel.cpp
     src/models/EEGViewFrame.h src/models/EEGViewFrame.cpp
+    src/models/BcgViewFrame.cpp src/models/BcgViewFrame.h
+    src/models/MmWavViewFrame.cpp src/models/MmWavViewFrame.h
+    src/models/RppgViewFrame.cpp src/models/RppgViewFrame.h
+    src/controllers/MmwavViewController.cpp src/controllers/MmwavViewController.h
+    src/controllers/RppgViewController.cpp src/controllers/RppgViewController.h
+    src/controllers/SummaryController.cpp src/controllers/SummaryController.h
     src/services/MuSettingsMgr.h src/services/MuSettingsMgr.cpp
     src/services/DataStreamService.h src/services/DataStreamService.cpp
     src/controllers/BandViewController.h src/controllers/BandViewController.cpp
+    src/controllers/BcgViewController.h src/controllers/BcgViewController.cpp
     src/controllers/EEGViewController.h src/controllers/EEGViewController.cpp
     src/VideoRealTime/framequeue.h src/VideoRealTime/framequeue.cpp
     src/VideoRealTime/H264Decoder.cpp src/VideoRealTime/H264Decoder.h
