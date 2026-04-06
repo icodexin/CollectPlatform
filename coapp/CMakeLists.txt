@@ -11,7 +11,7 @@ set(TARGET_OUTPUT_NAME "Collection App")
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
-find_package(FFMPEG REQUIRED)
+find_package(FFMPEG REQUIRED)   # put FFMPEG before QT to avoid some lib be hidden
 find_package(Qt6 COMPONENTS Core Widgets Svg Network Mqtt Multimedia LinguistTools REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5 I18N_TRANSLATED_LANGUAGES zh_CN)
@@ -41,7 +41,7 @@ set(H_FILES
     src/services/DataSerializer.h
     src/services/CameraService.h
     src/services/BandServer.h
-    src/services/EEGReceiver.h
+    src/services/EEGRecvService.h
     src/services/FFmpegHelper.h
     src/services/MqttPublisher.h
     src/services/CoSettingsMgr.h
@@ -74,7 +74,7 @@ set(CPP_FILES
     src/services/DataSerializer.cpp
     src/services/CameraService.cpp
     src/services/BandServer.cpp
-    src/services/EEGReceiver.cpp
+    src/services/EEGRecvService.cpp
     src/services/FFmpegHelper.cpp
     src/services/MqttPublisher.cpp
     src/services/CoSettingsMgr.cpp

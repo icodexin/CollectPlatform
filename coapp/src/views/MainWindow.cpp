@@ -12,7 +12,7 @@
 #include "services/BandServer.h"
 #include "services/CameraService.h"
 #include "services/DataPipe.h"
-#include "services/EEGReceiver.h"
+#include "services/EEGRecvService.h"
 #include "services/MqttPublisher.h"
 #include "services/VideoPushService.h"
 
@@ -25,9 +25,7 @@ MainWindow::MainWindow(QWidget* parent)
 
 void MainWindow::closeEvent(QCloseEvent* event) {
     m_bandServer->stop();
-    QMetaObject::invokeMethod(m_eegReceiver, &EEGReceiver::stop);
-    m_eegThread->quit();
-    m_eegThread->wait();
+    m_eegRecvService->stop();
     event->accept();
 }
 
@@ -76,13 +74,8 @@ void MainWindow::initServices() {
             m_dataPipe->push(std::move(data_ptr));
     };
 
-    m_eegReceiver = new EEGReceiver(nullptr);
-    m_eegReceiver->onDataFetched(dataFetchedCbk);
-
-    m_eegThread = new QThread(this);
-    m_eegReceiver->moveToThread(m_eegThread);
-    connect(m_eegThread, &QThread::finished, m_eegReceiver, &QObject::deleteLater);
-    m_eegThread->start();
+    m_eegRecvService = new EEGRecvService(this);
+    m_eegRecvService->onDataFetched(dataFetchedCbk);
 
     m_bandServer = new BandServer(this);
     m_bandServer->onDataReceived(dataFetchedCbk);
@@ -96,19 +89,19 @@ void MainWindow::initServices() {
 }
 
 void MainWindow::initConnection() {
-    /********** SettingView <-> EEGReceiver <-> EEGView **********/
+    /********** SettingView <-> EEGRecvService <-> EEGView **********/
     connect(ui_settingView, &SettingView::requestConnectEEG, ui_eegView, &EEGView::onConnecting);
     connect(ui_settingView, &SettingView::requestDisconnectEEG, ui_eegView, &EEGView::onDisconnecting);
-    connect(ui_settingView, &SettingView::requestConnectEEG, m_eegReceiver, &EEGReceiver::start);
-    connect(ui_settingView, &SettingView::requestDisconnectEEG, m_eegReceiver, &EEGReceiver::stop);
-    connect(m_eegReceiver, &EEGReceiver::connected, ui_settingView, &SettingView::onEEGConnected);
-    connect(m_eegReceiver, &EEGReceiver::disconnected, ui_settingView, &SettingView::onEEGDisconnected);
-    connect(m_eegReceiver, &EEGReceiver::connected, ui_eegView, &EEGView::onConnected);
-    connect(m_eegReceiver, &EEGReceiver::disconnected, ui_eegView, &EEGView::onDisconnected);
-    connect(m_eegReceiver, &EEGReceiver::dataFetched, ui_eegView, &EEGView::onDataFetched);
-    connect(m_eegReceiver, &EEGReceiver::eventFetched, ui_eegView, &EEGView::onEventFetched);
-    connect(m_eegReceiver, &EEGReceiver::errorOccurred, ui_eegView, &EEGView::onErrorOccurred);
-    connect(m_eegReceiver, &EEGReceiver::logFetched, ui_eegView, &EEGView::log);
+    connect(ui_settingView, &SettingView::requestConnectEEG, m_eegRecvService, &EEGRecvService::start);
+    connect(ui_settingView, &SettingView::requestDisconnectEEG, m_eegRecvService, &EEGRecvService::stop);
+    connect(m_eegRecvService, &EEGRecvService::connected, ui_settingView, &SettingView::onEEGConnected);
+    connect(m_eegRecvService, &EEGRecvService::disconnected, ui_settingView, &SettingView::onEEGDisconnected);
+    connect(m_eegRecvService, &EEGRecvService::connected, ui_eegView, &EEGView::onConnected);
+    connect(m_eegRecvService, &EEGRecvService::disconnected, ui_eegView, &EEGView::onDisconnected);
+    connect(m_eegRecvService, &EEGRecvService::dataFetched, ui_eegView, &EEGView::onDataFetched);
+    connect(m_eegRecvService, &EEGRecvService::eventFetched, ui_eegView, &EEGView::onEventFetched);
+    connect(m_eegRecvService, &EEGRecvService::errorOccurred, ui_eegView, &EEGView::onErrorOccurred);
+    connect(m_eegRecvService, &EEGRecvService::logFetched, ui_eegView, &EEGView::log);
 
     /********** SettingView <-> CameraService <-> CameraView **********/
     connect(ui_settingView, &SettingView::requestOpenCamera, m_cameraService, &CameraService::start);

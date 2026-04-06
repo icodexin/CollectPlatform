@@ -27,7 +27,7 @@ public:
         Q_ASSERT(m_threadProvider);
     }
 
-    ~EventLoopWorkerHost() {
+    virtual ~EventLoopWorkerHost() {
         destroyWorker();
     }
 
@@ -47,10 +47,6 @@ public:
 
     bool hasWorker() const {
         return m_worker != nullptr;
-    }
-
-    Worker* ensureWorkerCreated() {
-        return ensureWorkerCreated(QString{});
     }
 
     Worker* ensureWorkerCreated(const QString& threadHint = {}) {
@@ -123,7 +119,7 @@ public:
         }
     }
 
-private:
+protected:
     IEventLoopThreadProvider* m_threadProvider = nullptr;
     WorkerFactory m_factory;
     Worker* m_worker = nullptr;

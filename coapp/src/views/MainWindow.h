@@ -8,7 +8,7 @@ class BandView;
 class CameraService;
 class CameraView;
 class DataPipe;
-class EEGReceiver;
+class EEGRecvService;
 class EEGView;
 class MqttPublishService;
 class MqttPublisher;
@@ -36,8 +36,7 @@ private:
     BandView* ui_bandView = nullptr;
     CameraView* ui_cameraView = nullptr;
     LogBox* ui_logBox = nullptr;
-    EEGReceiver* m_eegReceiver = nullptr;
-    QThread* m_eegThread = nullptr;
+    EEGRecvService* m_eegRecvService = nullptr;
     BandServer* m_bandServer = nullptr;
     CameraService* m_cameraService = nullptr;
     MqttPublishService* m_mqttPubService = nullptr;
