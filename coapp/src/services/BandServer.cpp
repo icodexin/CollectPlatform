@@ -78,11 +78,7 @@ BandServer::~BandServer() {
     stop();
 }
 
-void BandServer::onDataReceived(const std::function<void(std::unique_ptr<WristbandPacket>)>& callback) {
-    m_callback = callback;
-}
-
-void BandServer::onDataReceived(std::function<void(std::unique_ptr<WristbandPacket>)>&& callback) {
+void BandServer::onDataReceived(std::function<void(std::unique_ptr<WristbandPacket>)> callback) {
     m_callback = std::move(callback);
 }
 

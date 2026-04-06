@@ -38,8 +38,7 @@ public:
     explicit BandServer(QObject* parent = nullptr);
     ~BandServer() override;
 
-    void onDataReceived(const std::function<void(std::unique_ptr<WristbandPacket>)>& callback);
-    void onDataReceived(std::function<void(std::unique_ptr<WristbandPacket>)>&& callback);
+    void onDataReceived(std::function<void(std::unique_ptr<WristbandPacket>)> callback);
 
 signals:
     void started();                                         // 服务已启动
