@@ -1,7 +1,12 @@
 #include "MainWindow.h"
 
+#include <QtWidgets/QBoxLayout>
+#include <QtWidgets/QDialog>
+#include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QPushButton>
 #include <QtWidgets/QSplitter>
+#include <QtWidgets/QStyle>
 
 #include "BandView.h"
 #include "CameraView.h"
@@ -35,35 +40,105 @@ void MainWindow::initUI() {
     ui_eegView = new EEGView;
     ui_bandView = new BandView;
     ui_cameraView = new CameraView;
-
-    auto* logView = new BarCard(tr("Log"), ":/res/icons/history.svg");
-    auto* logLayout = new QVBoxLayout;
     ui_logBox = new LogBox;
-    ui_logBox->setStyleSheet("QPlainTextEdit { background-color: rgba(255, 255, 255, 0);}");
-    logView->setContentsMargins(12, 12, 12, 12);
-    logLayout->addWidget(ui_logBox);
-    logLayout->setContentsMargins(4, 4, 4, 4);
-    logView->setContentLayout(logLayout);
-    logView->setMaximumHeight(150);
 
-    auto* devicesWidget = new QWidget;
-    auto* devicesLayout = new QGridLayout(devicesWidget);
-    devicesLayout->addWidget(ui_eegView, 0, 0);
-    devicesLayout->addWidget(ui_bandView, 0, 1);
-    devicesLayout->addWidget(ui_cameraView, 1, 0, 1, 2);
+    // 日志视图
+    auto* logView = new BarCard(tr("Log"), ":/res/icons/history.svg");
+    {
+        ui_logBox->setStyleSheet("QPlainTextEdit { background-color: rgba(255, 255, 255, 0);}");
+        auto* logLayout = new QVBoxLayout;
+        logLayout->addWidget(ui_logBox);
+        logLayout->setContentsMargins(4, 4, 4, 4);
+        logView->setContentsMargins(8, 8, 8, 8);
+        logView->setContentLayout(logLayout);
+        logView->setMaximumHeight(150);
+    }
 
+    // 设备视图
+    auto* devicesView = new QWidget;
+    {
+        auto* devicesLayout = new QGridLayout(devicesView);
+        devicesLayout->setContentsMargins(8, 8, 8, 8);
+        devicesLayout->setSpacing(8);
+        devicesLayout->addWidget(ui_eegView, 0, 0);
+        devicesLayout->addWidget(ui_bandView, 0, 1);
+        devicesLayout->addWidget(ui_cameraView, 1, 0, 1, 2);
+    }
+
+    // 内容区分割器
     auto* contentSplitter = new QSplitter(Qt::Vertical);
-    contentSplitter->addWidget(devicesWidget);
-    contentSplitter->addWidget(logView);
-    contentSplitter->setCollapsible(0, false);
-    contentSplitter->setCollapsible(1, false);
+    {
+        contentSplitter->addWidget(devicesView);
+        contentSplitter->addWidget(logView);
+        contentSplitter->setCollapsible(0, false);
+        contentSplitter->setCollapsible(1, false);
+    }
 
-    auto* mainSplitter = new QSplitter(Qt::Horizontal);
-    mainSplitter->addWidget(ui_settingView);
-    mainSplitter->addWidget(contentSplitter);
-    mainSplitter->setCollapsible(0, false);
+    // 控制栏按钮
+    ui_sidebarToggleButton = new QPushButton;
+    auto* settingsButton = new QPushButton;
+    auto* userButton = new QPushButton;
+    {
+        ui_sidebarToggleButton->setObjectName("icon");
+        ui_sidebarToggleButton->setIcon(QIcon(":/res/icons/sidebar.svg"));
+        ui_sidebarToggleButton->setIconSize(QSize(18, 18));
 
-    setCentralWidget(mainSplitter);
+        settingsButton->setObjectName("icon");
+        settingsButton->setIcon(QIcon(":/res/icons/setting.svg"));
+        settingsButton->setIconSize(QSize(18, 18));
+
+        userButton->setObjectName("icon");
+        userButton->setIcon(QIcon(":/res/icons/user.svg"));
+        userButton->setIconSize(QSize(18, 18));
+    }
+
+    // 顶部控制栏
+    auto* topControlBar = new QWidget;
+    {
+        topControlBar->setObjectName("topControlBar");
+        auto* topControlLayout = new QHBoxLayout(topControlBar);
+        topControlLayout->setContentsMargins(8, 4, 8, 4);
+        topControlLayout->setSpacing(2);
+
+        topControlLayout->addWidget(ui_sidebarToggleButton, 0, Qt::AlignLeft);
+        topControlLayout->addStretch(1);
+        topControlLayout->addWidget(settingsButton, 0, Qt::AlignRight);
+        topControlLayout->addWidget(userButton, 0, Qt::AlignRight);
+    }
+
+    // 内容区
+    auto* contentWidget = new QWidget;
+    {
+        auto* contentLayout = new QVBoxLayout(contentWidget);
+        contentLayout->setContentsMargins(0, 0, 0, 0);
+        contentLayout->setSpacing(0);
+        contentLayout->addWidget(topControlBar);
+        contentLayout->addWidget(contentSplitter, 1);
+    }
+
+    // 主分割器
+    ui_mainSplitter = new QSplitter(Qt::Horizontal);
+    {
+        ui_mainSplitter->addWidget(ui_settingView);
+        ui_mainSplitter->addWidget(contentWidget);
+        ui_mainSplitter->setCollapsible(0, false);
+        ui_mainSplitter->setCollapsible(1, false);
+        ui_mainSplitter->setStretchFactor(0, 0);
+        ui_mainSplitter->setStretchFactor(1, 1);
+        ui_mainSplitter->setSizes({m_lastSidebarWidth, 960});
+    }
+
+    connect(ui_sidebarToggleButton, &QPushButton::clicked, this, &MainWindow::toggleSidebar);
+    connect(settingsButton, &QPushButton::clicked, this, [this] {
+        showPlaceholderDialog(m_settingsDialog, tr("设置"));
+    });
+    connect(userButton, &QPushButton::clicked, this, [this] {
+        showPlaceholderDialog(m_userDialog, tr("用户"));
+    });
+
+    updateSidebarToggleButton();
+
+    setCentralWidget(ui_mainSplitter);
     setWindowTitle(qApp->applicationDisplayName());
 }
 
@@ -186,4 +261,53 @@ void MainWindow::initConnection() {
             ui_cameraView->clearStreamStats();
         }
     });
+}
+
+void MainWindow::toggleSidebar() {
+    if (!ui_mainSplitter)
+        return;
+
+    if (!m_sidebarCollapsed) {
+        const auto sizes = ui_mainSplitter->sizes();
+        if (!sizes.isEmpty() && sizes.at(0) > 0)
+            m_lastSidebarWidth = sizes.at(0);
+
+        ui_settingView->hide();
+        ui_mainSplitter->setSizes({0, qMax(1, width())});
+        m_sidebarCollapsed = true;
+    } else {
+        ui_settingView->show();
+        const int sidebarWidth = qMax(240, m_lastSidebarWidth);
+        ui_mainSplitter->setSizes({sidebarWidth, qMax(1, width() - sidebarWidth)});
+        m_sidebarCollapsed = false;
+    }
+
+    updateSidebarToggleButton();
+}
+
+void MainWindow::updateSidebarToggleButton() const {
+    if (!ui_sidebarToggleButton)
+        return;
+
+    ui_sidebarToggleButton->setToolTip(m_sidebarCollapsed ? tr("展开侧边栏") : tr("收起侧边栏"));
+}
+
+void MainWindow::showPlaceholderDialog(QPointer<QDialog>& dialog, const QString& title) {
+    if (!dialog) {
+        dialog = new QDialog(this);
+        dialog->resize(520, 360);
+
+        auto* layout = new QVBoxLayout(dialog);
+        layout->setContentsMargins(20, 20, 20, 20);
+
+        auto* placeholderPanel = new QFrame(dialog);
+        placeholderPanel->setObjectName("placeholderPanel");
+        placeholderPanel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
+        layout->addWidget(placeholderPanel);
+    }
+
+    dialog->setWindowTitle(title);
+    dialog->show();
+    dialog->raise();
+    dialog->activateWindow();
 }

@@ -34,13 +34,29 @@ QPushButton#primary:pressed {
     border: 1px solid #3376cd;
 }
 
+QPushButton#primary:disabled {
+    color: #98c3fa;
+    border: 1px solid #ebeefa;
+}
+
 QPushButton#tool {
     padding: 2px 2px;
 }
 
-QPushButton#primary:disabled {
-    color: #98c3fa;
-    border: 1px solid #ebeefa;
+QPushButton#icon {
+    padding: 2px 2px;
+    border: none;
+}
+
+/******************** Top Control Bar ********************/
+QWidget#topControlBar {
+    border-bottom: 1px solid #e0e6ea;
+}
+
+QFrame#placeholderPanel {
+    background: #f8fafc;
+    border: 1px dashed #d5dee6;
+    border-radius: 12px;
 }
 
 /******************** QLineEdit ********************/
@@ -277,11 +293,11 @@ QSplitter::handle {
 }
 
 QSplitter::handle:horizontal {
-    width: 2px;
+    width: 1px;
 }
 
 QSplitter::handle:vertical {
-    height: 2px;
+    height: 1px;
 }
 
 QSplitter::handle:pressed {

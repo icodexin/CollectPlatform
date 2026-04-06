@@ -37,8 +37,8 @@ InfoPanel::InfoPanel(QWidget* parent) : QWidget(parent) {
     layout->setSpacing(4);
     layout->setContentsMargins(0, 0, 0, 0);
     layout->addLayout(hLayout);
-    layout->addWidget(copyrightLabel);
     layout->addWidget(appVersionLabel);
+    layout->addWidget(copyrightLabel);
 
     connect(ui_refreshBtn, &QPushButton::clicked, this, &InfoPanel::updateIpAddress);
     updateIpAddress();

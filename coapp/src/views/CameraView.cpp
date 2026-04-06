@@ -10,7 +10,7 @@ ViewFinder::ViewFinder(QWidget* parent) : QWidget(parent) {
     auto* hintLayout = new QVBoxLayout(ui_hint);
     auto* iconLabel = new QLabel;
     iconLabel->setPixmap(QIcon(":/res/icons/camera-off.svg").pixmap(32, 32));
-    auto* textLabel = new QLabel(tr("Preview has been closed."));
+    auto* textLabel = new QLabel(tr("Preview has been closed"));
     hintLayout->addWidget(iconLabel, 0, Qt::AlignHCenter);
     hintLayout->addWidget(textLabel, 0, Qt::AlignHCenter);
 

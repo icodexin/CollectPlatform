@@ -742,8 +742,8 @@ OpenH264 is a software encoder provided by Cisco. It has a smaller feature set a
     <name>ViewFinder</name>
     <message>
         <location filename="../../src/views/CameraView.cpp" line="13"/>
-        <source>Preview has been closed.</source>
-        <translation>预览已关闭。</translation>
+        <source>Preview has been closed</source>
+        <translation>预览已关闭</translation>
     </message>
 </context>
 </TS>

@@ -9,8 +9,11 @@
         <file>icons/head-snowflake-outline.svg</file>
         <file>icons/history.svg</file>
         <file>icons/refresh.svg</file>
+        <file>icons/setting.svg</file>
+        <file>icons/sidebar.svg</file>
         <file>icons/up.svg</file>
         <file>icons/up-focus.svg</file>
+        <file>icons/user.svg</file>
         <file>icons/wristband.svg</file>
     </qresource>
 </RCC>
