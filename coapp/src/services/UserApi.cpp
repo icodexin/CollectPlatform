@@ -5,6 +5,7 @@
 #include <QtNetwork/QNetworkRequest>
 
 #include "AuthService.h"
+#include "CoSettingsMgr.h"
 #include "network/HttpMgr.h"
 
 void UserApi::fetchCurrentUser() {
@@ -23,7 +24,13 @@ void UserApi::fetchCurrentUser() {
                 return;
             }
 
-            emit api.currentUserFetched(doc.object());
+            const QJsonObject userInfo = doc.object();
+            const QString unifiedId = userInfo.value("unified_id").toString().trimmed();
+            if (CoSettingsMgr::authUnifiedId() != unifiedId) {
+                CoSettingsMgr::setAuthUnifiedId(unifiedId);
+                CoSettingsMgr::flush();
+            }
+            emit api.currentUserFetched(userInfo);
         },
         [&api](const int statusCode, const QString& message, const QByteArray&) {
             if (statusCode == 403) {

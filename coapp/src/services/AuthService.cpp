@@ -88,6 +88,10 @@ QString AuthService::tokenType() {
     return instance().m_tokens.tokenType;
 }
 
+QString AuthService::unifiedId() {
+    return CoSettingsMgr::authUnifiedId();
+}
+
 void AuthService::login(const QString& username, const QString& password) {
     auto& service = instance();
 
@@ -213,6 +217,7 @@ void AuthService::clearTokens() {
     CoSettingsMgr::setAuthAccessToken({});
     CoSettingsMgr::setAuthRefreshToken({});
     CoSettingsMgr::setAuthTokenType(QStringLiteral("bearer"));
+    CoSettingsMgr::setAuthUnifiedId({});
     CoSettingsMgr::flush();
     HttpMgr::removeDefaultHeader("Authorization");
 }

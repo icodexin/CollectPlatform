@@ -35,6 +35,7 @@ public:
     static QString authAccessToken();
     static QString authRefreshToken();
     static QString authTokenType();
+    static QString authUnifiedId();
     static QByteArray cameraDeviceId();
     static QSize cameraFormatRes();
     static qreal cameraFormatMaxFps();
@@ -49,6 +50,7 @@ public:
     static void setAuthAccessToken(const QString& token);
     static void setAuthRefreshToken(const QString& token);
     static void setAuthTokenType(const QString& tokenType);
+    static void setAuthUnifiedId(const QString& unifiedId);
     static void setCameraDeviceId(const QByteArray& deviceId);
     static void setCameraFormatRes(const QSize& res);
     static void setCameraFormatMaxFps(qreal fps);

@@ -112,7 +112,7 @@ void LoginDialog::initUI() {
     setModal(true);
     setWindowTitle(tr("User Login"));
     setObjectName("loginDialog");
-    resize(420, 360);
+    setMinimumSize(500, 450);
 
     auto* rootLayout = new QVBoxLayout(this);
     rootLayout->setContentsMargins(28, 16, 28, 28);

@@ -47,6 +47,10 @@ QString CoSettingsMgr::authTokenType() {
     return instance().getValueImpl("auth/token_type", "bearer").toString();
 }
 
+QString CoSettingsMgr::authUnifiedId() {
+    return instance().getValueImpl("auth/unified_id", "").toString();
+}
+
 QByteArray CoSettingsMgr::cameraDeviceId() {
     return instance().getValueImpl("device/camera/device_id", QByteArray{}).toByteArray();
 }
@@ -98,6 +102,10 @@ void CoSettingsMgr::setAuthRefreshToken(const QString& token) {
 
 void CoSettingsMgr::setAuthTokenType(const QString& tokenType) {
     instance().setValueImpl("auth/token_type", tokenType);
+}
+
+void CoSettingsMgr::setAuthUnifiedId(const QString& unifiedId) {
+    instance().setValueImpl("auth/unified_id", unifiedId);
 }
 
 void CoSettingsMgr::setCameraDeviceId(const QByteArray& deviceId) {

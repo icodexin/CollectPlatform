@@ -42,6 +42,8 @@ public:
     static QString refreshToken();
     /// 获取Token类型
     static QString tokenType();
+    /// 获取当前会话对应的统一身份ID
+    static QString unifiedId();
 
     /// 登录
     static void login(const QString& username, const QString& password);
