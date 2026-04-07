@@ -6,7 +6,7 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(msgpack-cxx REQUIRED)
-find_package(Qt6 COMPONENTS Core REQUIRED)
+find_package(Qt6 COMPONENTS Core Network REQUIRED)
 
 set(CMAKE_AUTOMOC ON)
 
@@ -20,6 +20,7 @@ set(H_FILES
     src/concurrency/ImmediateTaskExecutor.h
     src/concurrency/QThreadPoolTaskExecutor.h
     src/concurrency/EventLoopWorkerHost.h
+    src/network/HttpMgr.h
     src/model/CQueue.h
     src/model/ISensorData.h
     src/model/ISensorSerializer.h
@@ -33,6 +34,7 @@ set(CPP_FILES
     src/concurrency/DedicatedEventLoopThreadProvider.cpp
     src/concurrency/SharedEventLoopThreadProvider.cpp
     src/concurrency/QThreadPoolTaskExecutor.cpp
+    src/network/HttpMgr.cpp
     src/model/CQueue.cpp
     src/model/ISensorData.cpp
     src/model/ISensorSerializer.cpp
@@ -51,5 +53,5 @@ target_include_directories(${PROJECT_NAME}
 )
 
 target_link_libraries(${PROJECT_NAME}
-    PUBLIC msgpack-cxx Qt6::Core
+    PUBLIC msgpack-cxx Qt6::Core Qt6::Network
 )
