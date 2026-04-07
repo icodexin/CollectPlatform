@@ -48,15 +48,95 @@ QPushButton#icon {
     border: none;
 }
 
+QPushButton#linkButton {
+    background: transparent;
+    border: none;
+    color: #3376cd;
+    padding: 0;
+    text-align: center;
+}
+
+QPushButton#linkButton:hover {
+    background: transparent;
+    color: #245aa3;
+    text-decoration: underline;
+}
+
+QPushButton#linkButton:pressed {
+    background: transparent;
+    border: none;
+    color: #1d4b88;
+}
+
 /******************** Top Control Bar ********************/
 QWidget#topControlBar {
     border-bottom: 1px solid #e0e6ea;
+}
+
+QLabel#networkStatusLabel {
+    background: #fff4e5;
+    color: #9a6700;
+    border: 1px solid #f2d39b;
+    border-radius: 10px;
+    padding: 2px 10px;
+    font-size: 12px;
+    font-weight: 600;
+}
+
+QDialog#loginDialog {
+    background: #f5f7fb;
+}
+
+QWidget#loginCard {
+    background: white;
+    border: 1px solid #e0e6ea;
+    border-radius: 16px;
+}
+
+QLabel#dialogTitle {
+    color: #1f2937;
+    font-size: 22px;
+    font-weight: 700;
+}
+
+QLabel#dialogSubtitle {
+    color: #6b7280;
+    font-size: 13px;
+}
+
+QLabel#dialogHint {
+    color: #5b9cf8;
+    font-size: 12px;
+}
+
+QLabel#dialogHint[error="true"] {
+    color: #d84b4b;
 }
 
 QFrame#placeholderPanel {
     background: #f8fafc;
     border: 1px dashed #d5dee6;
     border-radius: 12px;
+}
+
+QFrame#settingsSectionCard {
+    background: #ffffff;
+    border: 1px solid #e0e6ea;
+    border-radius: 12px;
+}
+
+QLabel#settingsSectionTitle {
+    color: #1f2937;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+QLabel#settingsValueLabel {
+    background: #f8fafc;
+    color: #4b5563;
+    border: 1px solid #e0e6ea;
+    border-radius: 8px;
+    padding: 8px 10px;
 }
 
 /******************** QLineEdit ********************/

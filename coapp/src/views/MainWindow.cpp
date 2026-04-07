@@ -1,9 +1,8 @@
 #include "MainWindow.h"
 
 #include <QtWidgets/QBoxLayout>
-#include <QtWidgets/QDialog>
-#include <QtWidgets/QFrame>
 #include <QtWidgets/QGridLayout>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QSplitter>
 #include <QtWidgets/QStyle>
@@ -11,14 +10,18 @@
 #include "BandView.h"
 #include "CameraView.h"
 #include "EEGView.h"
+#include "SettingsDialog.h"
 #include "SettingView.h"
+#include "UserInfoDialog.h"
 #include "components/BarCard.h"
 #include "components/LogBox.h"
+#include "network/HttpMgr.h"
 #include "services/BandServer.h"
 #include "services/CameraService.h"
 #include "services/DataPipe.h"
 #include "services/EEGRecvService.h"
 #include "services/MqttPublisher.h"
+#include "services/UserApi.h"
 #include "services/VideoPushService.h"
 
 MainWindow::MainWindow(QWidget* parent)
@@ -28,10 +31,20 @@ MainWindow::MainWindow(QWidget* parent)
     initConnection();
 }
 
+void MainWindow::setQuitOnClose(const bool enabled) {
+    m_quitOnClose = enabled;
+}
+
 void MainWindow::closeEvent(QCloseEvent* event) {
+    if (m_settingsDialog)
+        m_settingsDialog->close();
+    if (m_userDialog)
+        m_userDialog->close();
+
     m_bandServer->stop();
     m_eegRecvService->stop();
     event->accept();
+    emit windowClosed(m_quitOnClose);
 }
 
 void MainWindow::initUI() {
@@ -100,7 +113,13 @@ void MainWindow::initUI() {
         topControlLayout->setContentsMargins(8, 4, 8, 4);
         topControlLayout->setSpacing(2);
 
+        ui_networkStatusLabel = new QLabel(tr("Service Unreachable"), topControlBar);
+        ui_networkStatusLabel->setObjectName("networkStatusLabel");
+        ui_networkStatusLabel->hide();
+
         topControlLayout->addWidget(ui_sidebarToggleButton, 0, Qt::AlignLeft);
+        topControlLayout->addSpacing(8);
+        topControlLayout->addWidget(ui_networkStatusLabel, 0, Qt::AlignLeft);
         topControlLayout->addStretch(1);
         topControlLayout->addWidget(settingsButton, 0, Qt::AlignRight);
         topControlLayout->addWidget(userButton, 0, Qt::AlignRight);
@@ -129,14 +148,8 @@ void MainWindow::initUI() {
     }
 
     connect(ui_sidebarToggleButton, &QPushButton::clicked, this, &MainWindow::toggleSidebar);
-    connect(settingsButton, &QPushButton::clicked, this, [this] {
-        showPlaceholderDialog(m_settingsDialog, tr("设置"));
-    });
-    connect(userButton, &QPushButton::clicked, this, [this] {
-        showPlaceholderDialog(m_userDialog, tr("用户"));
-    });
-
-    updateSidebarToggleButton();
+    connect(settingsButton, &QPushButton::clicked, this, &MainWindow::showSettingsDialog);
+    connect(userButton, &QPushButton::clicked, this, &MainWindow::showUserInfoDialog);
 
     setCentralWidget(ui_mainSplitter);
     setWindowTitle(qApp->applicationDisplayName());
@@ -261,6 +274,28 @@ void MainWindow::initConnection() {
             ui_cameraView->clearStreamStats();
         }
     });
+
+    connect(&HttpMgr::instance(), &HttpMgr::requestFinished, this,
+        [this](const QString&, const QUrl&, const int) {
+            updateNetworkStatus(false, {});
+        });
+    connect(&HttpMgr::instance(), &HttpMgr::requestFailed, this,
+        [this](const QString&, const QUrl&, const int statusCode, const QString& errorString) {
+            if (statusCode == 0 || statusCode == 502) {
+                updateNetworkStatus(true, tr("Service Unreachable"));
+                ui_logBox->log(LogMessage::WARN, tr("Network error: %1").arg(errorString));
+                return;
+            }
+
+            updateNetworkStatus(false, {});
+        });
+    connect(&HttpMgr::instance(), &HttpMgr::sslErrorsOccurred, this,
+        [this](const QUrl&, const QStringList&) {
+            updateNetworkStatus(false, {});
+        });
+    connect(&UserApi::instance(), &UserApi::currentUserSessionInvalid, this, [this] {
+        ui_logBox->log(LogMessage::WARN, tr("Current user is no longer valid. Session has been cleared."));
+    });
 }
 
 void MainWindow::toggleSidebar() {
@@ -281,33 +316,33 @@ void MainWindow::toggleSidebar() {
         ui_mainSplitter->setSizes({sidebarWidth, qMax(1, width() - sidebarWidth)});
         m_sidebarCollapsed = false;
     }
-
-    updateSidebarToggleButton();
 }
 
-void MainWindow::updateSidebarToggleButton() const {
-    if (!ui_sidebarToggleButton)
+void MainWindow::updateNetworkStatus(const bool visible, const QString& text) {
+    if (!ui_networkStatusLabel)
         return;
 
-    ui_sidebarToggleButton->setToolTip(m_sidebarCollapsed ? tr("展开侧边栏") : tr("收起侧边栏"));
+    ui_networkStatusLabel->setVisible(visible);
+    if (!text.isEmpty())
+        ui_networkStatusLabel->setText(text);
 }
 
-void MainWindow::showPlaceholderDialog(QPointer<QDialog>& dialog, const QString& title) {
-    if (!dialog) {
-        dialog = new QDialog(this);
-        dialog->resize(520, 360);
-
-        auto* layout = new QVBoxLayout(dialog);
-        layout->setContentsMargins(20, 20, 20, 20);
-
-        auto* placeholderPanel = new QFrame(dialog);
-        placeholderPanel->setObjectName("placeholderPanel");
-        placeholderPanel->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Expanding);
-        layout->addWidget(placeholderPanel);
+void MainWindow::showSettingsDialog() {
+    if (!m_settingsDialog) {
+        m_settingsDialog = new SettingsDialog(this);
     }
 
-    dialog->setWindowTitle(title);
-    dialog->show();
-    dialog->raise();
-    dialog->activateWindow();
+    m_settingsDialog->show();
+    m_settingsDialog->raise();
+    m_settingsDialog->activateWindow();
+}
+
+void MainWindow::showUserInfoDialog() {
+    if (!m_userDialog) {
+        m_userDialog = new UserInfoDialog(this);
+    }
+
+    m_userDialog->show();
+    m_userDialog->raise();
+    m_userDialog->activateWindow();
 }

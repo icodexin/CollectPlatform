@@ -15,9 +15,12 @@ class MqttPublishService;
 class MqttPublisher;
 class LogBox;
 class QDialog;
+class QLabel;
 class QPushButton;
 class QSplitter;
+class SettingsDialog;
 class SettingView;
+class UserInfoDialog;
 class VideoPushService;
 
 class MainWindow final : public QMainWindow {
@@ -25,6 +28,10 @@ class MainWindow final : public QMainWindow {
 
 public:
     explicit MainWindow(QWidget* parent = nullptr);
+    void setQuitOnClose(bool enabled);
+
+signals:
+    void windowClosed(bool shouldQuitApp);
 
 protected:
     void closeEvent(QCloseEvent* event) override;
@@ -34,8 +41,9 @@ private:
     void initServices();
     void initConnection();
     void toggleSidebar();
-    void updateSidebarToggleButton() const;
-    void showPlaceholderDialog(QPointer<QDialog>& dialog, const QString& title);
+    void updateNetworkStatus(bool visible, const QString& text);
+    void showSettingsDialog();
+    void showUserInfoDialog();
 
 private:
     QSplitter* ui_mainSplitter = nullptr;
@@ -44,6 +52,7 @@ private:
     BandView* ui_bandView = nullptr;
     CameraView* ui_cameraView = nullptr;
     LogBox* ui_logBox = nullptr;
+    QLabel* ui_networkStatusLabel = nullptr;
     QPushButton* ui_sidebarToggleButton = nullptr;
     EEGRecvService* m_eegRecvService = nullptr;
     BandServer* m_bandServer = nullptr;
@@ -51,10 +60,11 @@ private:
     MqttPublishService* m_mqttPubService = nullptr;
     DataPipe* m_dataPipe = nullptr;
     VideoPushService* m_videoPushService = nullptr;
-    QPointer<QDialog> m_settingsDialog;
-    QPointer<QDialog> m_userDialog;
+    QPointer<SettingsDialog> m_settingsDialog;
+    QPointer<UserInfoDialog> m_userDialog;
     int m_lastSidebarWidth = 320;
     bool m_sidebarCollapsed = false;
+    bool m_quitOnClose = true;
 };
 
 #endif //MAINWINDOW_H

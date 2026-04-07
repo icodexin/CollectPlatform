@@ -2,6 +2,39 @@
 <!DOCTYPE TS>
 <TS version="2.1" language="zh_CN" sourcelanguage="en_US">
 <context>
+    <name>AuthService</name>
+    <message>
+        <location filename="../../src/services/AuthService.cpp" line="48"/>
+        <source>Unable to connect to the server. Please confirm whether the backend service has been started.</source>
+        <translation>无法连接到服务器。请确认后端服务是否已启动。</translation>
+    </message>
+    <message>
+        <location filename="../../src/services/AuthService.cpp" line="51"/>
+        <source>The server address cannot be parsed. Please check your network configuration.</source>
+        <translation>无法解析服务器地址，请检查您的网络配置。</translation>
+    </message>
+    <message>
+        <location filename="../../src/services/AuthService.cpp" line="54"/>
+        <source>Request timed out, please check your network connection.</source>
+        <translation>请求超时，请检查您的网络连接。</translation>
+    </message>
+    <message>
+        <location filename="../../src/services/AuthService.cpp" line="30"/>
+        <source>User is unauthorized.</source>
+        <translation>用户未授权。</translation>
+    </message>
+    <message>
+        <location filename="../../src/services/AuthService.cpp" line="32"/>
+        <source>Operation is forbidden.</source>
+        <translation>不允许的操作。</translation>
+    </message>
+    <message>
+        <location filename="../../src/services/AuthService.cpp" line="34"/>
+        <source>Gateway Error.</source>
+        <translation>网关错误。</translation>
+    </message>
+</context>
+<context>
     <name>BandSettingPanel</name>
     <message>
         <location filename="../../src/views/settings/BandSettingPanel.cpp" line="10"/>
@@ -103,40 +136,40 @@
 <context>
     <name>CameraSettingPanel</name>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="18"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="21"/>
         <source>Camera</source>
         <translation>相机</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="23"/>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="57"/>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="71"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="26"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="77"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="91"/>
         <source>Open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="28"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="31"/>
         <source>Device</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="29"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="32"/>
         <source>Format</source>
         <translation>格式</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="52"/>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="76"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="72"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="96"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="72"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="92"/>
         <source>Opening...</source>
         <translation>开启中...</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="77"/>
+        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="97"/>
         <source>Closing...</source>
         <translation>关闭中...</translation>
     </message>
@@ -181,16 +214,17 @@
     </message>
 </context>
 <context>
-    <name>EEGReceiver</name>
+    <name>EEGRecvWorker</name>
     <message>
-        <location filename="../../src/services/EEGReceiver.cpp" line="201"/>
-        <source>Connected to DSI-Streamer at %1:%2</source>
-        <translation>已连接到位于%1:%2的DSI-Streamer</translation>
-    </message>
-    <message>
-        <location filename="../../src/services/EEGReceiver.cpp" line="205"/>
+        <location filename="../../src/services/EEGRecvService.cpp" line="237"/>
+        <location filename="../../src/services/EEGRecvService.cpp" line="251"/>
         <source>Disconnected from DSI-Streamer at %1:%2</source>
         <translation>已断开位于%1:%2的DSI-Streamer</translation>
+    </message>
+    <message>
+        <location filename="../../src/services/EEGRecvService.cpp" line="244"/>
+        <source>Connected to DSI-Streamer at %1:%2</source>
+        <translation>已连接到位于%1:%2的DSI-Streamer</translation>
     </message>
 </context>
 <context>
@@ -356,61 +390,186 @@
     </message>
 </context>
 <context>
+    <name>LoginDialog</name>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="52"/>
+        <source>Need username or password.</source>
+        <translation>请填写用户名和密码。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="57"/>
+        <source>Logging...</source>
+        <translation>正在登录…</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="64"/>
+        <source>The registration link is invalid.</source>
+        <translation>注册链接无效。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="69"/>
+        <source>The registration page cannot be opened.</source>
+        <translation>注册页面无法打开。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="76"/>
+        <source>Need server address.</source>
+        <translation>请填写服务器地址。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="82"/>
+        <source>The server address format is invalid.</source>
+        <translation>服务器地址无效。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="90"/>
+        <source>Server address saved.</source>
+        <translation>服务器地址已保存。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="108"/>
+        <source>Login failed, please try again later.</source>
+        <translation>登录失败，请重试。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="113"/>
+        <source>User Login</source>
+        <translation>用户登录</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="170"/>
+        <source>After logging in with a unified identity account, enter the main collection window.</source>
+        <translation>使用统一身份ID登录后，进入采集主窗口。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="177"/>
+        <source>Unified Identity ID</source>
+        <translation>统一身份ID</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="181"/>
+        <source>Password</source>
+        <translation>密码</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="193"/>
+        <source>Login</source>
+        <translation>登录</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="199"/>
+        <source>Don&apos;t have an account yet? Register Now</source>
+        <translation>还没有账号？立即注册</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="224"/>
+        <location filename="../../src/views/LoginDialog.cpp" line="313"/>
+        <source>Network Settings</source>
+        <translation>网络设置</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="229"/>
+        <source>Configure the server address.</source>
+        <translation>配置服务器地址。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="236"/>
+        <source>server hostname / ip</source>
+        <translation>服务器主机名/IP地址</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="245"/>
+        <source>Save Server Address</source>
+        <translation>保存服务器地址</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="305"/>
+        <source>Hide password</source>
+        <translation>隐藏密码</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="305"/>
+        <source>Show password</source>
+        <translation>显示密码</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/LoginDialog.cpp" line="314"/>
+        <source>&lt; Login</source>
+        <translation>&lt; 登录</translation>
+    </message>
+</context>
+<context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="41"/>
+        <location filename="../../src/views/MainWindow.cpp" line="59"/>
         <source>Log</source>
         <translation>日志</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="143"/>
+        <location filename="../../src/views/MainWindow.cpp" line="116"/>
+        <location filename="../../src/views/MainWindow.cpp" line="285"/>
+        <source>Service Unreachable</source>
+        <translation>服务不可达</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="224"/>
         <source>MQTT connected</source>
         <translation>已连接到MQTT</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="147"/>
+        <location filename="../../src/views/MainWindow.cpp" line="228"/>
         <source>MQTT disconnected</source>
         <translation>已断开和MQTT的连接</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="151"/>
+        <location filename="../../src/views/MainWindow.cpp" line="232"/>
         <source>MQTT error: %1</source>
         <translation>MQTT错误：%1</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="154"/>
+        <location filename="../../src/views/MainWindow.cpp" line="235"/>
         <source>MQTT message sent, ID: %1</source>
         <translation>已发送MQTT消息，ID:%1</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="169"/>
+        <location filename="../../src/views/MainWindow.cpp" line="250"/>
         <source>Video push starting...</source>
         <translation>正在视频推流...</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="172"/>
+        <location filename="../../src/views/MainWindow.cpp" line="253"/>
         <source>Video push started</source>
         <translation>视频推流已启动</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="175"/>
+        <location filename="../../src/views/MainWindow.cpp" line="256"/>
         <source>Video push stopping...</source>
         <translation>正在视频推流...</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="178"/>
+        <location filename="../../src/views/MainWindow.cpp" line="259"/>
         <source>Video push stopped</source>
         <translation>已停止视频推流</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="181"/>
+        <location filename="../../src/views/MainWindow.cpp" line="262"/>
         <source>Video push error</source>
         <translation>视频推流错误</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="186"/>
+        <location filename="../../src/views/MainWindow.cpp" line="267"/>
         <source>Video push error: %1</source>
         <translation>视频推流错误: %1</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="286"/>
+        <source>Network error: %1</source>
+        <translation>网络错误：%1</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="297"/>
+        <source>Current user is no longer valid. Session has been cleared.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -548,25 +707,117 @@
 <context>
     <name>QObject</name>
     <message>
-        <location filename="../../src/services/CameraService.cpp" line="22"/>
-        <location filename="../../src/services/CameraService.cpp" line="32"/>
+        <location filename="../../src/services/CameraService.cpp" line="21"/>
+        <location filename="../../src/services/CameraService.cpp" line="31"/>
         <source>Camera Permission</source>
         <translation>相机权限</translation>
     </message>
     <message>
-        <location filename="../../src/services/CameraService.cpp" line="23"/>
+        <location filename="../../src/services/CameraService.cpp" line="22"/>
         <source>Camera permission has been granted. You need to restart the application to take effect.</source>
         <translation>已授予相机权限。您需要重新启动应用程序才能生效。</translation>
     </message>
     <message>
-        <location filename="../../src/services/CameraService.cpp" line="33"/>
+        <location filename="../../src/services/CameraService.cpp" line="32"/>
         <source>Camera permission has been denied. Please allow camera access in system settings.</source>
         <translation>相机权限被拒绝。请在系统设置中允许相机访问。</translation>
     </message>
     <message>
-        <location filename="../../main.cpp" line="35"/>
+        <location filename="../../main.cpp" line="49"/>
         <source>Student Collection Terminal</source>
         <translation>学生采集终端</translation>
+    </message>
+</context>
+<context>
+    <name>SettingsDialog</name>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="40"/>
+        <source>Need server address.</source>
+        <translation>需要填写服务器地址。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="46"/>
+        <source>The server address format is invalid.</source>
+        <translation>服务器地址无效。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="54"/>
+        <source>Server address saved.</source>
+        <translation>服务器地址已保存。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="59"/>
+        <source>Settings</source>
+        <translation>设置</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="66"/>
+        <source>Application Settings</source>
+        <translation>应用设置</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="69"/>
+        <source>Configure the current application environment.</source>
+        <translation>配置当前应用环境。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="79"/>
+        <source>Network</source>
+        <translation>网络</translation>
+    </message>
+    <message>
+        <source>Set the backend server address used by login and user-related APIs.</source>
+        <translation type="vanished">设置登录和用户相关接口使用的后端服务地址。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="95"/>
+        <source>Server hostname / IP</source>
+        <translation>服务器主机名/IP地址</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="99"/>
+        <source>Server Address</source>
+        <translation>服务器地址</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="155"/>
+        <source>Save</source>
+        <translation>保存</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="117"/>
+        <source>Appearance</source>
+        <translation>外观</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="83"/>
+        <source>Set the server address used by app.</source>
+        <translation>设置APP使用的服务器地址。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="121"/>
+        <source>Theme switching will be available in a future version.</source>
+        <translation>主题切换将在后续版本开放。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="133"/>
+        <source>Light</source>
+        <translation>浅色</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="134"/>
+        <source>Dark</source>
+        <translation>深色</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="139"/>
+        <source>Theme</source>
+        <translation>主题</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="149"/>
+        <source>Close</source>
+        <translation>关闭</translation>
     </message>
 </context>
 <context>
@@ -736,6 +987,104 @@ OpenH264 is a software encoder provided by Cisco. It has a smaller feature set a
         <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="232"/>
         <source>Stopping...</source>
         <translation>停止中...</translation>
+    </message>
+</context>
+<context>
+    <name>UserInfoDialog</name>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="35"/>
+        <source>User information has been updated.</source>
+        <translation>用户信息已更新</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="45"/>
+        <source>Unknown</source>
+        <translation>未知</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="47"/>
+        <source>Active</source>
+        <translation>启用</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="47"/>
+        <source>Inactive</source>
+        <translation>停用</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="55"/>
+        <source>Failed to fetch user information.</source>
+        <translation>获取用户信息失败。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="56"/>
+        <source>Failed to fetch user information: %1</source>
+        <translation>获取用户信息失败：%1</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="57"/>
+        <source>Request failed (%1) %2</source>
+        <translation>请求失败（%1） %2</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="73"/>
+        <source>Signing out...</source>
+        <translation>正在退出登录...</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="82"/>
+        <source>User Information</source>
+        <translation>用户信息</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="89"/>
+        <source>Current User</source>
+        <translation>当前登录用户</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="92"/>
+        <source>Ready to fetch user information.</source>
+        <translation>准备获取用户信息</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="106"/>
+        <source>Name</source>
+        <translation>姓名</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="107"/>
+        <source>Unified Identity ID</source>
+        <translation>统一身份 ID</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="108"/>
+        <source>User Type</source>
+        <translation>用户类型</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="109"/>
+        <source>Account Status</source>
+        <translation>账号状态</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="113"/>
+        <source>The complete user information will be displayed here.</source>
+        <translation>完整用户信息将在这里显示</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="115"/>
+        <source>Sign Out</source>
+        <translation>退出登录</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="136"/>
+        <source>Fetching user information...</source>
+        <translation>正在获取用户信息...</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/UserInfoDialog.cpp" line="146"/>
+        <source>Not provided</source>
+        <translation>未提供</translation>
     </message>
 </context>
 <context>
