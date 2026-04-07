@@ -46,6 +46,8 @@ set(H_FILES
     src/services/MqttPublisher.h
     src/services/CoSettingsMgr.h
     src/services/VideoPushService.h
+    src/services/AuthService.h
+    src/services/UserApi.h
 )
 
 set(CPP_FILES
@@ -79,6 +81,8 @@ set(CPP_FILES
     src/services/MqttPublisher.cpp
     src/services/CoSettingsMgr.cpp
     src/services/VideoPushService.cpp
+    src/services/AuthService.cpp
+    src/services/UserApi.cpp
 )
 
 qt_add_resources(RESOURCES resources/resources.qrc)

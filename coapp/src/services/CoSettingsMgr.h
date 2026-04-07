@@ -30,6 +30,9 @@ public:
     static int bandPort();
     static QString mqttAddress();
     static int mqttPort();
+    static QString authAccessToken();
+    static QString authRefreshToken();
+    static QString authTokenType();
     static QByteArray cameraDeviceId();
     static QSize cameraFormatRes();
     static qreal cameraFormatMaxFps();
@@ -41,6 +44,9 @@ public:
     static void setBandPort(int port);
     static void setMQTTAddress(const QString& address);
     static void setMQTTPort(int port);
+    static void setAuthAccessToken(const QString& token);
+    static void setAuthRefreshToken(const QString& token);
+    static void setAuthTokenType(const QString& tokenType);
     static void setCameraDeviceId(const QByteArray& deviceId);
     static void setCameraFormatRes(const QSize& res);
     static void setCameraFormatMaxFps(qreal fps);

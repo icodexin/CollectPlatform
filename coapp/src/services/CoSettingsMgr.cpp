@@ -30,6 +30,18 @@ int CoSettingsMgr::mqttPort() {
     return instance().getValueImpl("network/mqtt/port", 1883).toInt();
 }
 
+QString CoSettingsMgr::authAccessToken() {
+    return instance().getValueImpl("auth/access_token", "").toString();
+}
+
+QString CoSettingsMgr::authRefreshToken() {
+    return instance().getValueImpl("auth/refresh_token", "").toString();
+}
+
+QString CoSettingsMgr::authTokenType() {
+    return instance().getValueImpl("auth/token_type", "bearer").toString();
+}
+
 QByteArray CoSettingsMgr::cameraDeviceId() {
     return instance().getValueImpl("device/camera/device_id", QByteArray{}).toByteArray();
 }
@@ -69,6 +81,18 @@ void CoSettingsMgr::setMQTTAddress(const QString& address) {
 
 void CoSettingsMgr::setMQTTPort(const int port) {
     return instance().setValueImpl("network/mqtt/port", port);
+}
+
+void CoSettingsMgr::setAuthAccessToken(const QString& token) {
+    instance().setValueImpl("auth/access_token", token);
+}
+
+void CoSettingsMgr::setAuthRefreshToken(const QString& token) {
+    instance().setValueImpl("auth/refresh_token", token);
+}
+
+void CoSettingsMgr::setAuthTokenType(const QString& tokenType) {
+    instance().setValueImpl("auth/token_type", tokenType);
 }
 
 void CoSettingsMgr::setCameraDeviceId(const QByteArray& deviceId) {
