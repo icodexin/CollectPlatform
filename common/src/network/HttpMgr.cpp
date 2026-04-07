@@ -10,6 +10,17 @@ namespace {
 constexpr auto kMethodAttribute = QNetworkRequest::User;
 }
 
+QUrl HttpHelper::buildApiBaseUrl(const QString& host, int port) {
+    auto _host = host.trimmed();
+    if (_host.isEmpty())
+        _host = QStringLiteral("localhost");
+    QUrl url;
+    url.setHost(_host);
+    url.setPort(80);
+    url.setScheme("http");
+    return url;
+}
+
 HttpMgr::HttpMgr() {
     m_defaultHeaders.insert("Accept", "application/json");
 

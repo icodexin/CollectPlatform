@@ -24,6 +24,8 @@ public:
 
     static void flush();
 
+    static QUrl httpBaseUrl();
+
     static QString serverHostname();
     static QString eegAddress();
     static int eegPort();

@@ -1,9 +1,14 @@
 #include "CoSettingsMgr.h"
 
 #include <QtCore/QSize>
+#include "network/HttpMgr.h"
 
 void CoSettingsMgr::flush() {
     instance().SettingsManager::flush();
+}
+
+QUrl CoSettingsMgr::httpBaseUrl() {
+    return HttpHelper::buildApiBaseUrl(serverHostname());
 }
 
 QString CoSettingsMgr::serverHostname() {

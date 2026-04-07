@@ -25,6 +25,7 @@ set(H_FILES
     src/views/settings/StreamSettingPanel.h
     src/views/settings/StreamAdvancedSettingDialog.h
     src/views/MainWindow.h
+    src/views/LoginDialog.h
     src/views/DeviceView.h
     src/views/SettingView.h
     src/views/EEGView.h
@@ -60,6 +61,7 @@ set(CPP_FILES
     src/views/settings/StreamSettingPanel.cpp
     src/views/settings/StreamAdvancedSettingDialog.cpp
     src/views/MainWindow.cpp
+    src/views/LoginDialog.cpp
     src/views/DeviceView.cpp
     src/views/SettingView.cpp
     src/views/EEGView.cpp

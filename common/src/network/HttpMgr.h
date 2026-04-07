@@ -16,6 +16,10 @@ class QNetworkReply;
 class QNetworkRequest;
 class QSslError;
 
+namespace HttpHelper {
+    QUrl buildApiBaseUrl(const QString& host, int port = 80);
+}
+
 class HttpMgr final : public QObject, public Singleton<HttpMgr> {
     Q_OBJECT
     DECLARE_SINGLETON(HttpMgr)
