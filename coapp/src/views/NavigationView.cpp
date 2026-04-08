@@ -1,4 +1,4 @@
-#include "SettingView.h"
+#include "NavigationView.h"
 
 #include <QtCore/QStringList>
 #include <QtGui/QResizeEvent>
@@ -8,47 +8,47 @@
 #include <QtWidgets/QPushButton>
 #include <QtWidgets/QVBoxLayout>
 
-#include "settings/BandSettingPanel.h"
-#include "settings/CameraSettingPanel.h"
-#include "settings/EEGSettingPanel.h"
-#include "settings/InfoPanel.h"
-#include "settings/StreamSettingPanel.h"
+#include "navigation/BandSettingPanel.h"
+#include "navigation/CameraSettingPanel.h"
+#include "navigation/EEGSettingPanel.h"
+#include "navigation/InfoPanel.h"
+#include "navigation/StreamSettingPanel.h"
 
-SettingView::SettingView(QWidget* parent)
+NavigationView::NavigationView(QWidget* parent)
     : QWidget(parent) {
     initUI();
     initConnection();
 }
 
-QString SettingView::eegAddress() const {
+QString NavigationView::eegAddress() const {
     return ui_eegPanel->address();
 }
 
-int SettingView::eegPort() const {
+int NavigationView::eegPort() const {
     return ui_eegPanel->port();
 }
 
-int SettingView::bandServicePort() const {
+int NavigationView::bandServicePort() const {
     return ui_bandPanel->port();
 }
 
-QCameraDevice SettingView::cameraDevice() const {
+QCameraDevice NavigationView::cameraDevice() const {
     return ui_cameraPanel->device();
 }
 
-QCameraFormat SettingView::cameraFormat() const {
+QCameraFormat NavigationView::cameraFormat() const {
     return ui_cameraPanel->format();
 }
 
-void SettingView::onEEGConnected() const {
+void NavigationView::onEEGConnected() const {
     ui_eegPanel->handleConnected();
 }
 
-void SettingView::onEEGDisconnected() const {
+void NavigationView::onEEGDisconnected() const {
     ui_eegPanel->handleDisconnected();
 }
 
-void SettingView::onEEGReceiverRunningChanged(const bool connected) const {
+void NavigationView::onEEGReceiverRunningChanged(const bool connected) const {
     if (connected) {
         onEEGConnected();
     } else {
@@ -56,58 +56,58 @@ void SettingView::onEEGReceiverRunningChanged(const bool connected) const {
     }
 }
 
-void SettingView::onBandServiceStarted() const {
+void NavigationView::onBandServiceStarted() const {
     ui_bandPanel->handleServiceStarted();
 }
 
-void SettingView::onBandServiceStopped() const {
+void NavigationView::onBandServiceStopped() const {
     ui_bandPanel->handleServiceStopped();
 }
 
-void SettingView::onBandServiceRunningChanged(const bool running) const {
+void NavigationView::onBandServiceRunningChanged(const bool running) const {
     ui_bandPanel->handleServiceRunningChanged(running);
 }
 
-void SettingView::onCameraOpened() const {
+void NavigationView::onCameraOpened() const {
     ui_cameraPanel->handleOpened();
 }
 
-void SettingView::onCameraClosed() const {
+void NavigationView::onCameraClosed() const {
     ui_cameraPanel->handleClosed();
 }
 
-void SettingView::onCameraRunningChanged(const bool running) const {
+void NavigationView::onCameraRunningChanged(const bool running) const {
     ui_cameraPanel->handleRunningChanged(running);
 }
 
-void SettingView::onMqttConnected() {
+void NavigationView::onMqttConnected() {
     m_mqttConnected = true;
     m_mqttShowStatusCard = false;
     updateMqttStatusCard();
 }
 
-void SettingView::onMqttDisconnected() {
+void NavigationView::onMqttDisconnected() {
     m_mqttConnected = false;
     m_mqttShowStatusCard = true;
     updateMqttStatusCard();
 }
 
-void SettingView::onMqttError(const QString& message) {
+void NavigationView::onMqttError(const QString& message) {
     Q_UNUSED(message)
     m_mqttShowStatusCard = true;
     updateMqttStatusCard();
 }
 
-void SettingView::onVideoPushStateChanged(const PushWorkerState state) const {
+void NavigationView::onVideoPushStateChanged(const PushWorkerState state) const {
     ui_streamPanel->handleStateChanged(state);
 }
 
-void SettingView::resizeEvent(QResizeEvent* event) {
+void NavigationView::resizeEvent(QResizeEvent* event) {
     QWidget::resizeEvent(event);
     updateMqttStatusCardLayout();
 }
 
-void SettingView::initUI() {
+void NavigationView::initUI() {
     ui_eegPanel = new EEGSettingPanel();
     ui_bandPanel = new BandSettingPanel();
     ui_cameraPanel = new CameraSettingPanel();
@@ -158,27 +158,27 @@ void SettingView::initUI() {
     updateMqttStatusCardLayout();
 }
 
-void SettingView::initConnection() {
-    connect(ui_eegPanel, &EEGSettingPanel::requestConnect, this, &SettingView::requestConnectEEG);
-    connect(ui_eegPanel, &EEGSettingPanel::requestDisconnect, this, &SettingView::requestDisconnectEEG);
+void NavigationView::initConnection() {
+    connect(ui_eegPanel, &EEGSettingPanel::requestConnect, this, &NavigationView::requestConnectEEG);
+    connect(ui_eegPanel, &EEGSettingPanel::requestDisconnect, this, &NavigationView::requestDisconnectEEG);
 
-    connect(ui_bandPanel, &BandSettingPanel::requestStartService, this, &SettingView::requestStartBandService);
-    connect(ui_bandPanel, &BandSettingPanel::requestStopService, this, &SettingView::requestStopBandService);
+    connect(ui_bandPanel, &BandSettingPanel::requestStartService, this, &NavigationView::requestStartBandService);
+    connect(ui_bandPanel, &BandSettingPanel::requestStopService, this, &NavigationView::requestStopBandService);
 
-    connect(ui_cameraPanel, &CameraSettingPanel::requestOpen, this, &SettingView::requestOpenCamera);
-    connect(ui_cameraPanel, &CameraSettingPanel::requestClose, this, &SettingView::requestCloseCamera);
-    connect(ui_cameraPanel, &CameraSettingPanel::requestUpdateDevice, this, &SettingView::requestUpdateCameraDevice);
+    connect(ui_cameraPanel, &CameraSettingPanel::requestOpen, this, &NavigationView::requestOpenCamera);
+    connect(ui_cameraPanel, &CameraSettingPanel::requestClose, this, &NavigationView::requestCloseCamera);
+    connect(ui_cameraPanel, &CameraSettingPanel::requestUpdateDevice, this, &NavigationView::requestUpdateCameraDevice);
     connect(ui_cameraPanel, &CameraSettingPanel::requestUpdateDevice, this, [=](const QCameraDevice& device) {
         emit requestUpdateCamera(device, ui_cameraPanel->format());
     });
-    connect(ui_cameraPanel, &CameraSettingPanel::requestUpdateFormat, this, &SettingView::requestUpdateCameraFormat);
-    connect(ui_mqttReconnectButton, &QPushButton::clicked, this, &SettingView::requestReconnectMqtt);
+    connect(ui_cameraPanel, &CameraSettingPanel::requestUpdateFormat, this, &NavigationView::requestUpdateCameraFormat);
+    connect(ui_mqttReconnectButton, &QPushButton::clicked, this, &NavigationView::requestReconnectMqtt);
 
-    connect(ui_streamPanel, &StreamSettingPanel::requestStart, this, &SettingView::requestStartVideoPush);
-    connect(ui_streamPanel, &StreamSettingPanel::requestStop, this, &SettingView::requestStopVideoPush);
+    connect(ui_streamPanel, &StreamSettingPanel::requestStart, this, &NavigationView::requestStartVideoPush);
+    connect(ui_streamPanel, &StreamSettingPanel::requestStop, this, &NavigationView::requestStopVideoPush);
 }
 
-void SettingView::updateMqttStatusCard() {
+void NavigationView::updateMqttStatusCard() {
     if (!ui_mqttStatusCard)
         return;
 
@@ -192,7 +192,7 @@ void SettingView::updateMqttStatusCard() {
     );
 }
 
-void SettingView::updateMqttStatusCardLayout() {
+void NavigationView::updateMqttStatusCardLayout() {
     if (!ui_mqttStatusCard || !ui_mqttReconnectButton)
         return;
 

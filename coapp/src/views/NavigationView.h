@@ -1,5 +1,5 @@
-#ifndef SETTINGVIEW_H
-#define SETTINGVIEW_H
+#ifndef NAVIGATIONVIEW_H
+#define NAVIGATIONVIEW_H
 
 #include <QtMultimedia/QCameraDevice>
 #include <QtWidgets/QWidget>
@@ -15,11 +15,11 @@ class QLabel;
 class QPushButton;
 class QResizeEvent;
 
-class SettingView final : public QWidget {
+class NavigationView final : public QWidget {
     Q_OBJECT
 
 public:
-    explicit SettingView(QWidget* parent = nullptr);
+    explicit NavigationView(QWidget* parent = nullptr);
     QString eegAddress() const;
     int eegPort() const;
     int bandServicePort() const;
@@ -78,4 +78,4 @@ private:
     bool m_mqttShowStatusCard = false;
 };
 
-#endif //SETTINGVIEW_H
+#endif //NAVIGATIONVIEW_H

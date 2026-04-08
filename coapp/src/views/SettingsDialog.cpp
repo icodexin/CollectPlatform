@@ -102,6 +102,7 @@ void SettingsDialog::initUI() {
     m_streamPortSpinBox->setRange(1, 65535);
     m_streamPortSpinBox->setAlignment(Qt::AlignCenter);
     m_streamPortSpinBox->setValue(CoSettingsMgr::streamPort());
+    m_streamPortSpinBox->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
     networkFormLayout->addRow(tr("Server Address"), m_serverAddressEdit);
     networkFormLayout->addRow(tr("Stream Port"), m_streamPortSpinBox);

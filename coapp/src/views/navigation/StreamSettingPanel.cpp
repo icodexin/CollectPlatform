@@ -11,7 +11,7 @@
 #include "services/AuthService.h"
 #include "services/CoSettingsMgr.h"
 #include "services/UserApi.h"
-#include "views/settings/StreamAdvancedSettingDialog.h"
+#include "views/navigation/StreamAdvancedSettingDialog.h"
 
 namespace {
     constexpr struct {
@@ -123,7 +123,6 @@ void StreamSettingPanel::initUI() {
 
     m_startBtn = new QPushButton(tr("Start Streaming"));
     m_pushUrlLabel = new QLabel(this);
-    m_pushUrlLabel->setObjectName("settingsValueLabel");
     m_pushUrlLabel->setWordWrap(true);
     m_pushUrlLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
 

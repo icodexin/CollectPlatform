@@ -11,8 +11,8 @@
 #include "BandView.h"
 #include "CameraView.h"
 #include "EEGView.h"
+#include "NavigationView.h"
 #include "SettingsDialog.h"
-#include "SettingView.h"
 #include "UserInfoDialog.h"
 #include "components/BarCard.h"
 #include "components/LogBox.h"
@@ -52,8 +52,8 @@ void MainWindow::closeEvent(QCloseEvent* event) {
 }
 
 void MainWindow::initUI() {
-    ui_settingView = new SettingView;
-    ui_settingView->setMaximumWidth(400);
+    ui_navigationView = new NavigationView;
+    ui_navigationView->setMaximumWidth(400);
     ui_eegView = new EEGView;
     ui_bandView = new BandView;
     ui_cameraView = new CameraView;
@@ -142,7 +142,7 @@ void MainWindow::initUI() {
     // 主分割器
     ui_mainSplitter = new QSplitter(Qt::Horizontal);
     {
-        ui_mainSplitter->addWidget(ui_settingView);
+        ui_mainSplitter->addWidget(ui_navigationView);
         ui_mainSplitter->addWidget(contentWidget);
         ui_mainSplitter->setCollapsible(0, false);
         ui_mainSplitter->setCollapsible(1, false);
@@ -174,7 +174,7 @@ void MainWindow::initServices() {
     m_bandServer->onDataReceived(dataFetchedCbk);
 
     m_cameraService = new CameraService(this);
-    m_cameraService->updateCamera(ui_settingView->cameraDevice(), ui_settingView->cameraFormat());
+    m_cameraService->updateCamera(ui_navigationView->cameraDevice(), ui_navigationView->cameraFormat());
 
     m_mqttPubService = new MqttPublishService(this);
 
@@ -182,13 +182,13 @@ void MainWindow::initServices() {
 }
 
 void MainWindow::initConnection() {
-    /********** SettingView <-> EEGRecvService <-> EEGView **********/
-    connect(ui_settingView, &SettingView::requestConnectEEG, ui_eegView, &EEGView::onConnecting);
-    connect(ui_settingView, &SettingView::requestDisconnectEEG, ui_eegView, &EEGView::onDisconnecting);
-    connect(ui_settingView, &SettingView::requestConnectEEG, m_eegRecvService, &EEGRecvService::start);
-    connect(ui_settingView, &SettingView::requestDisconnectEEG, m_eegRecvService, &EEGRecvService::stop);
-    connect(m_eegRecvService, &EEGRecvService::connected, ui_settingView, &SettingView::onEEGConnected);
-    connect(m_eegRecvService, &EEGRecvService::disconnected, ui_settingView, &SettingView::onEEGDisconnected);
+    /********** NavigationView <-> EEGRecvService <-> EEGView **********/
+    connect(ui_navigationView, &NavigationView::requestConnectEEG, ui_eegView, &EEGView::onConnecting);
+    connect(ui_navigationView, &NavigationView::requestDisconnectEEG, ui_eegView, &EEGView::onDisconnecting);
+    connect(ui_navigationView, &NavigationView::requestConnectEEG, m_eegRecvService, &EEGRecvService::start);
+    connect(ui_navigationView, &NavigationView::requestDisconnectEEG, m_eegRecvService, &EEGRecvService::stop);
+    connect(m_eegRecvService, &EEGRecvService::connected, ui_navigationView, &NavigationView::onEEGConnected);
+    connect(m_eegRecvService, &EEGRecvService::disconnected, ui_navigationView, &NavigationView::onEEGDisconnected);
     connect(m_eegRecvService, &EEGRecvService::connected, ui_eegView, &EEGView::onConnected);
     connect(m_eegRecvService, &EEGRecvService::disconnected, ui_eegView, &EEGView::onDisconnected);
     connect(m_eegRecvService, &EEGRecvService::dataFetched, ui_eegView, &EEGView::onDataFetched);
@@ -196,21 +196,21 @@ void MainWindow::initConnection() {
     connect(m_eegRecvService, &EEGRecvService::errorOccurred, ui_eegView, &EEGView::onErrorOccurred);
     connect(m_eegRecvService, &EEGRecvService::logFetched, ui_eegView, &EEGView::log);
 
-    /********** SettingView <-> CameraService <-> CameraView **********/
-    connect(ui_settingView, &SettingView::requestOpenCamera, m_cameraService, &CameraService::start);
-    connect(ui_settingView, &SettingView::requestCloseCamera, m_cameraService, &CameraService::stop);
-    connect(ui_settingView, &SettingView::requestUpdateCamera, m_cameraService, &CameraService::updateCamera);
-    connect(ui_settingView, &SettingView::requestUpdateCameraFormat, m_cameraService, &CameraService::updateFormat);
-    connect(m_cameraService, &CameraService::runningChanged, ui_settingView, &SettingView::onCameraRunningChanged);
+    /********** NavigationView <-> CameraService <-> CameraView **********/
+    connect(ui_navigationView, &NavigationView::requestOpenCamera, m_cameraService, &CameraService::start);
+    connect(ui_navigationView, &NavigationView::requestCloseCamera, m_cameraService, &CameraService::stop);
+    connect(ui_navigationView, &NavigationView::requestUpdateCamera, m_cameraService, &CameraService::updateCamera);
+    connect(ui_navigationView, &NavigationView::requestUpdateCameraFormat, m_cameraService, &CameraService::updateFormat);
+    connect(m_cameraService, &CameraService::runningChanged, ui_navigationView, &NavigationView::onCameraRunningChanged);
     connect(m_cameraService, &CameraService::runningChanged, ui_cameraView, &CameraView::setPlaying);
     connect(m_cameraService, &CameraService::videoFrameChanged, ui_cameraView, &CameraView::setFrame);
 
-    /********** SettingView <-> BandServer <-> BandView **********/
-    connect(ui_settingView, &SettingView::requestStartBandService, ui_bandView, &BandView::onConnecting);
-    connect(ui_settingView, &SettingView::requestStopBandService, ui_bandView, &BandView::onDisconnecting);
-    connect(ui_settingView, &SettingView::requestStartBandService, m_bandServer, &BandServer::start);
-    connect(ui_settingView, &SettingView::requestStopBandService, m_bandServer, &BandServer::stop);
-    connect(m_bandServer, &BandServer::runningChanged, ui_settingView, &SettingView::onBandServiceRunningChanged);
+    /********** NavigationView <-> BandServer <-> BandView **********/
+    connect(ui_navigationView, &NavigationView::requestStartBandService, ui_bandView, &BandView::onConnecting);
+    connect(ui_navigationView, &NavigationView::requestStopBandService, ui_bandView, &BandView::onDisconnecting);
+    connect(ui_navigationView, &NavigationView::requestStartBandService, m_bandServer, &BandServer::start);
+    connect(ui_navigationView, &NavigationView::requestStopBandService, m_bandServer, &BandServer::stop);
+    connect(m_bandServer, &BandServer::runningChanged, ui_navigationView, &NavigationView::onBandServiceRunningChanged);
     connect(m_bandServer, &BandServer::runningChanged, ui_bandView, &BandView::onConnectionStatusChanged);
     connect(m_bandServer, &BandServer::errorOccurred, ui_bandView, &BandView::onErrorOccurred);
     connect(m_bandServer, &BandServer::clientConnected, ui_bandView, &BandView::onClientConnected);
@@ -219,10 +219,10 @@ void MainWindow::initConnection() {
 
     /********** MQTT Publish Service **********/
     m_mqttPubService->setBroker(CoSettingsMgr::serverHostname(), static_cast<quint16>(CoSettingsMgr::mqttPort()));
-    connect(ui_settingView, &SettingView::requestReconnectMqtt, m_mqttPubService, &MqttPublishService::reconnect);
-    connect(m_mqttPubService, &MqttPublishService::started, ui_settingView, &SettingView::onMqttConnected);
-    connect(m_mqttPubService, &MqttPublishService::stopped, ui_settingView, &SettingView::onMqttDisconnected);
-    connect(m_mqttPubService, &MqttPublishService::connectionFailed, ui_settingView, &SettingView::onMqttError);
+    connect(ui_navigationView, &NavigationView::requestReconnectMqtt, m_mqttPubService, &MqttPublishService::reconnect);
+    connect(m_mqttPubService, &MqttPublishService::started, ui_navigationView, &NavigationView::onMqttConnected);
+    connect(m_mqttPubService, &MqttPublishService::stopped, ui_navigationView, &NavigationView::onMqttDisconnected);
+    connect(m_mqttPubService, &MqttPublishService::connectionFailed, ui_navigationView, &NavigationView::onMqttError);
     connect(m_mqttPubService, &MqttPublishService::started, this, [=] {
         m_dataPipe->setStudentId(AuthService::unifiedId());
         m_dataPipe->allowPush(true);
@@ -244,10 +244,10 @@ void MainWindow::initConnection() {
         qOverload<const QString&, const QByteArray&>(&MqttPublishService::publish)
     );
 
-    /********** SettingView <-> VideoPushService **********/
-    connect(ui_settingView, &SettingView::requestStartVideoPush, m_videoPushService, &VideoPushService::start);
-    connect(ui_settingView, &SettingView::requestStopVideoPush, m_videoPushService, &VideoPushService::stop);
-    connect(m_videoPushService, &VideoPushService::stateChanged, ui_settingView, &SettingView::onVideoPushStateChanged);
+    /********** NavigationView <-> VideoPushService **********/
+    connect(ui_navigationView, &NavigationView::requestStartVideoPush, m_videoPushService, &VideoPushService::start);
+    connect(ui_navigationView, &NavigationView::requestStopVideoPush, m_videoPushService, &VideoPushService::stop);
+    connect(m_videoPushService, &VideoPushService::stateChanged, ui_navigationView, &NavigationView::onVideoPushStateChanged);
     connect(m_cameraService, &CameraService::videoFrameChanged, m_videoPushService, &VideoPushService::pushFrame);
     connect(m_videoPushService, &VideoPushService::stateChanged, this, [=](PushWorkerState state) {
         switch (state) {
@@ -317,11 +317,11 @@ void MainWindow::toggleSidebar() {
         if (!sizes.isEmpty() && sizes.at(0) > 0)
             m_lastSidebarWidth = sizes.at(0);
 
-        ui_settingView->hide();
+        ui_navigationView->hide();
         ui_mainSplitter->setSizes({0, qMax(1, width())});
         m_sidebarCollapsed = true;
     } else {
-        ui_settingView->show();
+        ui_navigationView->show();
         const int sidebarWidth = qMax(240, m_lastSidebarWidth);
         ui_mainSplitter->setSizes({sidebarWidth, qMax(1, width() - sidebarWidth)});
         m_sidebarCollapsed = false;

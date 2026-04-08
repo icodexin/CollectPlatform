@@ -17,19 +17,19 @@ find_package(Qt6 COMPONENTS Core Widgets Svg Network Mqtt Multimedia LinguistToo
 qt_standard_project_setup(REQUIRES 6.5 I18N_TRANSLATED_LANGUAGES zh_CN)
 
 set(H_FILES
-    src/views/settings/CameraSettingPanel.h
-    src/views/settings/EEGSettingPanel.h
-    src/views/settings/BandSettingPanel.h
-    src/views/settings/MqttSettingPanel.h
-    src/views/settings/InfoPanel.h
-    src/views/settings/StreamSettingPanel.h
-    src/views/settings/StreamAdvancedSettingDialog.h
+    src/views/navigation/CameraSettingPanel.h
+    src/views/navigation/EEGSettingPanel.h
+    src/views/navigation/BandSettingPanel.h
+    src/views/navigation/MqttSettingPanel.h
+    src/views/navigation/InfoPanel.h
+    src/views/navigation/StreamSettingPanel.h
+    src/views/navigation/StreamAdvancedSettingDialog.h
     src/views/MainWindow.h
     src/views/LoginDialog.h
     src/views/SettingsDialog.h
     src/views/UserInfoDialog.h
     src/views/DeviceView.h
-    src/views/SettingView.h
+    src/views/NavigationView.h
     src/views/EEGView.h
     src/views/BandView.h
     src/views/CameraView.h
@@ -55,19 +55,19 @@ set(H_FILES
 
 set(CPP_FILES
     main.cpp
-    src/views/settings/CameraSettingPanel.cpp
-    src/views/settings/EEGSettingPanel.cpp
-    src/views/settings/BandSettingPanel.cpp
-    src/views/settings/MqttSettingPanel.cpp
-    src/views/settings/InfoPanel.cpp
-    src/views/settings/StreamSettingPanel.cpp
-    src/views/settings/StreamAdvancedSettingDialog.cpp
+    src/views/navigation/CameraSettingPanel.cpp
+    src/views/navigation/EEGSettingPanel.cpp
+    src/views/navigation/BandSettingPanel.cpp
+    src/views/navigation/MqttSettingPanel.cpp
+    src/views/navigation/InfoPanel.cpp
+    src/views/navigation/StreamSettingPanel.cpp
+    src/views/navigation/StreamAdvancedSettingDialog.cpp
     src/views/MainWindow.cpp
     src/views/LoginDialog.cpp
     src/views/SettingsDialog.cpp
     src/views/UserInfoDialog.cpp
     src/views/DeviceView.cpp
-    src/views/SettingView.cpp
+    src/views/NavigationView.cpp
     src/views/EEGView.cpp
     src/views/BandView.cpp
     src/views/CameraView.cpp

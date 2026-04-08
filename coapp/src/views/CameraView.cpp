@@ -3,7 +3,6 @@
 #include <QtGui/QPainter>
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QLabel>
-#include "SettingView.h"
 
 ViewFinder::ViewFinder(QWidget* parent) : QWidget(parent) {
     ui_hint = new QWidget(this);

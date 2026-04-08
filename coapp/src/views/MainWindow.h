@@ -19,7 +19,7 @@ class QLabel;
 class QPushButton;
 class QSplitter;
 class SettingsDialog;
-class SettingView;
+class NavigationView;
 class UserInfoDialog;
 class VideoPushService;
 
@@ -48,7 +48,7 @@ private:
 
 private:
     QSplitter* ui_mainSplitter = nullptr;
-    SettingView* ui_settingView = nullptr;
+    NavigationView* ui_navigationView = nullptr;
     EEGView* ui_eegView = nullptr;
     BandView* ui_bandView = nullptr;
     CameraView* ui_cameraView = nullptr;
