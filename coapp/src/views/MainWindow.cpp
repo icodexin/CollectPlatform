@@ -1,5 +1,6 @@
 #include "MainWindow.h"
 
+#include <QtCore/QJsonObject>
 #include <QtWidgets/QBoxLayout>
 #include <QtWidgets/QGridLayout>
 #include <QtWidgets/QLabel>
@@ -16,8 +17,10 @@
 #include "components/BarCard.h"
 #include "components/LogBox.h"
 #include "network/HttpMgr.h"
+#include "services/AuthService.h"
 #include "services/BandServer.h"
 #include "services/CameraService.h"
+#include "services/CoSettingsMgr.h"
 #include "services/DataPipe.h"
 #include "services/EEGRecvService.h"
 #include "services/MqttPublisher.h"
@@ -41,6 +44,7 @@ void MainWindow::closeEvent(QCloseEvent* event) {
     if (m_userDialog)
         m_userDialog->close();
 
+    m_mqttPubService->stop();
     m_bandServer->stop();
     m_eegRecvService->stop();
     event->accept();
@@ -157,6 +161,7 @@ void MainWindow::initUI() {
 
 void MainWindow::initServices() {
     m_dataPipe = new DataPipe(this);
+    m_dataPipe->allowPush(false);
     auto dataFetchedCbk = [this](std::unique_ptr<ISensorData> data_ptr) {
         if (m_dataPipe)
             m_dataPipe->push(std::move(data_ptr));
@@ -213,26 +218,26 @@ void MainWindow::initConnection() {
     connect(m_bandServer, &BandServer::dataReceived, ui_bandView, &BandView::onDataReceived);
 
     /********** MQTT Publish Service **********/
-    connect(ui_settingView, &SettingView::requestStartMqtt, m_mqttPubService,
-        qOverload<const QString&, quint16, const QString&, const QString&, const QString&>(&MqttPublishService::start));
-    connect(ui_settingView, &SettingView::requestStopMqtt, m_mqttPubService, &MqttPublishService::stop);
+    m_mqttPubService->setBroker(CoSettingsMgr::serverHostname(), static_cast<quint16>(CoSettingsMgr::mqttPort()));
+    connect(ui_settingView, &SettingView::requestReconnectMqtt, m_mqttPubService, &MqttPublishService::reconnect);
     connect(m_mqttPubService, &MqttPublishService::started, ui_settingView, &SettingView::onMqttConnected);
     connect(m_mqttPubService, &MqttPublishService::stopped, ui_settingView, &SettingView::onMqttDisconnected);
+    connect(m_mqttPubService, &MqttPublishService::connectionFailed, ui_settingView, &SettingView::onMqttError);
     connect(m_mqttPubService, &MqttPublishService::started, this, [=] {
-        m_dataPipe->setStudentId(ui_settingView->mqttUserId());
+        m_dataPipe->setStudentId(AuthService::unifiedId());
         m_dataPipe->allowPush(true);
-        ui_logBox->log(LogMessage::SUCCESS, tr("MQTT connected"));
+        ui_logBox->log(LogMessage::SUCCESS, tr("RabbitMQ connected"));
     });
     connect(m_mqttPubService, &MqttPublishService::stopped, this, [=] {
         m_dataPipe->allowPush(false);
-        ui_logBox->log(LogMessage::WARN, tr("MQTT disconnected"));
+        ui_logBox->log(LogMessage::WARN, tr("RabbitMQ disconnected"));
     });
-    connect(m_mqttPubService, &MqttPublishService::errorOccurred,
-        this, [=](QMqttClient::ClientError error, const QString& msg) {
-            ui_logBox->log(LogMessage::ERROR, tr("MQTT error: %1").arg(msg));
+    connect(m_mqttPubService, &MqttPublishService::errorOccurred, this,
+        [=](QMqttClient::ClientError, const QString& msg) {
+            ui_logBox->log(LogMessage::ERROR, tr("RabbitMQ error: %1").arg(msg));
         });
     connect(m_mqttPubService, &MqttPublishService::messageSent, this, [=](const qint32 msgId) {
-        ui_logBox->log(LogMessage::INFO, tr("MQTT message sent, ID: %1").arg(msgId));
+        ui_logBox->log(LogMessage::INFO, tr("RabbitMQ message sent, ID: %1").arg(msgId));
     });
 
     connect(m_dataPipe, &DataPipe::dataReady, m_mqttPubService,
@@ -296,6 +301,11 @@ void MainWindow::initConnection() {
     connect(&UserApi::instance(), &UserApi::currentUserSessionInvalid, this, [this] {
         ui_logBox->log(LogMessage::WARN, tr("Current user is no longer valid. Session has been cleared."));
     });
+    connect(&UserApi::instance(), &UserApi::currentUserFetched, this, [this](const QJsonObject&) {
+        tryStartMessagePushService();
+    });
+
+    tryStartMessagePushService();
 }
 
 void MainWindow::toggleSidebar() {
@@ -345,4 +355,17 @@ void MainWindow::showUserInfoDialog() {
     m_userDialog->show();
     m_userDialog->raise();
     m_userDialog->activateWindow();
+}
+
+void MainWindow::tryStartMessagePushService() {
+    if (!m_mqttPubService)
+        return;
+
+    if (AuthService::accessToken().trimmed().isEmpty())
+        return;
+
+    if (AuthService::unifiedId().trimmed().isEmpty())
+        return;
+
+    m_mqttPubService->start();
 }

@@ -7,6 +7,7 @@ class QLabel;
 class QLineEdit;
 class QPushButton;
 class QComboBox;
+class QSpinBox;
 
 class SettingsDialog final : public QDialog {
     Q_OBJECT
@@ -23,6 +24,7 @@ private:
 
 private:
     QLineEdit* m_serverAddressEdit = nullptr;
+    QSpinBox* m_streamPortSpinBox = nullptr;
     QLabel* m_statusLabel = nullptr;
     QComboBox* m_themeComboBox = nullptr;
     QPushButton* m_saveButton = nullptr;

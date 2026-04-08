@@ -7,6 +7,7 @@
 #include <QtWidgets/QLabel>
 #include <QtWidgets/QLineEdit>
 #include <QtWidgets/QPushButton>
+#include <QtWidgets/QSpinBox>
 #include <QtWidgets/QStyle>
 #include <QtWidgets/QVBoxLayout>
 
@@ -48,6 +49,7 @@ void SettingsDialog::onSaveClicked() {
     }
 
     CoSettingsMgr::setServerHostname(host);
+    CoSettingsMgr::setStreamPort(m_streamPortSpinBox->value());
     CoSettingsMgr::flush();
     HttpMgr::setBaseUrl(url);
 
@@ -96,7 +98,13 @@ void SettingsDialog::initUI() {
     m_serverAddressEdit->setClearButtonEnabled(true);
     m_serverAddressEdit->setText(CoSettingsMgr::serverHostname());
 
+    m_streamPortSpinBox = new QSpinBox(networkCard);
+    m_streamPortSpinBox->setRange(1, 65535);
+    m_streamPortSpinBox->setAlignment(Qt::AlignCenter);
+    m_streamPortSpinBox->setValue(CoSettingsMgr::streamPort());
+
     networkFormLayout->addRow(tr("Server Address"), m_serverAddressEdit);
+    networkFormLayout->addRow(tr("Stream Port"), m_streamPortSpinBox);
 
     m_statusLabel = new QLabel(networkCard);
     m_statusLabel->setObjectName("dialogHint");

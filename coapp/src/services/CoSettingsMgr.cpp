@@ -1,6 +1,8 @@
 #include "CoSettingsMgr.h"
 
 #include <QtCore/QSize>
+#include <QtCore/QUrl>
+
 #include "network/HttpMgr.h"
 
 void CoSettingsMgr::flush() {
@@ -28,7 +30,7 @@ int CoSettingsMgr::bandPort() {
 }
 
 QString CoSettingsMgr::mqttAddress() {
-    return instance().getValueImpl("network/mqtt/address", "127.0.0.1").toString();
+    return serverHostname();
 }
 
 int CoSettingsMgr::mqttPort() {
@@ -85,7 +87,7 @@ void CoSettingsMgr::setBandPort(const int port) {
 }
 
 void CoSettingsMgr::setMQTTAddress(const QString& address) {
-    return instance().setValueImpl("network/mqtt/address", address);
+    setServerHostname(address);
 }
 
 void CoSettingsMgr::setMQTTPort(const int port) {
@@ -125,7 +127,14 @@ void CoSettingsMgr::setCameraFormatPixelFormat(const QVideoFrameFormat::PixelFor
 }
 
 QString CoSettingsMgr::streamUrl() {
-    return instance().getValueImpl("stream/url", "rtsp://127.0.0.1:8554/live").toString();
+    const QString host = serverHostname().trimmed().isEmpty() ? QStringLiteral("127.0.0.1") : serverHostname().trimmed();
+    const int port = streamPort();
+    const QString unifiedId = authUnifiedId().trimmed().isEmpty() ? QStringLiteral("<unified_id>") : authUnifiedId().trimmed();
+    return QStringLiteral("rtsp://%1:%2/live/%3").arg(host, QString::number(port), unifiedId);
+}
+
+int CoSettingsMgr::streamPort() {
+    return instance().getValueImpl("stream/port", 8554).toInt();
 }
 
 QSize CoSettingsMgr::streamRes() {
@@ -202,6 +211,21 @@ int CoSettingsMgr::streamNvLookahead() {
 
 void CoSettingsMgr::setStreamUrl(const QString& url) {
     instance().setValueImpl("stream/url", url);
+
+    const QUrl parsedUrl(url.trimmed());
+    if (!parsedUrl.isValid())
+        return;
+
+    if (!parsedUrl.host().trimmed().isEmpty()) {
+        setServerHostname(parsedUrl.host().trimmed());
+    }
+    if (parsedUrl.port() > 0) {
+        setStreamPort(parsedUrl.port());
+    }
+}
+
+void CoSettingsMgr::setStreamPort(const int port) {
+    instance().setValueImpl("stream/port", port);
 }
 
 void CoSettingsMgr::setStreamRes(const QSize& res) {

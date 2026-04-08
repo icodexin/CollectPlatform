@@ -1,13 +1,16 @@
 #include "StreamSettingPanel.h"
 
+#include <QtCore/QJsonObject>
 #include <QtWidgets/QComboBox>
 #include <QtWidgets/QFormLayout>
 #include <QtWidgets/QHBoxLayout>
-#include <QtWidgets/QLineEdit>
+#include <QtWidgets/QLabel>
 #include <QtWidgets/QMessageBox>
 #include <QtWidgets/QPushButton>
 
+#include "services/AuthService.h"
 #include "services/CoSettingsMgr.h"
+#include "services/UserApi.h"
 #include "views/settings/StreamAdvancedSettingDialog.h"
 
 namespace {
@@ -80,11 +83,6 @@ StreamSettingPanel::StreamSettingPanel(QWidget* parent)
 }
 
 void StreamSettingPanel::initUI() {
-    m_urlEdit = new QLineEdit();
-    m_urlEdit->setPlaceholderText("rtsp://host:port/key");
-    m_urlEdit->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
-    m_urlEdit->setText(CoSettingsMgr::streamUrl());
-
     m_resolutionCombo = new QComboBox();
     m_resolutionCombo->setSizePolicy(QSizePolicy::Expanding, QSizePolicy::Preferred);
 
@@ -124,6 +122,10 @@ void StreamSettingPanel::initUI() {
     );
 
     m_startBtn = new QPushButton(tr("Start Streaming"));
+    m_pushUrlLabel = new QLabel(this);
+    m_pushUrlLabel->setObjectName("settingsValueLabel");
+    m_pushUrlLabel->setWordWrap(true);
+    m_pushUrlLabel->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
     auto* mainLayout = new QVBoxLayout(this);
     mainLayout->setSpacing(4);
@@ -132,7 +134,6 @@ void StreamSettingPanel::initUI() {
     formLayout->setSpacing(4);
     formLayout->setContentsMargins(0, 0, 0, 0);
     formLayout->setFieldGrowthPolicy(QFormLayout::ExpandingFieldsGrow);
-    formLayout->addRow(tr("URL"), m_urlEdit);
     formLayout->addRow(tr("Resolution"), m_resolutionCombo);
     formLayout->addRow(tr("Frame Rate"), m_fpsCombo);
 
@@ -144,6 +145,9 @@ void StreamSettingPanel::initUI() {
     mainLayout->addLayout(formLayout);
     mainLayout->addLayout(linkLayout);
     mainLayout->addWidget(m_startBtn);
+    mainLayout->addWidget(m_pushUrlLabel);
+
+    updatePushUrlLabel();
 }
 
 void StreamSettingPanel::initConnections() {
@@ -154,7 +158,6 @@ void StreamSettingPanel::initConnections() {
         dlg.exec();
     });
 
-    connect(m_urlEdit, &QLineEdit::textChanged, this, &CoSettingsMgr::setStreamUrl);
     connect(m_resolutionCombo, qOverload<int>(&QComboBox::currentIndexChanged), this,
         [this](const int i) {
             const QSize sz = m_resolutionCombo->itemData(i).toSize();
@@ -165,11 +168,17 @@ void StreamSettingPanel::initConnections() {
             const int fps = m_fpsCombo->itemData(i).toInt();
             CoSettingsMgr::setStreamFps(fps);
         });
+    connect(&UserApi::instance(), &UserApi::currentUserFetched, this, [this](const QJsonObject&) {
+        updatePushUrlLabel();
+    });
+    connect(&AuthService::instance(), &AuthService::authenticationChanged, this, [this](const bool) {
+        updatePushUrlLabel();
+    });
 }
 
 PushConfig StreamSettingPanel::buildConfig() const {
     PushConfig cfg;
-    cfg.rtspUrl = m_urlEdit->text().trimmed();
+    cfg.rtspUrl = CoSettingsMgr::streamUrl();
     cfg.fps = m_fpsCombo->currentData().toInt();
 
     const QSize sz = m_resolutionCombo->currentData().toSize();
@@ -183,10 +192,12 @@ PushConfig StreamSettingPanel::buildConfig() const {
 
 void StreamSettingPanel::onStartBtnClicked() {
     if (m_startBtn->text() == tr("Start Streaming")) {
-        if (m_urlEdit->text().trimmed().isEmpty()) {
-            QMessageBox::warning(this, tr("Warning"), tr("Please enter a valid RTSP URL."));
+        if (CoSettingsMgr::authUnifiedId().trimmed().isEmpty()) {
+            QMessageBox::warning(this, tr("Warning"),
+                tr("The unified identity ID is not ready yet. Please wait a moment and try again."));
             return;
         }
+        updatePushUrlLabel();
         m_startBtn->setText(tr("Starting..."));
         m_startBtn->setEnabled(false);
         emit requestStart(buildConfig());
@@ -206,7 +217,6 @@ void StreamSettingPanel::handleStarted() const {
 void StreamSettingPanel::handleStopped() const {
     m_startBtn->setText(tr("Start Streaming"));
     m_startBtn->setEnabled(true);
-    m_urlEdit->setEnabled(true);
     m_resolutionCombo->setEnabled(true);
     m_fpsCombo->setEnabled(true);
     m_moreSettingsBtn->setEnabled(true);
@@ -220,7 +230,6 @@ void StreamSettingPanel::handleStateChanged(const PushWorkerState state) const {
         case PushWorkerState::Starting:
             m_startBtn->setText(tr("Starting..."));
             m_startBtn->setEnabled(false);
-            m_urlEdit->setEnabled(false);
             m_resolutionCombo->setEnabled(false);
             m_fpsCombo->setEnabled(false);
             m_moreSettingsBtn->setEnabled(false);
@@ -238,4 +247,11 @@ void StreamSettingPanel::handleStateChanged(const PushWorkerState state) const {
             handleStopped();
             break;
     }
+}
+
+void StreamSettingPanel::updatePushUrlLabel() {
+    if (!m_pushUrlLabel)
+        return;
+
+    m_pushUrlLabel->setText(tr("Push URL: %1").arg(CoSettingsMgr::streamUrl()));
 }

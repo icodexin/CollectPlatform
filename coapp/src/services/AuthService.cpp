@@ -187,6 +187,12 @@ void AuthService::authorizedRequest(RequestFactory requestFactory, SuccessHandle
     service.handleAuthorizedReply(reply, std::move(pendingRequest), true);
 }
 
+void AuthService::refreshTokens(RefreshSuccessHandler onSuccess, FailureHandler onFailure) {
+    auto& service = instance();
+    service.queuePendingRefreshObserver({std::move(onSuccess), std::move(onFailure)});
+    service.startRefreshFlow();
+}
+
 QByteArray AuthService::buildFormBody(const QList<QPair<QString, QString>>& fields) {
     QUrlQuery query;
     for (const auto& [key, value] : fields)
@@ -243,6 +249,13 @@ void AuthService::queuePendingRequest(PendingRequest pendingRequest) {
     m_pendingRequests.push_back(std::move(pendingRequest));
 }
 
+void AuthService::queuePendingRefreshObserver(PendingRefreshObserver observer) {
+    if (!observer.onSuccess && !observer.onFailure)
+        return;
+
+    m_pendingRefreshObservers.push_back(std::move(observer));
+}
+
 void AuthService::flushPendingRequests(const bool refreshSucceeded, const int statusCode,
                                        const QString& errorMessage, const QByteArray& responseBody) {
     auto pendingRequests = std::move(m_pendingRequests);
@@ -263,6 +276,23 @@ void AuthService::flushPendingRequests(const bool refreshSucceeded, const int st
 
         if (pendingRequest.onFailure)
             pendingRequest.onFailure(statusCode, errorMessage, responseBody);
+    }
+}
+
+void AuthService::flushPendingRefreshObservers(const bool refreshSucceeded, const int statusCode,
+                                               const QString& errorMessage, const QByteArray& responseBody) {
+    auto observers = std::move(m_pendingRefreshObservers);
+    m_pendingRefreshObservers.clear();
+
+    for (auto& observer : observers) {
+        if (refreshSucceeded) {
+            if (observer.onSuccess)
+                observer.onSuccess();
+            continue;
+        }
+
+        if (observer.onFailure)
+            observer.onFailure(statusCode, errorMessage, responseBody);
     }
 }
 
@@ -327,6 +357,7 @@ void AuthService::startRefreshFlow() {
         emit authenticationChanged(false);
         emit sessionExpired();
         flushPendingRequests(false, 401, QStringLiteral("Authentication expired."), {});
+        flushPendingRefreshObservers(false, 401, QStringLiteral("Authentication expired."), {});
         return;
     }
 
@@ -348,12 +379,17 @@ void AuthService::startRefreshFlow() {
             saveTokens(tokenSet);
             emit tokensRefreshed();
             flushPendingRequests(true);
+            flushPendingRefreshObservers(true);
         }
         else {
             clearTokens();
             emit authenticationChanged(false);
             emit sessionExpired();
             flushPendingRequests(false,
+                reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(),
+                errorMessage,
+                {});
+            flushPendingRefreshObservers(false,
                 reply->attribute(QNetworkRequest::HttpStatusCodeAttribute).toInt(),
                 errorMessage,
                 {});

@@ -45,7 +45,9 @@ public:
     static void setEEGAddress(const QString& address);
     static void setEEGPort(int port);
     static void setBandPort(int port);
+    [[deprecated("MQTT address configuration is deprecated and kept only for legacy compatibility.")]]
     static void setMQTTAddress(const QString& address);
+    [[deprecated("MQTT port configuration is deprecated and kept only for legacy compatibility.")]]
     static void setMQTTPort(int port);
     static void setAuthAccessToken(const QString& token);
     static void setAuthRefreshToken(const QString& token);
@@ -57,6 +59,7 @@ public:
     static void setCameraFormatPixelFormat(QVideoFrameFormat::PixelFormat pixelFormat);
 
     static QString streamUrl();
+    static int streamPort();
     static QSize streamRes();
     static int streamFps();
     static int streamBitrateKbps();
@@ -81,6 +84,7 @@ public:
     static int streamNvLookahead();
 
     static void setStreamUrl(const QString& url);
+    static void setStreamPort(int port);
     static void setStreamRes(const QSize& res);
     static void setStreamFps(int fps);
     static void setStreamBitrateKbps(int kbps);

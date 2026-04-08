@@ -501,73 +501,89 @@
 <context>
     <name>MainWindow</name>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="59"/>
+        <location filename="../../src/views/MainWindow.cpp" line="63"/>
         <source>Log</source>
         <translation>日志</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="116"/>
-        <location filename="../../src/views/MainWindow.cpp" line="285"/>
+        <location filename="../../src/views/MainWindow.cpp" line="120"/>
+        <location filename="../../src/views/MainWindow.cpp" line="290"/>
         <source>Service Unreachable</source>
         <translation>服务不可达</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="224"/>
         <source>MQTT connected</source>
-        <translation>已连接到MQTT</translation>
+        <translation type="vanished">已连接到MQTT</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="228"/>
         <source>MQTT disconnected</source>
-        <translation>已断开和MQTT的连接</translation>
+        <translation type="vanished">已断开和MQTT的连接</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="232"/>
         <source>MQTT error: %1</source>
-        <translation>MQTT错误：%1</translation>
+        <translation type="vanished">MQTT错误：%1</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="235"/>
         <source>MQTT message sent, ID: %1</source>
-        <translation>已发送MQTT消息，ID:%1</translation>
+        <translation type="vanished">已发送MQTT消息，ID:%1</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="250"/>
+        <location filename="../../src/views/MainWindow.cpp" line="229"/>
+        <source>RabbitMQ connected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="233"/>
+        <source>RabbitMQ disconnected</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="237"/>
+        <source>RabbitMQ error: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="240"/>
+        <source>RabbitMQ message sent, ID: %1</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/views/MainWindow.cpp" line="255"/>
         <source>Video push starting...</source>
         <translation>正在视频推流...</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="253"/>
+        <location filename="../../src/views/MainWindow.cpp" line="258"/>
         <source>Video push started</source>
         <translation>视频推流已启动</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="256"/>
+        <location filename="../../src/views/MainWindow.cpp" line="261"/>
         <source>Video push stopping...</source>
         <translation>正在视频推流...</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="259"/>
+        <location filename="../../src/views/MainWindow.cpp" line="264"/>
         <source>Video push stopped</source>
         <translation>已停止视频推流</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="262"/>
+        <location filename="../../src/views/MainWindow.cpp" line="267"/>
         <source>Video push error</source>
         <translation>视频推流错误</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="267"/>
+        <location filename="../../src/views/MainWindow.cpp" line="272"/>
         <source>Video push error: %1</source>
         <translation>视频推流错误: %1</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="286"/>
+        <location filename="../../src/views/MainWindow.cpp" line="291"/>
         <source>Network error: %1</source>
         <translation>网络错误：%1</translation>
     </message>
     <message>
-        <location filename="../../src/views/MainWindow.cpp" line="297"/>
+        <location filename="../../src/views/MainWindow.cpp" line="302"/>
         <source>Current user is no longer valid. Session has been cleared.</source>
         <translation type="unfinished"></translation>
     </message>
@@ -575,49 +591,72 @@
 <context>
     <name>MqttPublishService</name>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="271"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="327"/>
         <source>The broker does not accept a connection using the specified protocol version.</source>
         <translation>此代理不接受使用指定协议版本的连接。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="274"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="330"/>
         <source>The client ID is malformed. This might be related to its length.</source>
         <translation>此客户端ID的格式不正确。这可能与它的长度有关。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="277"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="333"/>
         <source>The network connection has been established, but the service is unavailable on the broker side.</source>
         <translation>网络连接已建立，但服务在代理端不可用。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="281"/>
         <source>The data in the username or password is malformed.</source>
-        <translation>用户名或密码中的数据格式不正确。</translation>
+        <translation type="vanished">用户名或密码中的数据格式不正确。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="284"/>
         <source>The client is not authorized to connect.</source>
-        <translation>此客户端未被授权连接。</translation>
+        <translation type="vanished">此客户端未被授权连接。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="287"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="315"/>
+        <source>The message push service connection has been disconnected.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/services/MqttPublisher.cpp" line="337"/>
+        <source>The message push service credentials are invalid.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/services/MqttPublisher.cpp" line="340"/>
+        <source>The message push service is not authorized to connect.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/services/MqttPublisher.cpp" line="343"/>
         <source>The underlying transport caused an error. For example, the connection might have been interrupted unexpectedly.</source>
         <translation>基础传输导致错误。例如，连接可能已意外中断。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="291"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="347"/>
         <source>The client encountered a protocol violation, and therefore closed the connection.</source>
         <translation>此客户端遇到协议冲突，因此关闭了连接。</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="294"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="350"/>
         <source>The error is related to MQTT protocol level 5. More details may be help: Code: 0x%1, Reason: %2</source>
         <translation>该错误与MQTT协议级别5有关。更多详细信息可能有帮助：代码：0x%1，原因：%2</translation>
     </message>
     <message>
-        <location filename="../../src/services/MqttPublisher.cpp" line="301"/>
+        <location filename="../../src/services/MqttPublisher.cpp" line="357"/>
         <source>An unknown error occurred.</source>
         <translation>发生未知错误。</translation>
+    </message>
+    <message>
+        <location filename="../../src/services/MqttPublisher.cpp" line="413"/>
+        <source>The current login session is missing the unified identity ID. Please wait for user information synchronization or log in again.</source>
+        <translation type="unfinished"></translation>
+    </message>
+    <message>
+        <location filename="../../src/services/MqttPublisher.cpp" line="421"/>
+        <source>The current login session is missing the access token. Please log in again.</source>
+        <translation type="unfinished"></translation>
     </message>
 </context>
 <context>
@@ -726,6 +765,31 @@
         <location filename="../../main.cpp" line="49"/>
         <source>Student Collection Terminal</source>
         <translation>学生采集终端</translation>
+    </message>
+    <message>
+        <location filename="../../src/services/MqttPublisher.cpp" line="389"/>
+        <source>Failed to refresh the login session for the message push service.</source>
+        <translation type="unfinished"></translation>
+    </message>
+</context>
+<context>
+    <name>SettingView</name>
+    <message>
+        <location filename="../../src/views/SettingView.cpp" line="118"/>
+        <source>Message Push Service Connection Failed</source>
+        <translation>消息推送服务连接失败</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingView.cpp" line="124"/>
+        <source>Force Retry</source>
+        <translation>强制重试</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingView.cpp" line="190"/>
+        <source>Please check whether the RabbitMQ service and related backend services have been started.
+App will try to reconnect the service.</source>
+        <translation>请检查RabbitMQ服务及其相关后端服务是否已启动。
+应用程序将尝试重新连接服务。</translation>
     </message>
 </context>
 <context>

@@ -2,6 +2,7 @@
 #define MQTTPUBLISHER_H
 
 #include <QtCore/QObject>
+#include <QtCore/QTimer>
 #include <QtMqtt/QMqttClient>
 
 class MqttPublisher final : public QObject {
@@ -70,6 +71,7 @@ signals:
     void stopped();
     void statusChanged(Status status);
     void errorOccurred(QMqttClient::ClientError error, const QString& errorString);
+    void connectionFailed(const QString& errorString);
     void messageSent(qint32 id);
 
 public slots:
@@ -83,6 +85,7 @@ public slots:
 
     void start(const QString& host, quint16 port, const QString& uid, const QString& username, const QString& password);
     void start();
+    void reconnect();
     void stop();
 
     void publish(const QString& topic, const QByteArray& message, quint8 qos, bool retain);
@@ -90,12 +93,35 @@ public slots:
 
 private slots:
     void setStatus(Status status);
+    void onClientConnected();
+    void onClientDisconnected();
     void onClientErrorOccurred(QMqttClient::ClientError error);
+    void onReconnectTimeout();
+
+private:
+    bool prepareSessionCredentials(QString* errorMessage);
+    void connectWithCurrentSession(bool resetAuthRetry);
+    bool shouldRefreshCredentials(QMqttClient::ClientError error) const;
+    void handleConnectionFailure(QMqttClient::ClientError error, const QString& message);
+    void scheduleReconnect();
+    void cancelReconnect();
 
 private:
     MqttPublisher* m_publisher = nullptr;
     QThread* m_workThread = nullptr;
+    QTimer* m_reconnectTimer = nullptr;
     Status m_status = Stopped;
+    QString m_host = "localhost";
+    quint16 m_port = 1883;
+    QString m_uid;
+    QString m_username;
+    QString m_password;
+    QString m_lastErrorMessage;
+    bool m_stopRequested = false;
+    bool m_refreshingCredentials = false;
+    bool m_pendingReconnectAfterRefresh = false;
+    bool m_authRefreshTried = false;
+    int m_reconnectAttemptCount = 0;
 };
 
 #endif //MQTTPUBLISHER_H

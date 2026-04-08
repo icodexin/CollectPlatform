@@ -125,10 +125,26 @@ QFrame#settingsSectionCard {
     border-radius: 12px;
 }
 
+QFrame#mqttWarningCard {
+    background: #fff4f4;
+    border: 1px solid #f3c7c7;
+    border-radius: 12px;
+}
+
 QLabel#settingsSectionTitle {
     color: #1f2937;
     font-size: 16px;
     font-weight: 700;
+}
+
+QLabel#mqttWarningTitle {
+    color: #8f1d1d;
+    font-size: 16px;
+    font-weight: 700;
+}
+
+QLabel#mqttWarningBody {
+    color: #7a2e2e;
 }
 
 QLabel#settingsValueLabel {
@@ -136,7 +152,7 @@ QLabel#settingsValueLabel {
     color: #4b5563;
     border: 1px solid #e0e6ea;
     border-radius: 8px;
-    padding: 8px 10px;
+    padding: 8px;
 }
 
 /******************** QLineEdit ********************/

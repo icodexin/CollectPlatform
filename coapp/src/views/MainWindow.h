@@ -37,6 +37,7 @@ protected:
     void closeEvent(QCloseEvent* event) override;
 
 private:
+    void tryStartMessagePushService();
     void initUI();
     void initServices();
     void initConnection();

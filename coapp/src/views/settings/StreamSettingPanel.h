@@ -4,9 +4,8 @@
 #include <QtWidgets/QGroupBox>
 #include "services/VideoPushService.h"
 
-class QLineEdit;
 class QComboBox;
-class QSpinBox;
+class QLabel;
 class QPushButton;
 
 class StreamSettingPanel final : public QGroupBox {
@@ -33,14 +32,15 @@ private slots:
 private:
     void initUI();
     void initConnections();
+    void updatePushUrlLabel();
 
 private:
-    QLineEdit* m_urlEdit = nullptr;
     QComboBox* m_resolutionCombo = nullptr;
     QComboBox* m_fpsCombo = nullptr;
 
     QPushButton* m_moreSettingsBtn = nullptr;
     QPushButton* m_startBtn = nullptr;
+    QLabel* m_pushUrlLabel = nullptr;
 };
 
 #endif //STREAMSETTINGPANEL_H

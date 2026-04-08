@@ -22,6 +22,7 @@ public:
     using RequestFactory = std::function<QNetworkReply*()>;
     using SuccessHandler = std::function<void(QNetworkReply*)>;
     using FailureHandler = std::function<void(int, const QString&, const QByteArray&)>; // code, err_msg, body
+    using RefreshSuccessHandler = std::function<void()>;
 
     struct TokenSet {
         QString accessToken;
@@ -54,6 +55,8 @@ public:
     /// 对请求添加认证
     static void authorizedRequest(RequestFactory requestFactory, SuccessHandler onSuccess,
         FailureHandler onFailure = {});
+    /// 刷新访问Token
+    static void refreshTokens(RefreshSuccessHandler onSuccess = {}, FailureHandler onFailure = {});
 
 signals:
     void loginSucceeded();
@@ -71,6 +74,11 @@ private:
         FailureHandler onFailure;
     };
 
+    struct PendingRefreshObserver {
+        RefreshSuccessHandler onSuccess;
+        FailureHandler onFailure;
+    };
+
 private:
     AuthService();
     ~AuthService() override = default;
@@ -82,7 +90,10 @@ private:
     void clearTokens();
     void applyAuthorizationHeader() const;
     void queuePendingRequest(PendingRequest pendingRequest);
+    void queuePendingRefreshObserver(PendingRefreshObserver observer);
     void flushPendingRequests(bool refreshSucceeded, int statusCode = 0,
+        const QString& errorMessage = {}, const QByteArray& responseBody = {});
+    void flushPendingRefreshObservers(bool refreshSucceeded, int statusCode = 0,
         const QString& errorMessage = {}, const QByteArray& responseBody = {});
     void handleAuthorizedReply(QNetworkReply* reply, PendingRequest pendingRequest, bool allowRefresh);
     void startRefreshFlow();
@@ -91,6 +102,7 @@ private:
 private:
     TokenSet m_tokens;
     QList<PendingRequest> m_pendingRequests;
+    QList<PendingRefreshObserver> m_pendingRefreshObservers;
     bool m_refreshing = false;
 };
 
