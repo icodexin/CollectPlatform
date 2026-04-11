@@ -37,35 +37,35 @@
 <context>
     <name>BandSettingPanel</name>
     <message>
-        <location filename="../../src/views/settings/BandSettingPanel.cpp" line="10"/>
+        <location filename="../../src/views/navigation/BandSettingPanel.cpp" line="10"/>
         <source>Wristband</source>
         <translation>手环</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/BandSettingPanel.cpp" line="16"/>
-        <location filename="../../src/views/settings/BandSettingPanel.cpp" line="41"/>
-        <location filename="../../src/views/settings/BandSettingPanel.cpp" line="55"/>
+        <location filename="../../src/views/navigation/BandSettingPanel.cpp" line="16"/>
+        <location filename="../../src/views/navigation/BandSettingPanel.cpp" line="41"/>
+        <location filename="../../src/views/navigation/BandSettingPanel.cpp" line="55"/>
         <source>Start Service</source>
         <translation>启动服务</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/BandSettingPanel.cpp" line="21"/>
+        <location filename="../../src/views/navigation/BandSettingPanel.cpp" line="21"/>
         <source>Port</source>
         <translation>端口</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/BandSettingPanel.cpp" line="35"/>
-        <location filename="../../src/views/settings/BandSettingPanel.cpp" line="61"/>
+        <location filename="../../src/views/navigation/BandSettingPanel.cpp" line="35"/>
+        <location filename="../../src/views/navigation/BandSettingPanel.cpp" line="61"/>
         <source>Stop Service</source>
         <translation>停止服务</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/BandSettingPanel.cpp" line="56"/>
+        <location filename="../../src/views/navigation/BandSettingPanel.cpp" line="56"/>
         <source>Starting...</source>
         <translation>启动中...</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/BandSettingPanel.cpp" line="62"/>
+        <location filename="../../src/views/navigation/BandSettingPanel.cpp" line="62"/>
         <source>Stopping...</source>
         <translation>停止中...</translation>
     </message>
@@ -136,40 +136,40 @@
 <context>
     <name>CameraSettingPanel</name>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="21"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="21"/>
         <source>Camera</source>
         <translation>相机</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="26"/>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="77"/>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="91"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="26"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="77"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="91"/>
         <source>Open</source>
         <translation>打开</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="31"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="31"/>
         <source>Device</source>
         <translation>设备</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="32"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="32"/>
         <source>Format</source>
         <translation>格式</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="72"/>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="96"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="72"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="96"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="92"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="92"/>
         <source>Opening...</source>
         <translation>开启中...</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/CameraSettingPanel.cpp" line="97"/>
+        <location filename="../../src/views/navigation/CameraSettingPanel.cpp" line="97"/>
         <source>Closing...</source>
         <translation>关闭中...</translation>
     </message>
@@ -177,38 +177,38 @@
 <context>
     <name>CameraView</name>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="57"/>
+        <location filename="../../src/views/CameraView.cpp" line="56"/>
         <source>Camera</source>
         <translation>相机</translation>
     </message>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="74"/>
+        <location filename="../../src/views/CameraView.cpp" line="73"/>
         <source>Inactive</source>
         <translation>未激活</translation>
     </message>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="74"/>
+        <location filename="../../src/views/CameraView.cpp" line="73"/>
         <source>Running</source>
         <translation>运行中</translation>
     </message>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="76"/>
-        <location filename="../../src/views/CameraView.cpp" line="95"/>
+        <location filename="../../src/views/CameraView.cpp" line="75"/>
+        <location filename="../../src/views/CameraView.cpp" line="94"/>
         <source>-- fps  -- kbps</source>
         <translation>-- fps  -- kbps</translation>
     </message>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="88"/>
+        <location filename="../../src/views/CameraView.cpp" line="87"/>
         <source>%1 Mbps</source>
         <translation>%1 Mbps</translation>
     </message>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="90"/>
+        <location filename="../../src/views/CameraView.cpp" line="89"/>
         <source>%1 kbps</source>
         <translation>%1 kbps</translation>
     </message>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="91"/>
+        <location filename="../../src/views/CameraView.cpp" line="90"/>
         <source>%1 fps  %2</source>
         <translation>%1 fps  %2</translation>
     </message>
@@ -230,50 +230,50 @@
 <context>
     <name>EEGSettingPanel</name>
     <message>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="12"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="12"/>
         <source>EEG</source>
         <translation>EEG</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="21"/>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="53"/>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="58"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="21"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="53"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="58"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="26"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="26"/>
         <source>Host</source>
         <translation>主机地址</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="27"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="27"/>
         <source>Port</source>
         <translation>端口</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="46"/>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="69"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="46"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="69"/>
         <source>Disconnect</source>
         <translation>断开连接</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="60"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="60"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="60"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="60"/>
         <source>Please enter a valid EEG address.</source>
         <translation>请输入一个有效的EEG地址。</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="63"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="63"/>
         <source>Connecting...</source>
         <translation>连接中...</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/EEGSettingPanel.cpp" line="70"/>
+        <location filename="../../src/views/navigation/EEGSettingPanel.cpp" line="70"/>
         <source>Disconnecting...</source>
         <translation>终止中...</translation>
     </message>
@@ -369,22 +369,22 @@
 <context>
     <name>InfoPanel</name>
     <message>
-        <location filename="../../src/views/settings/InfoPanel.cpp" line="22"/>
+        <location filename="../../src/views/navigation/InfoPanel.cpp" line="22"/>
         <source>Local IP address:</source>
         <translation>本机IP地址：</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/InfoPanel.cpp" line="25"/>
+        <location filename="../../src/views/navigation/InfoPanel.cpp" line="25"/>
         <source>Refresh</source>
         <translation>刷新</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/InfoPanel.cpp" line="26"/>
+        <location filename="../../src/views/navigation/InfoPanel.cpp" line="26"/>
         <source>©️2026 Intelligent Perception Laboratory</source>
         <translation>©️2026 智能感知实验室</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/InfoPanel.cpp" line="56"/>
+        <location filename="../../src/views/navigation/InfoPanel.cpp" line="56"/>
         <source>No network connection.</source>
         <translation>没有网络连接。</translation>
     </message>
@@ -662,85 +662,105 @@
 <context>
     <name>MqttSettingPanel</name>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="12"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="12"/>
         <source>MQTT</source>
         <translation>MQTT</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="28"/>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="80"/>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="85"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="28"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="80"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="85"/>
         <source>Connect</source>
         <translation>连接</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="33"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="33"/>
         <source>Host</source>
         <translation>主机地址</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="34"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="34"/>
         <source>Port</source>
         <translation>端口</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="35"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="35"/>
         <source>ID</source>
         <translation>ID</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="36"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="36"/>
         <source>Username</source>
         <translation>用户名</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="37"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="37"/>
         <source>Password</source>
         <translation>密码</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="70"/>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="112"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="70"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="112"/>
         <source>Disconnect</source>
         <translation>断开连接</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="87"/>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="91"/>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="95"/>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="99"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="87"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="91"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="95"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="99"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="87"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="87"/>
         <source>Please enter a valid MQTT address.</source>
         <translation>请输入一个有效的MQTT地址。</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="91"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="91"/>
         <source>Please enter a valid MQTT client ID.</source>
         <translation>请输入一个有效的MQTT客户端ID。</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="95"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="95"/>
         <source>Please enter a valid MQTT username.</source>
         <translation>请输入一个有效的MQTT用户名。</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="99"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="99"/>
         <source>Please enter a valid MQTT password.</source>
         <translation>请输入一个有效的MQTT密码。</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="102"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="102"/>
         <source>Connecting...</source>
         <translation>连接中...</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/MqttSettingPanel.cpp" line="113"/>
+        <location filename="../../src/views/navigation/MqttSettingPanel.cpp" line="113"/>
         <source>Disconnecting...</source>
         <translation>终止中...</translation>
+    </message>
+</context>
+<context>
+    <name>NavigationView</name>
+    <message>
+        <location filename="../../src/views/NavigationView.cpp" line="118"/>
+        <source>Message Push Service Connection Failed</source>
+        <translation>消息推送服务连接失败</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/NavigationView.cpp" line="124"/>
+        <source>Force Retry</source>
+        <translation>强制重试</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/NavigationView.cpp" line="190"/>
+        <source>Please check whether the RabbitMQ service and related backend services have been started.
+App will try to reconnect the service.</source>
+        <translation>请检查RabbitMQ服务及其相关后端服务是否已启动。
+应用程序将尝试重新连接服务。</translation>
     </message>
 </context>
 <context>
@@ -775,57 +795,54 @@
 <context>
     <name>SettingView</name>
     <message>
-        <location filename="../../src/views/SettingView.cpp" line="118"/>
         <source>Message Push Service Connection Failed</source>
-        <translation>消息推送服务连接失败</translation>
+        <translation type="vanished">消息推送服务连接失败</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingView.cpp" line="124"/>
         <source>Force Retry</source>
-        <translation>强制重试</translation>
+        <translation type="vanished">强制重试</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingView.cpp" line="190"/>
         <source>Please check whether the RabbitMQ service and related backend services have been started.
 App will try to reconnect the service.</source>
-        <translation>请检查RabbitMQ服务及其相关后端服务是否已启动。
+        <translation type="vanished">请检查RabbitMQ服务及其相关后端服务是否已启动。
 应用程序将尝试重新连接服务。</translation>
     </message>
 </context>
 <context>
     <name>SettingsDialog</name>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="40"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="41"/>
         <source>Need server address.</source>
         <translation>需要填写服务器地址。</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="46"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="47"/>
         <source>The server address format is invalid.</source>
         <translation>服务器地址无效。</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="54"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="56"/>
         <source>Server address saved.</source>
         <translation>服务器地址已保存。</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="59"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="61"/>
         <source>Settings</source>
         <translation>设置</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="66"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="68"/>
         <source>Application Settings</source>
         <translation>应用设置</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="69"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="71"/>
         <source>Configure the current application environment.</source>
         <translation>配置当前应用环境。</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="79"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="81"/>
         <source>Network</source>
         <translation>网络</translation>
     </message>
@@ -834,52 +851,57 @@ App will try to reconnect the service.</source>
         <translation type="vanished">设置登录和用户相关接口使用的后端服务地址。</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="95"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="97"/>
         <source>Server hostname / IP</source>
         <translation>服务器主机名/IP地址</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="99"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="107"/>
         <source>Server Address</source>
         <translation>服务器地址</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="155"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="164"/>
         <source>Save</source>
         <translation>保存</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="117"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="126"/>
         <source>Appearance</source>
         <translation>外观</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="83"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="85"/>
         <source>Set the server address used by app.</source>
         <translation>设置APP使用的服务器地址。</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="121"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="108"/>
+        <source>Stream Port</source>
+        <translation>推流端口</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/SettingsDialog.cpp" line="130"/>
         <source>Theme switching will be available in a future version.</source>
         <translation>主题切换将在后续版本开放。</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="133"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="142"/>
         <source>Light</source>
         <translation>浅色</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="134"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="143"/>
         <source>Dark</source>
         <translation>深色</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="139"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="148"/>
         <source>Theme</source>
         <translation>主题</translation>
     </message>
     <message>
-        <location filename="../../src/views/SettingsDialog.cpp" line="149"/>
+        <location filename="../../src/views/SettingsDialog.cpp" line="158"/>
         <source>Close</source>
         <translation>关闭</translation>
     </message>
@@ -887,30 +909,30 @@ App will try to reconnect the service.</source>
 <context>
     <name>StreamAdvancedSettingDialog</name>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="30"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="30"/>
         <source>Stream Advanced Settings</source>
         <translation>流媒体高级设置</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="55"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="55"/>
         <source>0s (Auto)</source>
         <translation>0s (自动)</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="93"/>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="148"/>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="175"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="93"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="148"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="175"/>
         <source>Preset</source>
         <translation>预设</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="94"/>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="176"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="94"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="176"/>
         <source>Tune</source>
         <translation>Tune</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="102"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="102"/>
         <source>No Options.
 
 OpenH264 is a software encoder provided by Cisco. It has a smaller feature set and lower performance compared to libx264. However, it is royalty-free and may be used in commercial applications without licensing fees.</source>
@@ -919,68 +941,68 @@ OpenH264 is a software encoder provided by Cisco. It has a smaller feature set a
 OpenH264 is a software encoder provided by Cisco. It has a smaller feature set and lower performance compared to libx264. However, it is royalty-free and may be used in commercial applications without licensing fees.</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="116"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="116"/>
         <source>Realtime Encoding</source>
         <translation>实时编码</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="117"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="117"/>
         <source>Allow SW Fallback</source>
         <translation>允许回退到软件编码</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="118"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="118"/>
         <source>Prioritize Speed</source>
         <translation>优先考虑编码速度</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="119"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="119"/>
         <source>Spatial Adaptive Quantization</source>
         <translation>空间自适应量化</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="149"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="149"/>
         <source>Async Depth</source>
         <translation>异步深度</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="61"/>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="173"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="61"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="173"/>
         <source>0 (Disabled)</source>
         <translation>0 (禁用)</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="177"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="177"/>
         <source>Lookahead</source>
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="192"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="192"/>
         <source>Encoder Options</source>
         <translation>编码器选项</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="203"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="203"/>
         <source>Bitrate</source>
         <translation>码率</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="204"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="204"/>
         <source>Profile</source>
         <translation>配置文件</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="205"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="205"/>
         <source>GOP Size</source>
         <translation>关键帧间隔</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="206"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="206"/>
         <source>B-Frames</source>
         <translation>B帧数</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamAdvancedSettingDialog.cpp" line="207"/>
+        <location filename="../../src/views/navigation/StreamAdvancedSettingDialog.cpp" line="207"/>
         <source>Encoder</source>
         <translation>编码器</translation>
     </message>
@@ -988,7 +1010,7 @@ OpenH264 is a software encoder provided by Cisco. It has a smaller feature set a
 <context>
     <name>StreamSettingPanel</name>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="77"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="80"/>
         <source>Stream</source>
         <translation>流</translation>
     </message>
@@ -997,58 +1019,66 @@ OpenH264 is a software encoder provided by Cisco. It has a smaller feature set a
         <translation type="vanished">自动</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="117"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="115"/>
         <source>More Settings</source>
         <translation>更多设置</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="126"/>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="185"/>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="207"/>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="236"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="124"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="193"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="217"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="244"/>
         <source>Start Streaming</source>
         <translation>开启推流</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="135"/>
         <source>URL</source>
-        <translation>URL</translation>
+        <translation type="vanished">URL</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="136"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="136"/>
         <source>Resolution</source>
         <translation>分辨率</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="137"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="137"/>
         <source>Frame Rate</source>
         <translation>帧率</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="187"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="195"/>
         <source>Warning</source>
         <translation>警告</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="187"/>
-        <source>Please enter a valid RTSP URL.</source>
-        <translation>请输入一个有效的RTSL URL。</translation>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="196"/>
+        <source>The unified identity ID is not ready yet. Please wait a moment and try again.</source>
+        <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="190"/>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="221"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="255"/>
+        <source>Push URL: %1</source>
+        <translation>推流URL：%1</translation>
+    </message>
+    <message>
+        <source>Please enter a valid RTSP URL.</source>
+        <translation type="vanished">请输入一个有效的RTSL URL。</translation>
+    </message>
+    <message>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="200"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="230"/>
         <source>Starting...</source>
         <translation>启动中...</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="194"/>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="202"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="204"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="212"/>
         <source>Stop Streaming</source>
         <translation>停止推流</translation>
     </message>
     <message>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="195"/>
-        <location filename="../../src/views/settings/StreamSettingPanel.cpp" line="232"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="205"/>
+        <location filename="../../src/views/navigation/StreamSettingPanel.cpp" line="240"/>
         <source>Stopping...</source>
         <translation>停止中...</translation>
     </message>
@@ -1154,7 +1184,7 @@ OpenH264 is a software encoder provided by Cisco. It has a smaller feature set a
 <context>
     <name>ViewFinder</name>
     <message>
-        <location filename="../../src/views/CameraView.cpp" line="13"/>
+        <location filename="../../src/views/CameraView.cpp" line="12"/>
         <source>Preview has been closed</source>
         <translation>预览已关闭</translation>
     </message>
