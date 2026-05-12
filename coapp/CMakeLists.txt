@@ -12,110 +12,50 @@ set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_STANDARD 17)
 
 find_package(FFMPEG REQUIRED)   # put FFMPEG before QT to avoid some lib be hidden
-find_package(Qt6 COMPONENTS Core Widgets Svg Network Mqtt Multimedia LinguistTools REQUIRED)
+find_package(Qt6 COMPONENTS Core Widgets Svg Network Mqtt Multimedia SerialPort LinguistTools REQUIRED)
+find_package(Python3 COMPONENTS Interpreter REQUIRED)
 
 qt_standard_project_setup(REQUIRES 6.5 I18N_TRANSLATED_LANGUAGES zh_CN)
 
-set(H_FILES
-    src/views/navigation/CameraSettingPanel.h
-    src/views/navigation/EEGSettingPanel.h
-    src/views/navigation/BandSettingPanel.h
-    src/views/navigation/MqttSettingPanel.h
-    src/views/navigation/InfoPanel.h
-    src/views/navigation/StreamSettingPanel.h
-    src/views/navigation/StreamAdvancedSettingDialog.h
-    src/views/MainWindow.h
-    src/views/LoginDialog.h
-    src/views/SettingsDialog.h
-    src/views/UserInfoDialog.h
-    src/views/DeviceView.h
-    src/views/NavigationView.h
-    src/views/EEGView.h
-    src/views/BandView.h
-    src/views/CameraView.h
-    src/components/BaseWidget.h
-    src/components/BarCard.h
-    src/components/IPv4Edit.h
-    src/components/LogBox.h
-    src/components/RecordingIndicator.h
-    src/components/SvgIconHelper.h
-    src/services/log.h
-    src/services/DataPipe.h
-    src/services/DataSerializer.h
-    src/services/CameraService.h
-    src/services/BandServer.h
-    src/services/EEGRecvService.h
-    src/services/FFmpegHelper.h
-    src/services/MqttPublisher.h
-    src/services/CoSettingsMgr.h
-    src/services/VideoPushService.h
-    src/services/AuthService.h
-    src/services/UserApi.h
-)
-
-set(CPP_FILES
-    main.cpp
-    src/views/navigation/CameraSettingPanel.cpp
-    src/views/navigation/EEGSettingPanel.cpp
-    src/views/navigation/BandSettingPanel.cpp
-    src/views/navigation/MqttSettingPanel.cpp
-    src/views/navigation/InfoPanel.cpp
-    src/views/navigation/StreamSettingPanel.cpp
-    src/views/navigation/StreamAdvancedSettingDialog.cpp
-    src/views/MainWindow.cpp
-    src/views/LoginDialog.cpp
-    src/views/SettingsDialog.cpp
-    src/views/UserInfoDialog.cpp
-    src/views/DeviceView.cpp
-    src/views/NavigationView.cpp
-    src/views/EEGView.cpp
-    src/views/BandView.cpp
-    src/views/CameraView.cpp
-    src/components/BaseWidget.cpp
-    src/components/BarCard.cpp
-    src/components/IPv4Edit.cpp
-    src/components/LogBox.cpp
-    src/components/RecordingIndicator.cpp
-    src/components/SvgIconHelper.cpp
-    src/services/log.cpp
-    src/services/DataPipe.cpp
-    src/services/DataSerializer.cpp
-    src/services/CameraService.cpp
-    src/services/BandServer.cpp
-    src/services/EEGRecvService.cpp
-    src/services/FFmpegHelper.cpp
-    src/services/MqttPublisher.cpp
-    src/services/CoSettingsMgr.cpp
-    src/services/VideoPushService.cpp
-    src/services/AuthService.cpp
-    src/services/UserApi.cpp
-)
-
-qt_add_resources(RESOURCES resources/resources.qrc)
-
 qt_add_executable(${PROJECT_NAME}
-    ${H_FILES} ${CPP_FILES} ${RESOURCES}
+    main.cpp
 )
+
+add_subdirectory(src)
+add_subdirectory(resources)
 
 if (Qt6_VERSION VERSION_GREATER_EQUAL "6.9.0")
-    qt_add_translations(${PROJECT_NAME}
+    qt_add_translations(CoApp
         TS_OUTPUT_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}/resources/i18n
     )
 else ()
-    qt_add_translations(${PROJECT_NAME}
+    qt_add_translations(CoApp
         TS_FILE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/resources/i18n
     )
 endif ()
-
-target_include_directories(${PROJECT_NAME}
-    PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src
-)
 
 target_compile_definitions(${PROJECT_NAME} PRIVATE
     APP_VERSION="${APP_VERSION}"
 )
 
 set(APP_PACKAGE_DIR ${APP_OUTPUT_DIRECTORY}/coapp)
+if (APPLE)
+    set(AI_SERVICE_OUTPUT_DIR ${APP_PACKAGE_DIR}/${TARGET_OUTPUT_NAME}.app/Contents/MacOS)
+else ()
+    set(AI_SERVICE_OUTPUT_DIR ${APP_PACKAGE_DIR})
+endif ()
+set(AI_SERVICE_BUILD_DIR ${CMAKE_BINARY_DIR}/ai_service_build/$<CONFIG>)
+
+add_custom_target(Build_${PROJECT_NAME}_AiService
+    COMMAND ${Python3_EXECUTABLE}
+        ${CMAKE_SOURCE_DIR}/ai_service/build_ai_service.py
+        --service-dir ${CMAKE_SOURCE_DIR}/ai_service
+        --output-dir ${AI_SERVICE_OUTPUT_DIR}
+        --build-dir ${AI_SERVICE_BUILD_DIR}
+        --name ai_service
+    COMMENT "Building ai_service executable for ${PROJECT_NAME} ..."
+    VERBATIM
+)
 
 set_target_properties(${PROJECT_NAME} PROPERTIES
     OUTPUT_NAME ${TARGET_OUTPUT_NAME}
@@ -129,13 +69,10 @@ set_target_properties(${PROJECT_NAME} PROPERTIES
     WIN32_EXECUTABLE TRUE
 )
 
-target_link_directories(${PROJECT_NAME} PRIVATE
-    ${FFMPEG_LIBRARY_DIRS}
-)
+add_dependencies(${PROJECT_NAME} Build_${PROJECT_NAME}_AiService)
 
 target_link_libraries(${PROJECT_NAME} PRIVATE
-    Qt6::Core Qt6::Widgets Qt6::Svg Qt6::Network Qt6::Mqtt Qt6::Multimedia PlatformCommon
-    ${FFMPEG_LIBRARIES}
+    Qt6::Core Qt6::Widgets CoApp_components CoApp_services CoApp_views
 )
 
 if (WIN32)
